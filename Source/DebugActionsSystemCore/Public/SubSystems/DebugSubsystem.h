@@ -57,7 +57,6 @@ public:
 	static UDebugSubsystem* Get(const UObject* WorldContextObject);
 
 #pragma region Debug Actions System
-
 	virtual void PlayerControllerChanged(APlayerController* NewPlayerController) override;
 private:
 	void OnDebugMenuKeyPressed();
@@ -69,9 +68,10 @@ public:
 
 #pragma region Debug Actions
 public:
+	void OnDebugToolsWidgetVisibilityChange(bool bVisible);
 	void OnFolderStateChange(bool bIsDeveloped, class UDebugActionBase* InDebugActionFolder);
 #pragma endregion
-	
+
 #pragma region Debug Inputs
 public:
 	/** Request a debug input on specified slot. @param SharedID: is the id used to get the same input of other DA */
@@ -91,9 +91,6 @@ private:
 	bool Internal_SetUsedDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag = DAS_SharedDIKey_UnShared);
 	void Internal_FreeAllDebugInputs();
 #pragma endregion
-	
-private:
-	void Internal_CreateWidget();
 };
 
 #if CPP

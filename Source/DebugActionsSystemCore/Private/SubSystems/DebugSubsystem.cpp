@@ -103,7 +103,18 @@ void UDebugSubsystem::OnDebugMenuKeyPressed() {
 	ULocalPlayer* LP = GetLocalPlayer();
 	LP->PlayerController->SetShowMouseCursor(bDebugSystemOpened);
 	
+	OnDebugToolsWidgetVisibilityChange(bDebugSystemOpened);
+	
 	WIZ_LOG(FString::Printf(TEXT("New debug tools widget state: %s"), bDebugSystemOpened ? TEXT("true") : TEXT("false")), Log, LogDebugActionsSystem);
+}
+
+void UDebugSubsystem::OnDebugToolsWidgetVisibilityChange(bool bVisible) {
+	
+	if (bVisible) {
+		for (auto DebugAction : MyDebugDataAsset->DebugActionsArray) {
+			DebugAction->OnParentFolderIsDeveloped(NULL);
+		}
+	}
 }
 
 void UDebugSubsystem::OnFolderStateChange(bool bIsDeveloped, UDebugActionBase* InDebugActionFolder) {
@@ -181,8 +192,4 @@ void UDebugSubsystem::Internal_FreeAllDebugInputs() {
 
 	UsedDebugInputs.Empty();
 	SharedDebugInputs.Empty();
-}
-
-void UDebugSubsystem::Internal_CreateWidget() {
-	
 }
