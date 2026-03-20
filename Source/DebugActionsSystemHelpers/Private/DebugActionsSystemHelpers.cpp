@@ -1,4 +1,6 @@
-﻿#include "DebugActionsSystemHelpers.h"
+﻿// Copyright Epic Games, Inc. & Wiz Corporation All Rights Reserved.
+
+#include "DebugActionsSystemHelpers.h"
 
 #define LOCTEXT_NAMESPACE "FDebugActionsSystemHelpersModule"
 

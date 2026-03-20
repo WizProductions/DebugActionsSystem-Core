@@ -16,7 +16,10 @@ public class DebugActionsSystemTags : ModuleRules
             new string[]
             {
 	            "CoreUObject",
-	            "Engine"
+	            "Engine",
+	            "DebugActionsSystemHelpers",
+	            "Engine",
+	            "Projects"
             }
         );
     }

@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. & Wiz Corporation All Rights Reserved.
 
 #include "DebugActionsSystemCoreModule.h"
 #include "EditorMode/DebugActionsSystemCoreEditorModeCommands.h"
