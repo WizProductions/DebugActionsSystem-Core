@@ -35,8 +35,8 @@ void UDebugSubsystem::PlayerControllerChanged(APlayerController* NewPlayerContro
 	
 	Super::PlayerControllerChanged(NewPlayerController);
 	
-	//@ASKING: Check if the freecam DA call it every executed
-	WIZ_LOG("Called", Warning, LogDebugActionsSystem);
+	if (MyDebugToolsWidget != NULL)
+		return; //Already created and still valid
 	
 	// - Clean-Up
 	for (auto LinePair : FreeDebugsInputs) {
@@ -110,6 +110,12 @@ void UDebugSubsystem::OnDebugMenuKeyPressed() {
 
 void UDebugSubsystem::OnDebugToolsWidgetVisibilityChange(bool bVisible) {
 	
+	//Clear all DI used array
+	this->Internal_FreeAllDebugInputs();
+
+	//Clear slots in the UI
+	MyDebugToolsWidget->ClearSlotsAssigment();
+	
 	if (bVisible) {
 		for (auto DebugAction : MyDebugDataAsset->DebugActionsArray) {
 			DebugAction->OnParentFolderIsDeveloped(NULL);
@@ -119,21 +125,26 @@ void UDebugSubsystem::OnDebugToolsWidgetVisibilityChange(bool bVisible) {
 
 void UDebugSubsystem::OnFolderStateChange(bool bIsDeveloped, UDebugActionBase* InDebugActionFolder) {
 
-	if (InDebugActionFolder) {
+	if (InDebugActionFolder == NULL)
+		WIZ_RET_LOG( , "DebugActionFolder invalid", Warning, LogDebugActionsSystem);
+	
+	bool bIsNewFolderClicked = LastFolderClicked != InDebugActionFolder;
+	int FolderDepthLevel =  InDebugActionFolder->GetDepthLevel();
+	
+	//Clear all DI used array
+	this->Internal_FreeAllDebugInputs();
 
-		bool bIsNewFolderClicked = LastFolderClicked != InDebugActionFolder;
-		//Other folder developed
-		if (bIsNewFolderClicked) {
-			
-			//Clear all DI used array
-			this->Internal_FreeAllDebugInputs();
-
-			//Clear slots in the UI
-			MyDebugToolsWidget->ClearSlotsAssigment();
-			
-			LastFolderClicked = InDebugActionFolder;
-		}
-		MyDebugToolsWidget->OnFolderStateChange(bIsDeveloped, bIsNewFolderClicked, InDebugActionFolder);
+	//Clear slots in the UI
+	MyDebugToolsWidget->ClearSlotsAssigment();
+		
+	LastFolderClicked = InDebugActionFolder;
+	
+	//Change visibility of debug input
+	MyDebugToolsWidget->OnFolderStateChange(bIsDeveloped, bIsNewFolderClicked, InDebugActionFolder);
+	
+	if (FolderDepthLevel == 0 && bIsDeveloped == false) {
+		OnDebugToolsWidgetVisibilityChange(true);
+		return; //Do not change the visibility of debug inputs on collapse a root folder because DI for roots DA just spawned
 	}
 }
 

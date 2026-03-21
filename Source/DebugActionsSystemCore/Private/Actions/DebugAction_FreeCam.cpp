@@ -10,7 +10,7 @@
 void UDebugAction_FreeCam::OnParentFolderIsDeveloped(UDebugActionFolder* ParentFolder) {
 	Super::OnParentFolderIsDeveloped(ParentFolder);
 	
-	MyPlayerSelector = MyDebugSubsystem->RequestDebugInput<UDI_LocalPlayerSelector>(DAS_SharedDIKey_LocalPlayerSelector_Default);
+	MyPlayerSelector = MyDebugSubsystem->RequestDebugInput<UDI_LocalPlayerSelector>();
 }
 
 EDebugActionResult UDebugAction_FreeCam::ExecuteDebugAction() {

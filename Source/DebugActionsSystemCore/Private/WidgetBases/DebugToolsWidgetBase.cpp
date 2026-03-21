@@ -45,9 +45,9 @@ const FText UDebugToolsWidgetBase::GetPaletteCategory() {
 
 void UDebugToolsWidgetBase::Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder) {
 	
-	int DADepthLevel = InDebugActionFolder->GetDepthLevel(); //Target depth level
+	int DADepthLevel = InDebugActionFolder->GetDepthLevel();
 
-	//User clicked on another debug action folder -> hide old debug action folder children's
+	//User clicked on another debug action folder -> hide old debug action folder children's (same depth)
 	if (DebugActionsDepthsArray[DADepthLevel] != InDebugActionFolder) {
 		if (UDebugActionBase* OldOnDepthDebugAction = DebugActionsDepthsArray[DADepthLevel]) {
 			OldOnDepthDebugAction->SetDebugActionWidgetVisibility(true, DADepthLevel);

@@ -13,7 +13,7 @@ void UDI_LocalPlayerSelector::PostInitProperties() {
 		return;
 
 	DebugInputTitle = FText::FromString("Player");
-	DebugInputSize = FVector2D(120, 28);
+	DebugInputSize = FVector2D(140, 28);
 
 	MyComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugTools<UComboBoxString>();
 	MyWidget = MyComboBox;
