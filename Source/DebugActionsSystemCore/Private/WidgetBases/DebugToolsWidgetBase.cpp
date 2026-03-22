@@ -65,6 +65,13 @@ void UDebugToolsWidgetBase::OnFolderStateChange(bool bIsDeveloped, bool bIsNewFo
 	}
 }
 
+UDebugActionBase* UDebugToolsWidgetBase::GetDebugActionByDepth(int Depth) const {
+	if (DebugActionsDepthsArray.Num() < Depth)
+		WIZ_RET_LOG(NULL, "Depth target is out of bounds.", Warning, LogDebugActionsSystem);
+	
+	return DebugActionsDepthsArray[Depth];
+}
+
 void UDebugToolsWidgetBase::Internal_FindAndInitChildDebugActions(UDebugSubsystem* Subsystem, int ParentDebugActionIndex, int DepthLevel, TArray<TObjectPtr<UDebugActionBase>>& ChildDebugActions, TObjectPtr<UDebugActionBase> ParentDebugAction) {
 	
 	//At this point, the debug action is a folder

@@ -24,15 +24,13 @@ protected:
 	//==== References ====\\.
 	UPROPERTY(BlueprintReadWrite, Category = "References")
 	class UDI_LocalPlayerSelector* MyPlayerSelector = NULL; 
-	
-	//==== Properties ====\\.
 
 //#############################################################################
-//##------------------------------- FUNCTIONS -------------------------------##
+//##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 	
 public:
-	virtual void OnParentFolderIsDeveloped(UDebugActionFolder* ParentFolder) override;
 	virtual FText GetDebugActionTitle() const override { return FText::FromString(FString("FreeCam")); }
+	virtual void OnParentFolderIsDeveloped(UDebugActionFolder* ParentFolder) override;
 	virtual EDebugActionResult ExecuteDebugAction() override;
 };

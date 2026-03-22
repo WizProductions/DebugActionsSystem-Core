@@ -42,11 +42,12 @@ private:
 
 public:
 	/* Debug Inputs */
-	TMap<TSubclassOf<UDebugInput>, TSet<UDebugInput*>> FreeDebugsInputs;
+	TMap<TSubclassOf<UDebugInput>, TSet<TObjectPtr<UDebugInput>>> FreeDebugsInputs;
 	UPROPERTY()
-	TArray<UDebugInput*> UsedDebugInputs;
+	TArray<TObjectPtr<UDebugInput>> UsedDebugInputs;
 	UPROPERTY()
-	TMap<struct FGameplayTag, UDebugInput*> SharedDebugInputs;
+	TMap<struct FGameplayTag, TObjectPtr<UDebugInput>> SharedDebugInputs;
+	TMap<struct FGameplayTag, TMap<TSubclassOf<UDebugActionBase>, TObjectPtr<UDebugActionBase>>> NewSharedDebugInputs;
 
 //#############################################################################
 //##-------------------------------- FUNCTIONS ------------------------------##

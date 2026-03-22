@@ -62,6 +62,7 @@ protected:
 public:
 	void GenerateDebugMenu(TArray<TObjectPtr<UDebugActionBase>>& DebugActions);
 	void OnFolderStateChange(bool bIsDeveloped, bool bIsNewFolderClicked, UDebugActionBase* InDebugActionFolder);
+	UDebugActionBase* GetDebugActionByDepth(int Depth) const;
 	
 	//======= Debug Inputs ========\\.
 private:

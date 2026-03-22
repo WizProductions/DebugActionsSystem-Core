@@ -85,3 +85,10 @@ EDebugActionResult UDebugActionFolder::ExecuteDebugAction() {
 	
 	return EDebugActionResult::Fail;
 }
+
+void UDebugActionFolder::RefreshChildren() {
+	
+	for (auto DA : DebugActionsStored) {
+		DA->OnParentFolderIsDeveloped(this);
+	}
+}

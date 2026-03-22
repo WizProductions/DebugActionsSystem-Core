@@ -10,7 +10,7 @@
 //#############################################################################
 
 /*
- * Default.
+ * A DebugActionFolder can store any debug actions.
 */
 UCLASS(BlueprintType, EditInlineNew, DefaultToInstanced)
 class DEBUGACTIONSSYSTEMCORE_API UDebugActionFolder : public UDebugActionBase {
@@ -19,10 +19,6 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionFolder : public UDebugActionBase {
 //#############################################################################
 //##------------------------------- ATTRIBUTES ------------------------------##
 //#############################################################################
-
-	//@Upgrade: add a specific behavior for activate?
-	//- LeftClick: Entity specific execute
-	//- RightClick Entity class execute
 	
 public:
 	//==== Settings ====\\.
@@ -31,10 +27,9 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Instanced)
 	TArray<TObjectPtr<UDebugActionBase>> DebugActionsStored;
-	//==== Properties ====\\.
 
 //#############################################################################
-//##------------------------------- FUNCTIONS -------------------------------##
+//##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 
 #if WITH_EDITOR
@@ -45,4 +40,6 @@ public:
 	virtual void SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int DepthRecursivity) override;
 	virtual FText GetDebugActionTitle() const override { return DebugFolderTitle; }
 	virtual EDebugActionResult ExecuteDebugAction() override;
+	
+	void RefreshChildren();
 };

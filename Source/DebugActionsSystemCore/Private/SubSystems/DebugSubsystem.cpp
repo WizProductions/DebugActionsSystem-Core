@@ -3,6 +3,7 @@
 #include "SubSystems/DebugSubsystem.h"
 #include "DataAssets/DebugActionsSystemDataAsset.h"
 #include "DebugActionsSystemCoreDefines.h"
+#include "Actions/DebugActionFolder.h"
 #include "Inputs/DI_FloatSlider.h"
 #include "WidgetBases/DebugToolsWidgetBase.h"
 #include "Engine/AssetManager.h"
@@ -18,7 +19,7 @@ void UDebugSubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 
 UDebugSubsystem* UDebugSubsystem::Get(const UObject* WorldContextObject) {
 	if (WorldContextObject == NULL)
-		WIZ_RET_LOG(NULL, "World context invalid.", Error, LogDebugActionsSystem);
+		WIZ_RET_LOG(NULL, "World context object invalid.", Error, LogDebugActionsSystem);
 	
 	UWorld* World = WorldContextObject->GetWorld();
 	if (World == NULL)
@@ -142,10 +143,22 @@ void UDebugSubsystem::OnFolderStateChange(bool bIsDeveloped, UDebugActionBase* I
 	//Change visibility of debug input
 	MyDebugToolsWidget->OnFolderStateChange(bIsDeveloped, bIsNewFolderClicked, InDebugActionFolder);
 	
-	if (FolderDepthLevel == 0 && bIsDeveloped == false) {
+	if (bIsDeveloped == true)
+		return;
+	
+	if (FolderDepthLevel == 0) {
 		OnDebugToolsWidgetVisibilityChange(true);
 		return; //Do not change the visibility of debug inputs on collapse a root folder because DI for roots DA just spawned
 	}
+	
+	//Refresh children of parent debug action folder when the child folder is collapse (request DI if needed)
+	UDebugActionBase* DA = MyDebugToolsWidget.Get()->GetDebugActionByDepth(FolderDepthLevel - 1);
+	UDebugActionFolder* DAF = Cast<UDebugActionFolder>(DA);
+	
+	if (DAF == NULL)
+		WIZ_RET_LOG( , FString::Printf(TEXT("Cast failed, the DA %s on depth %d is not a folder"), *DA->GetClass()->GetName(), FolderDepthLevel), Warning, LogDebugActionsSystem);
+	
+	DAF->RefreshChildren();
 }
 
 bool UDebugSubsystem::Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag) {
