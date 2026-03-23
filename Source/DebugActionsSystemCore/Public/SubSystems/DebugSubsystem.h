@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "DebugActionsSystemTagsDefines.h"
 #include "Inputs/DebugInput.h"
+#include "Structs/FreeDebugInputsLine.h"
 #include "Structs/SharedDIMapKey.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "DebugSubsystem.generated.h"
@@ -41,12 +42,12 @@ private:
 	TObjectPtr<class UDebugActionBase> LastFolderClicked = nullptr;
 
 public:
-	/* Debug Inputs */
-	TMap<TSubclassOf<UDebugInput>, TSet<TObjectPtr<UDebugInput>>> FreeDebugsInputs;
+	UPROPERTY()
+	TMap<TSubclassOf<UDebugInput>, FFreeDebugInputsLine> FreeDebugsInputs;
 	UPROPERTY()
 	TArray<TObjectPtr<UDebugInput>> UsedDebugInputs;
 	UPROPERTY()
-	TMap<FSharedDIMapKey, TObjectPtr<UDebugInput>> NewSharedDebugInputs;
+	TMap<FSharedDIMapKey, TObjectPtr<UDebugInput>> SharedDebugInputs;
 
 //#############################################################################
 //##-------------------------------- FUNCTIONS ------------------------------##

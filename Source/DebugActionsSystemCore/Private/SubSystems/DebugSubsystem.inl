@@ -18,7 +18,7 @@ T* UDebugSubsystem::RequestDebugInput(const FGameplayTag& SharedKeyTag) {
 		FSharedDIMapKey SharedDIKey(SharedKeyTag, DIClass);
 		
 		//Is found a map associated of tag?
-		if (TObjectPtr<UDebugInput>* DIFound = NewSharedDebugInputs.Find(SharedDIKey)) {
+		if (TObjectPtr<UDebugInput>* DIFound = SharedDebugInputs.Find(SharedDIKey)) {
 			//Is the pointer wrapper valid?
 			if (DIFound && *DIFound) {
 				OutDI = Cast<T, UDebugInput>(*DIFound);
@@ -29,11 +29,11 @@ T* UDebugSubsystem::RequestDebugInput(const FGameplayTag& SharedKeyTag) {
 	
 	//Check if DI is free
 	if (auto Line = FreeDebugsInputs.Find(T::StaticClass())) {	//Find return a pointer to value (not a ref)
-		for (auto It = Line->CreateIterator(); It; ++It) {
+		for (auto It = Line->FreeDebugLine.CreateIterator(); It; ++It) {
 			if (UDebugInput* ExistingDI = *It) {
 
 				//Remove from the free DI array
-				Line->Remove(It.GetId());
+				Line->FreeDebugLine.Remove(It.GetId());
 
 				//Set used to debug input recovered
 				Internal_SetUsedDI(ExistingDI, SharedKeyTag);

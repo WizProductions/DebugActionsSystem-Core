@@ -39,18 +39,14 @@ void UDebugSubsystem::PlayerControllerChanged(APlayerController* NewPlayerContro
 	if (MyDebugToolsWidget != NULL)
 		return; //Already created and still valid
 	
-	// - Clean-Up
-	for (auto LinePair : FreeDebugsInputs) {
-		LinePair.Value.Empty();
-	}
-	
+	// - Clean-Up	
 	FreeDebugsInputs.Empty();
 	UsedDebugInputs.Empty();
-	NewSharedDebugInputs.Empty();
+	SharedDebugInputs.Empty();
 	
 	FreeDebugsInputs.Reserve(10);
 	UsedDebugInputs.Reserve(5);
-	NewSharedDebugInputs.Reserve(10);
+	SharedDebugInputs.Reserve(10);
 	
 	const UDASSettings* DASSettings = GetDefault<UDASSettings>();
 	if (DASSettings == NULL)
@@ -83,9 +79,8 @@ void UDebugSubsystem::PlayerControllerChanged(APlayerController* NewPlayerContro
 		}
 	}
 
-	if (MyDebugToolsWidget == NULL) {
+	if (MyDebugToolsWidget == NULL)
 		WIZ_RET_LOG( , "DebugToolsWidget is invalid! Request aborted.", Error, LogDebugActionsSystem);
-	}
 	
 	MyDebugToolsWidget->GenerateDebugMenu(MyDebugDataAsset->DebugActionsArray);
 	
@@ -174,7 +169,7 @@ bool UDebugSubsystem::Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& Sh
 
 		//Set free
 		auto& Line = FreeDebugsInputs.FindOrAdd(DI->GetClass());
-		Line.Add(DI);
+		Line.FreeDebugLine.Add(DI);
 		
 		return Count >= 1;
 	}
@@ -183,7 +178,7 @@ bool UDebugSubsystem::Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& Sh
 		TSubclassOf<UDebugInput> DIClass = DI->GetClass();
 		FSharedDIMapKey SharedDIKey(SharedKeyTag, DIClass);
 		
-		TObjectPtr<UDebugInput>* DIFound = NewSharedDebugInputs.Find(SharedDIKey);
+		TObjectPtr<UDebugInput>* DIFound = SharedDebugInputs.Find(SharedDIKey);
 		if (DIFound == NULL)
 			WIZ_RET_LOG(false, "Shared DI not found", Warning, LogDebugActionsSystem);
 		
@@ -192,7 +187,7 @@ bool UDebugSubsystem::Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& Sh
 
 		//Set free
 		auto& Line = FreeDebugsInputs.FindOrAdd(DI->GetClass());
-		Line.Add(DI);
+		Line.FreeDebugLine.Add(DI);
 		
 		return true;
 	}
@@ -212,9 +207,9 @@ bool UDebugSubsystem::Internal_SetUsedDI(UDebugInput* DI, const FGameplayTag& Sh
 		TSubclassOf<UDebugInput> DIClass = DI->GetClass();
 		FSharedDIMapKey SharedDIKey(SharedKeyTag, DIClass);
 
-		int32 PreSize = NewSharedDebugInputs.Num();
-		NewSharedDebugInputs.Add(SharedDIKey, DI);
-		return PreSize < NewSharedDebugInputs.Num();
+		int32 PreSize = SharedDebugInputs.Num();
+		SharedDebugInputs.Add(SharedDIKey, DI);
+		return PreSize < SharedDebugInputs.Num();
 	}
 }
 
@@ -225,18 +220,18 @@ void UDebugSubsystem::Internal_FreeAllDebugInputs() {
 		
 		//Add in free map
 		auto& FreeDILine = FreeDebugsInputs.FindOrAdd(DI->GetClass());
-		FreeDILine.Add(DI);
+		FreeDILine.FreeDebugLine.Add(DI);
 	}
 	
 	//Find in shared using map
-	for (auto& DI : NewSharedDebugInputs) {
+	for (auto& DI : SharedDebugInputs) {
 		
 		if (DI.Value == NULL)
 			continue;
 			
 		//Add in free map
 		auto& FreeDILine = FreeDebugsInputs.FindOrAdd(DI.Value.GetClass());
-		FreeDILine.Add(DI.Value);
+		FreeDILine.FreeDebugLine.Add(DI.Value);
 		
 		//Free line at the same time to prevent rewrite
 		DI.Value = NULL;
