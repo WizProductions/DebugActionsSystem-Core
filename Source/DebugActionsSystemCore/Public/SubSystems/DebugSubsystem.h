@@ -45,9 +45,8 @@ public:
 	TMap<TSubclassOf<UDebugInput>, TSet<TObjectPtr<UDebugInput>>> FreeDebugsInputs;
 	UPROPERTY()
 	TArray<TObjectPtr<UDebugInput>> UsedDebugInputs;
-	UPROPERTY()
-	TMap<struct FGameplayTag, TObjectPtr<UDebugInput>> SharedDebugInputs;
-	TMap<struct FGameplayTag, TMap<TSubclassOf<UDebugActionBase>, TObjectPtr<UDebugActionBase>>> NewSharedDebugInputs;
+	TMap<struct FGameplayTag, TMap<TSubclassOf<UDebugInput>, TObjectPtr<UDebugInput>>> SharedDebugInputs;
+	//TMap<struct FSharedDIMapKey, TObjectPtr<UDebugInput>> NewSharedDebugInputs;
 
 //#############################################################################
 //##-------------------------------- FUNCTIONS ------------------------------##
@@ -77,7 +76,7 @@ public:
 public:
 	/** Request a debug input on specified slot. @param SharedID: is the id used to get the same input of other DA */
 	template <typename T> requires std::is_base_of_v<UDebugInput, T>
-	T* RequestDebugInput(const FGameplayTag& SharedKeyTag = DAS_SharedDIKey_UnShared);
+	T* RequestDebugInput(const FGameplayTag& SharedKeyTag = DAS_SharedDIKey_Default);
 	template <typename T> requires std::is_base_of_v<UDebugInput, T>
 	T* Internal_RegisterNewDI();
 	/**
@@ -88,8 +87,8 @@ public:
 	T* GetNewWidgetInDebugTools();
 	
 private:
-	bool Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag = DAS_SharedDIKey_UnShared);
-	bool Internal_SetUsedDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag = DAS_SharedDIKey_UnShared);
+	bool Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag);
+	bool Internal_SetUsedDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag);
 	void Internal_FreeAllDebugInputs();
 #pragma endregion
 };

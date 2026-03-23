@@ -48,6 +48,10 @@ void UDebugSubsystem::PlayerControllerChanged(APlayerController* NewPlayerContro
 	UsedDebugInputs.Empty();
 	SharedDebugInputs.Empty();
 	
+	FreeDebugsInputs.Reserve(10);
+	UsedDebugInputs.Reserve(5);
+	SharedDebugInputs.Reserve(20);
+	
 	const UDASSettings* DASSettings = GetDefault<UDASSettings>();
 	if (DASSettings == NULL)
 		WIZ_RET_LOG( , "Debug Actions System Settings not found, a critical problem occured, please contact developper.", Error, LogDebugActionsSystem);
@@ -84,8 +88,7 @@ void UDebugSubsystem::PlayerControllerChanged(APlayerController* NewPlayerContro
 	}
 	
 	MyDebugToolsWidget->GenerateDebugMenu(MyDebugDataAsset->DebugActionsArray);
-
-	//@Upgrade: replace by EnhancedInputCompoent? with register mapping context? | Keybinding in project settings category?
+	
 	//Keybindings
 	if (auto IC = NewPlayerController->InputComponent) {
 		const TArray<FKey>& DASOpenMenuKeys = MyDebugDataAsset->DASOpenMenuKeys;
@@ -176,7 +179,12 @@ bool UDebugSubsystem::Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& Sh
 	}
 	else {
 		//Remove used
-		Count = SharedDebugInputs.Remove(SharedKeyTag);
+		auto SharedDIMapOfKeyTag = SharedDebugInputs.Find(SharedKeyTag);
+		if (SharedDIMapOfKeyTag == NULL)
+			WIZ_RET_LOG(false, "Key not found", Warning, LogDebugActionsSystem);
+		
+		TSubclassOf<UDebugInput> DIClass = DI->GetClass();
+		Count = SharedDIMapOfKeyTag->Remove(DIClass);
 
 		//Set free
 		auto& Line = FreeDebugsInputs.FindOrAdd(DI->GetClass());
@@ -196,24 +204,39 @@ bool UDebugSubsystem::Internal_SetUsedDI(UDebugInput* DI, const FGameplayTag& Sh
 		return PreSize == Index;
 	}
 	else {
-		int32 PreSize = SharedDebugInputs.Num();
-		SharedDebugInputs.Add(SharedKeyTag, DI);
+		auto& SharedDIMapOfKeyTag = SharedDebugInputs.FindOrAdd(SharedKeyTag);
+		TSubclassOf<UDebugInput> DIClass = DI->GetClass();
+		int32 PreSize = SharedDIMapOfKeyTag.Num();
+		
+		SharedDIMapOfKeyTag.Add(DIClass, DI);
 
-		return PreSize == SharedDebugInputs.Num();
+		return PreSize < SharedDIMapOfKeyTag.Num();
 	}
 }
 
 void UDebugSubsystem::Internal_FreeAllDebugInputs() {
 
-	for (auto DI : UsedDebugInputs) {
-		auto& Line = FreeDebugsInputs.FindOrAdd(DI->GetClass());
-		Line.Add(DI);
+	//Find in unshared using map
+	for (auto& DI : UsedDebugInputs) {
+		
+		//Add in free map
+		auto& FreeDILine = FreeDebugsInputs.FindOrAdd(DI->GetClass());
+		FreeDILine.Add(DI);
 	}
-	for (auto DI : SharedDebugInputs) {
-		auto& Line = FreeDebugsInputs.FindOrAdd(DI.Value->GetClass());
-		Line.Add(DI.Value);
+	
+	//Find in shared using map
+	for (auto& SharedDI_Line : SharedDebugInputs) {
+		for (auto& DILine : SharedDI_Line.Value) {
+			
+			//Add in free map
+			auto& FreeDILine = FreeDebugsInputs.FindOrAdd(DILine.Value.GetClass());
+			FreeDILine.Add(DILine.Value);
+			
+			//Free line at the same time to prevent rewrite
+			DILine.Value = NULL;
+		}
 	}
 
+	//Free unshared using map
 	UsedDebugInputs.Empty();
-	SharedDebugInputs.Empty();
 }

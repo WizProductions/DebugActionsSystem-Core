@@ -8,12 +8,19 @@
 template <typename T> requires std::is_base_of_v<UDebugInput, T>
 T* UDebugSubsystem::RequestDebugInput(const FGameplayTag& SharedKeyTag) {
 
-	T* DI = NULL;
+	T* OutDI = NULL;
 	
-	//Check if DI already registered to Shared TMap
-	if (SharedKeyTag.MatchesTagExact(DAS_SharedDIKey_UnShared) == false && SharedDebugInputs.Contains(SharedKeyTag)) {
-		DI = Cast<T, UDebugInput>(SharedDebugInputs[SharedKeyTag]);
-		return DI;
+	//Check if DI is already registered on the Shared DI map
+	if (SharedKeyTag.MatchesTagExact(DAS_SharedDIKey_UnShared) == false) {
+		
+		//Is found a map associated of tag?
+		if (auto DIKeyTagMap = SharedDebugInputs.Find(SharedKeyTag)) {
+
+			if (TObjectPtr<UDebugInput> DIFound = *DIKeyTagMap->Find(T::StaticClass())) {
+				OutDI = Cast<T, UDebugInput>(DIFound);
+				return OutDI;
+			}
+		}
 	}
 	
 	//Check if DI is free
@@ -27,22 +34,22 @@ T* UDebugSubsystem::RequestDebugInput(const FGameplayTag& SharedKeyTag) {
 				//Set used to debug input recovered
 				Internal_SetUsedDI(ExistingDI, SharedKeyTag);
 				
-				DI = Cast<T>(ExistingDI);
+				OutDI = Cast<T>(ExistingDI);
 				break;
 			}
 		}
 	} 
 
-	//DI is still nullptr, no DI free -> create another one
-	if (DI == nullptr) {
-		DI = Internal_RegisterNewDI<T>();
-		Internal_SetUsedDI(DI, SharedKeyTag);
+	//DI is still nullptr, no DI free -> create new one
+	if (OutDI == nullptr) {
+		OutDI = Internal_RegisterNewDI<T>();
+		Internal_SetUsedDI(OutDI, SharedKeyTag);
 	}
 	
 
 	//Assign a slot to DI
-	if (MyDebugToolsWidget->AssignSlotToDebugInput(DI)) {
-		return DI;
+	if (MyDebugToolsWidget->AssignSlotToDebugInput(OutDI)) {
+		return OutDI;
 	}
 
 	WIZ_RET_LOG(NULL, "Request aborted, no slot available. Try to add new one in DebugToolsWidget", Error, LogDebugActionsSystem);

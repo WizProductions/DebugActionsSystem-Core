@@ -1,7 +1,8 @@
 ﻿#include "DebugActionsSystemTagsDefines.h"
 
 //==== DAS - Tags ====\\.
-DAS_DEFINE_SHARED_DI_GAMEPLAY_TAG_COMMENT(UnShared, UnShared, "Unshared debug input, default value but not common.");
+DAS_DEFINE_SHARED_DI_GAMEPLAY_TAG_COMMENT(UnShared, UnShared, "Unshared debug input, not common.");
+DAS_DEFINE_SHARED_DI_GAMEPLAY_TAG_COMMENT(Default, Default, "Shared debug input, default value.");
 DAS_DEFINE_SHARED_DI_GAMEPLAY_TAG_COMMENT(ActorComponentInstSelector_Default, ActorComponentInstSelector.Default, "Default key for actor component instance selector debug input.");
 DAS_DEFINE_SHARED_DI_GAMEPLAY_TAG_COMMENT(ActorInstSelector_Default, ActorInstSelector.Default, "Default key for actor instance selector debug input.");
 DAS_DEFINE_SHARED_DI_GAMEPLAY_TAG_COMMENT(ClassSelector_Default, ClassSelector.Default, "Default key for class selector debug input.");
