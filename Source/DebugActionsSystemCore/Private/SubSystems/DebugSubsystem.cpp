@@ -46,11 +46,11 @@ void UDebugSubsystem::PlayerControllerChanged(APlayerController* NewPlayerContro
 	
 	FreeDebugsInputs.Empty();
 	UsedDebugInputs.Empty();
-	SharedDebugInputs.Empty();
+	NewSharedDebugInputs.Empty();
 	
 	FreeDebugsInputs.Reserve(10);
 	UsedDebugInputs.Reserve(5);
-	SharedDebugInputs.Reserve(20);
+	NewSharedDebugInputs.Reserve(10);
 	
 	const UDASSettings* DASSettings = GetDefault<UDASSettings>();
 	if (DASSettings == NULL)
@@ -165,33 +165,37 @@ void UDebugSubsystem::OnFolderStateChange(bool bIsDeveloped, UDebugActionBase* I
 }
 
 bool UDebugSubsystem::Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag) {
-
-	int Count;
-
+	
 	//UnShared
 	if (SharedKeyTag.MatchesTagExact(DAS_SharedDIKey_UnShared)) {
+		
 		//Remove used
-		Count = UsedDebugInputs.RemoveSwap(DI, EAllowShrinking::Yes);
+		int Count = UsedDebugInputs.RemoveSwap(DI, EAllowShrinking::Yes);
 
 		//Set free
 		auto& Line = FreeDebugsInputs.FindOrAdd(DI->GetClass());
 		Line.Add(DI);
+		
+		return Count >= 1;
 	}
 	else {
-		//Remove used
-		auto SharedDIMapOfKeyTag = SharedDebugInputs.Find(SharedKeyTag);
-		if (SharedDIMapOfKeyTag == NULL)
-			WIZ_RET_LOG(false, "Key not found", Warning, LogDebugActionsSystem);
-		
+		//Construct key
 		TSubclassOf<UDebugInput> DIClass = DI->GetClass();
-		Count = SharedDIMapOfKeyTag->Remove(DIClass);
+		FSharedDIMapKey SharedDIKey(SharedKeyTag, DIClass);
+		
+		TObjectPtr<UDebugInput>* DIFound = NewSharedDebugInputs.Find(SharedDIKey);
+		if (DIFound == NULL)
+			WIZ_RET_LOG(false, "Shared DI not found", Warning, LogDebugActionsSystem);
+		
+		//Free used
+		DIFound = NULL;
 
 		//Set free
 		auto& Line = FreeDebugsInputs.FindOrAdd(DI->GetClass());
 		Line.Add(DI);
+		
+		return true;
 	}
-
-	return Count >= 1;
 }
 
 bool UDebugSubsystem::Internal_SetUsedDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag) {
@@ -204,13 +208,13 @@ bool UDebugSubsystem::Internal_SetUsedDI(UDebugInput* DI, const FGameplayTag& Sh
 		return PreSize == Index;
 	}
 	else {
-		auto& SharedDIMapOfKeyTag = SharedDebugInputs.FindOrAdd(SharedKeyTag);
+		//Construct key
 		TSubclassOf<UDebugInput> DIClass = DI->GetClass();
-		int32 PreSize = SharedDIMapOfKeyTag.Num();
-		
-		SharedDIMapOfKeyTag.Add(DIClass, DI);
+		FSharedDIMapKey SharedDIKey(SharedKeyTag, DIClass);
 
-		return PreSize < SharedDIMapOfKeyTag.Num();
+		int32 PreSize = NewSharedDebugInputs.Num();
+		NewSharedDebugInputs.Add(SharedDIKey, DI);
+		return PreSize < NewSharedDebugInputs.Num();
 	}
 }
 
@@ -225,16 +229,17 @@ void UDebugSubsystem::Internal_FreeAllDebugInputs() {
 	}
 	
 	//Find in shared using map
-	for (auto& SharedDI_Line : SharedDebugInputs) {
-		for (auto& DILine : SharedDI_Line.Value) {
+	for (auto& DI : NewSharedDebugInputs) {
+		
+		if (DI.Value == NULL)
+			continue;
 			
-			//Add in free map
-			auto& FreeDILine = FreeDebugsInputs.FindOrAdd(DILine.Value.GetClass());
-			FreeDILine.Add(DILine.Value);
-			
-			//Free line at the same time to prevent rewrite
-			DILine.Value = NULL;
-		}
+		//Add in free map
+		auto& FreeDILine = FreeDebugsInputs.FindOrAdd(DI.Value.GetClass());
+		FreeDILine.Add(DI.Value);
+		
+		//Free line at the same time to prevent rewrite
+		DI.Value = NULL;
 	}
 
 	//Free unshared using map

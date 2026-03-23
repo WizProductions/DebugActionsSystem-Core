@@ -4,7 +4,7 @@
 #include "Components/CanvasPanel.h"
 #include "DataAssets/DebugActionsSystemDataAsset.h"
 #include "DebugActionsSystemCoreDefines.h"
-#include "Enumerations/DebugEnums.h"
+#include "Enumerations/EDebugActionResult.h"
 #include "SubSystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotBase.h"
 
@@ -25,7 +25,7 @@ void UDebugToolsWidgetBase::GenerateDebugMenu(TArray<TObjectPtr<UDebugActionBase
     	}
 
     	if (AddDebugActionParentWidget(DebugActionIndex, 0, ChildDebugAction)) {
-    		if (ChildDebugAction->InitializeDebugAction(OutDebugActionsStored, Subsystem) == EDebugActionResult::InitHierarchy) {
+    		if (ChildDebugAction->InitializeDebugAction(OutDebugActionsStored, Subsystem) == EDebugActionResult::HierarchyInitialization) {
     			Internal_FindAndInitChildDebugActions(Subsystem, DebugActionIndex, 1, OutDebugActionsStored, ChildDebugAction);
     		}
     	}
@@ -92,7 +92,7 @@ void UDebugToolsWidgetBase::Internal_FindAndInitChildDebugActions(UDebugSubsyste
 
 		AddDebugActionChildWidget(DebugActionIndex, DepthLevel, ChildDebugAction, ParentDebugAction);
 		
-		if (ChildDebugAction->InitializeDebugAction(OutDebugActionsStored, Subsystem) == EDebugActionResult::InitHierarchy) {
+		if (ChildDebugAction->InitializeDebugAction(OutDebugActionsStored, Subsystem) == EDebugActionResult::HierarchyInitialization) {
 			Internal_FindAndInitChildDebugActions(Subsystem, DebugActionIndex, NextDepthLevel, OutDebugActionsStored, ChildDebugAction);
 		}
 

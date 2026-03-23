@@ -3,7 +3,7 @@
 #include "DebugActionsSystemTags.h"
 #include "DebugActionsSystemHelpersDefine.h"
 #include "GameplayTagsManager.h"
-#include "DebugActionsSystemHelpers/Public/Helpers/WizHelpers.h"
+#include "DebugActionsSystemHelpers/Public/Helpers/DASHelpers.h"
 #include "Interfaces/IPluginManager.h"
 
 #define LOCTEXT_NAMESPACE "FDebugActionsSystemTagsModule"

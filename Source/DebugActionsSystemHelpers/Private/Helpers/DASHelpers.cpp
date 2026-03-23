@@ -1,12 +1,12 @@
 // Copyright Wiz Productions. All Rights Reserved.
 
-#include "Helpers/WizHelpers.h"
+#include "Helpers/DASHelpers.h"
 #include "Components/GridPanel.h"
 #include "Components/RichTextBlock.h"
 #include "GameFramework/GameStateBase.h"
 #include "Kismet/GameplayStatics.h"
 
-bool WizHelpers::IsInLevelEditor() {
+bool DASHelpers::IsInLevelEditor() {
 #if UE_EDITOR
 	
 	if (!GIsEditor || IsRunningCommandlet() || !GEditor) {
@@ -20,19 +20,19 @@ bool WizHelpers::IsInLevelEditor() {
 #endif
 }
 
-bool WizHelpers::IsCurrentPlayer(const UWorld* WorldContext, int32 playerIndex, const AActor* ActorToTest) {
+bool DASHelpers::IsCurrentPlayer(const UWorld* WorldContext, int32 playerIndex, const AActor* ActorToTest) {
 
 	AActor* Actor = UGameplayStatics::GetPlayerPawn(WorldContext, playerIndex);
 	//if Actor or ActorToTest is nullptr, both are different -> not player
 	return (ActorToTest && Actor == ActorToTest);
 }
 
-void WizHelpers::DisableCollisionOfComponent(UPrimitiveComponent* Component) {
+void DASHelpers::DisableCollisionOfComponent(UPrimitiveComponent* Component) {
 	Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Component->SetGenerateOverlapEvents(false);
 }
 
-void WizHelpers::ForceGridPanelUpdate(UGridPanel* GridPanel) {
+void DASHelpers::ForceGridPanelUpdate(UGridPanel* GridPanel) {
 	
 	if (!GridPanel)
 		return;
@@ -71,7 +71,7 @@ void WizHelpers::ForceGridPanelUpdate(UGridPanel* GridPanel) {
 	SlateWidget->Invalidate(EInvalidateWidgetReason::Layout);
 }
 
-bool WizHelpers::IsHosting(UWorld* ContextWorld) {
+bool DASHelpers::IsHosting(UWorld* ContextWorld) {
 	
 	if (!ContextWorld) {
 		WIZ_RET_LOG(false, "World invalid to check hosting!", Error);
@@ -83,7 +83,7 @@ bool WizHelpers::IsHosting(UWorld* ContextWorld) {
 	return false;
 }
 
-bool WizHelpers::IsClientOfHost(UWorld* ContextWorld) {
+bool DASHelpers::IsClientOfHost(UWorld* ContextWorld) {
 	
 	if (!ContextWorld) {
 		WIZ_RET_LOG(true, "World invalid to check client!", Error);
@@ -95,7 +95,7 @@ bool WizHelpers::IsClientOfHost(UWorld* ContextWorld) {
 	return false;
 }
 
-bool WizHelpers::IsStandaloneWorld(UWorld* ContextWorld) {
+bool DASHelpers::IsStandaloneWorld(UWorld* ContextWorld) {
 
 	if (!ContextWorld) {
 		WIZ_RET_LOG(true, "World invalid to check standalone!", Error);
@@ -108,7 +108,7 @@ bool WizHelpers::IsStandaloneWorld(UWorld* ContextWorld) {
 	
 }
 
-bool WizHelpers::IsStandaloneWorldOrAloneInServer(UWorld* ContextWorld) {
+bool DASHelpers::IsStandaloneWorldOrAloneInServer(UWorld* ContextWorld) {
 	
 	if (!ContextWorld) {
 		WIZ_RET_LOG(true, "World invalid to check standalone!", Error);
@@ -119,7 +119,7 @@ bool WizHelpers::IsStandaloneWorldOrAloneInServer(UWorld* ContextWorld) {
 		WIZ_RET_LOG(true, "GameState invalid to check alone!", Error);
 	}
 	
-	if (WizHelpers::IsClientOfHost(ContextWorld))
+	if (DASHelpers::IsClientOfHost(ContextWorld))
 		return false;
 	
 	int NumPlayers = GameState->PlayerArray.Num();
@@ -133,13 +133,13 @@ bool WizHelpers::IsStandaloneWorldOrAloneInServer(UWorld* ContextWorld) {
 	return (bStandalone or bAlone);
 }
 
-void WizHelpers::SetRichText(URichTextBlock* RichTextBlock, const FText& Text, const FText& RichID) {
+void DASHelpers::SetRichText(URichTextBlock* RichTextBlock, const FText& Text, const FText& RichID) {
 	RichTextBlock->SetText(FText::FromString(FString::Printf(TEXT("<%s>%s</>"), *RichID.ToString(), *Text.ToString())));
 }
 
 #pragma region Logs
 #if !UE_BUILD_SHIPPING
-void WizHelpers::PrivateInternal_WizDebugLog(
+void DASHelpers::PrivateInternal_WizDebugLog(
 	const ANSICHAR* FunctionSignature,
 	int32 FileLine,
 	const FString& Message,
@@ -153,7 +153,7 @@ void WizHelpers::PrivateInternal_WizDebugLog(
 	
 	FString FinalMessage = Message;
 	if (FunctionSignature) {
-		FString Prefix = WizHelpers::ParseFunctionPrefixFromAnsi(FunctionSignature, FileLine);
+		FString Prefix = DASHelpers::ParseFunctionPrefixFromAnsi(FunctionSignature, FileLine);
 		if (!Prefix.IsEmpty()) {
 			FinalMessage = FString::Printf(TEXT("%s %s"), *Prefix, *Message);
 		}
@@ -186,7 +186,7 @@ void WizHelpers::PrivateInternal_WizDebugLog(
 	}
 }
 
-FString WizHelpers::ParseFunctionPrefixFromString(FString FunctionSignature, int32 Line) {
+FString DASHelpers::ParseFunctionPrefixFromString(FString FunctionSignature, int32 Line) {
 	int32 ParenIdx = INDEX_NONE;
 	if (FunctionSignature.FindChar('(', ParenIdx)) {
 		FunctionSignature = FunctionSignature.Left(ParenIdx);
@@ -218,7 +218,7 @@ FString WizHelpers::ParseFunctionPrefixFromString(FString FunctionSignature, int
 	}
 }
 
-FString WizHelpers::ParseFunctionPrefixFromAnsi(const ANSICHAR* FunctionSignatureAnsi, int32 Line) {
+FString DASHelpers::ParseFunctionPrefixFromAnsi(const ANSICHAR* FunctionSignatureAnsi, int32 Line) {
 	if (!FunctionSignatureAnsi) {
 		return Line >= 0
 				   ? FString::Printf(TEXT("?(%d):"), Line)
@@ -227,7 +227,7 @@ FString WizHelpers::ParseFunctionPrefixFromAnsi(const ANSICHAR* FunctionSignatur
 	return ParseFunctionPrefixFromString(ANSI_TO_TCHAR(FunctionSignatureAnsi), Line);
 }
 
-FString WizHelpers::ParseFunctionPrefixFromTChar(const TCHAR* FunctionSignatureTChar, int32 Line) {
+FString DASHelpers::ParseFunctionPrefixFromTChar(const TCHAR* FunctionSignatureTChar, int32 Line) {
 	if (!FunctionSignatureTChar) {
 		return Line >= 0
 				   ? FString::Printf(TEXT("?(%d):"), Line)

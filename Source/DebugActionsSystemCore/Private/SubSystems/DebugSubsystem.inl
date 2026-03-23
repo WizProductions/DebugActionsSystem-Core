@@ -13,11 +13,15 @@ T* UDebugSubsystem::RequestDebugInput(const FGameplayTag& SharedKeyTag) {
 	//Check if DI is already registered on the Shared DI map
 	if (SharedKeyTag.MatchesTagExact(DAS_SharedDIKey_UnShared) == false) {
 		
+		//Construct the key
+		TSubclassOf<UDebugInput> DIClass = T::StaticClass();
+		FSharedDIMapKey SharedDIKey(SharedKeyTag, DIClass);
+		
 		//Is found a map associated of tag?
-		if (auto DIKeyTagMap = SharedDebugInputs.Find(SharedKeyTag)) {
-
-			if (TObjectPtr<UDebugInput> DIFound = *DIKeyTagMap->Find(T::StaticClass())) {
-				OutDI = Cast<T, UDebugInput>(DIFound);
+		if (TObjectPtr<UDebugInput>* DIFound = NewSharedDebugInputs.Find(SharedDIKey)) {
+			//Is the pointer wrapper valid?
+			if (DIFound && *DIFound) {
+				OutDI = Cast<T, UDebugInput>(*DIFound);
 				return OutDI;
 			}
 		}

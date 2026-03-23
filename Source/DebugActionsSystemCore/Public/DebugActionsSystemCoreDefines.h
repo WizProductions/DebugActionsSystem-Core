@@ -3,7 +3,7 @@
 #pragma once
 
 #include "NativeGameplayTags.h"
-#include "Helpers/WizHelpers.h"
+#include "Helpers/DASHelpers.h"
 #include "DebugActionsSystemHelpersDefine.h"
 
 //==== DAS - Log Macros ====\\.
@@ -15,5 +15,4 @@
 EDebugActionResult Result = Super::ExecuteDebugAction(); \
 if (Result == EDebugActionResult::Fail) { \
 DAS_WIZ_RET_LOG_RED(Result, "A problem occured while execute the debug action.", Error); \
-return Result; \
 }

@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DebugActionsSystemCoreDefines.h"
 #include "DebugActionsSystemTagsDefines.h"
 #include "Inputs/DebugInput.h"
+#include "Structs/SharedDIMapKey.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "DebugSubsystem.generated.h"
 
@@ -45,8 +45,8 @@ public:
 	TMap<TSubclassOf<UDebugInput>, TSet<TObjectPtr<UDebugInput>>> FreeDebugsInputs;
 	UPROPERTY()
 	TArray<TObjectPtr<UDebugInput>> UsedDebugInputs;
-	TMap<struct FGameplayTag, TMap<TSubclassOf<UDebugInput>, TObjectPtr<UDebugInput>>> SharedDebugInputs;
-	//TMap<struct FSharedDIMapKey, TObjectPtr<UDebugInput>> NewSharedDebugInputs;
+	UPROPERTY()
+	TMap<FSharedDIMapKey, TObjectPtr<UDebugInput>> NewSharedDebugInputs;
 
 //#############################################################################
 //##-------------------------------- FUNCTIONS ------------------------------##

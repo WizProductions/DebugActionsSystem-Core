@@ -1,7 +1,7 @@
 ﻿// Copyright Wiz Corporation. All Rights Reserved.
 
 #include "Actions/DebugActionBase.h"
-#include "Enumerations/DebugEnums.h"
+#include "Enumerations/EDebugActionResult.h"
 #include "WidgetBases/DebugActionWidgetBase.h"
 
 EDebugActionResult UDebugActionBase::InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutDebugActionsHierarchy, UDebugSubsystem* Subsystem) {

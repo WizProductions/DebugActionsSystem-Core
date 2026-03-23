@@ -17,15 +17,16 @@ UCLASS(BlueprintType)
 class DEBUGACTIONSSYSTEMCORE_API UDebugActionsSystemDataAsset : public UPrimaryDataAsset {
 	GENERATED_BODY()
 
-//##############################################################################
-//##------------------------------- ATTRIBUTES -------------------------------##-
-//##############################################################################
+//#############################################################################
+//##--------------------------- PUBLIC ATTRIBUTES ---------------------------##
+//#############################################################################
 	
 public:
 	//==== Settings ====\\.
 	UPROPERTY(Category="Actions", EditInstanceOnly, Instanced)
 	TArray<TObjectPtr<UDebugActionBase>> DebugActionsArray;
 	UPROPERTY(Category="Keybinds", EditInstanceOnly, BlueprintReadOnly)
+	// ReSharper disable once UnrealHeaderToolError //- bug, FKey not found but existing
 	TArray<FKey> DASOpenMenuKeys;
 	UPROPERTY(Category="UI", EditInstanceOnly, BlueprintReadOnly)
 	FVector2D FirstDebugActionWidgetPos = { 100.f, 100.f };
@@ -33,19 +34,10 @@ public:
 	FVector2D DebugActionsWidgetsOffset = { 300.f, 50.f };
 
 //#############################################################################
-//##------------------------------- FUNCTIONS -------------------------------##
+//##-------------------------------- METHODS --------------------------------##
 //#############################################################################
-
-public:
-	UDebugActionsSystemDataAsset() {}
-
 
 #ifdef WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-#endif
-
-//#############################################################################
-//##------------------------------- REFLECTED -------------------------------##
-//#############################################################################
-	
+#endif	
 };

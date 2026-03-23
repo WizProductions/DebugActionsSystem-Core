@@ -32,9 +32,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_ActorComponentInstanceSelector : public UDe
 
 	//==== Delegates ====\\.
 private:
-	/* Delegates */
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInputValueChange);
-	
 public:
 	FOnInputValueChange OnInputValueChange;
 	

@@ -2,21 +2,11 @@
 
 #pragma once
 
-// this macro doesn't work, because UBT try to parse before c++ compilation (macro not expanded -> ubt not found UPARAM -> unknown class, delegate, struct...)
-#define UPARAM_TEXTURE_ONLY_PTR \
-UPARAM(meta=( \
-AllowPrivateAccess="true", \
-DisplayThumbnail="true", \
-DisplayName="Image", \
-AllowedClasses= "/Script/Engine.Texture,/Script/Engine.MaterialInterface,/Script/Engine.SlateTextureAtlasInterface", \
-DisallowedClasses = "/Script/MediaAssets.MediaTexture") \
-) class UObject*
-
 enum class ETriggerEvent : uint8;
 class UGridPanel;
 class URichTextBlock;
 
-namespace WizHelpers {
+namespace DASHelpers {
 
 	//#############################################################################
 	//##-------------------------------- HELPERS --------------------------------##
@@ -54,7 +44,7 @@ namespace WizHelpers {
 *		FColor OnScreenMessageColor = FColor::White\n
 */
 #define WIZ_LOG(Message, Verbosity, ...) \
-WizHelpers::PrivateInternal_WizDebugLog(WIZ_FUNCTION_SIG, __LINE__, Message, ELogVerbosity::Type::Verbosity, ##__VA_ARGS__)
+DASHelpers::PrivateInternal_WizDebugLog(WIZ_FUNCTION_SIG, __LINE__, Message, ELogVerbosity::Type::Verbosity, ##__VA_ARGS__)
 
 /** A specific version of WIZ_LOG with a return value. \n
 *   eg: WIZ_RET_LOG( , "Access denied", Error) \n
@@ -147,5 +137,5 @@ do { \
 };
 
 #if CPP
-#include "WizHelpers.inl"
+#include "DASHelpers.inl"
 #endif

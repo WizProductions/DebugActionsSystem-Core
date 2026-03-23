@@ -24,7 +24,7 @@ ENUM_CLASS_FLAGS(EWidgetStyleMode) // Macro to add bitwise operations
 
 */
 UCLASS()
-class DEBUGACTIONSSYSTEMCORE_API UDASFunctionLibrary : public UBlueprintFunctionLibrary {
+class DEBUGACTIONSSYSTEMHELPERS_API UDASFunctionLibrary : public UBlueprintFunctionLibrary {
 	GENERATED_BODY()
 	
 //#############################################################################
@@ -35,7 +35,20 @@ public:
 	/** Returns all derived classes of ParentClass loaded in the game */
 	UFUNCTION(BlueprintCallable)
 	static void GetAllDerivedClasses(TSubclassOf<UObject> ParentClass, TArray<UClass*>& OutSubClasses, bool bIncludeAbstract = false);
-
+	
+	UFUNCTION(BlueprintPure, Category = "Debug", meta = (DefaultToSelf = "ContextObject", HidePin = "ContextObject"))
+	static FString GetBlueprintPMethodPrefix(const UObject* ContextObject, FString MethodName);
+	
+	static void K2_WizLog(
+		const UObject* ContextObject, 
+		FString MethodName,
+		const FString& Message            = "",
+		bool bAddLogMessage				  = false,
+		FColor OnScreenMessageColor       = FColor::White,
+		float OnScreenMessageDuration     = 7.f,
+		uint64 OnScreenMessageKey         = INDEX_NONE
+	);
+	
 	UFUNCTION(BlueprintCallable)
 	static void SetImageOfButtonStyles(
 		class UButton* ButtonWidget,
@@ -53,19 +66,6 @@ public:
 		class UButton* ButtonWidget,
 		ESlateBrushDrawType::Type DrawAsType,
 		UPARAM(meta=(Bitmask, BitmaskEnum="/Script/DebugActionsSystem.EWidgetStyleMode")) int32 WidgetStyleModesMask = 15
-	);
-	
-	UFUNCTION(BlueprintPure, Category = "Debug", meta = (DefaultToSelf = "ContextObject", HidePin = "ContextObject"))
-	static FString GetBlueprintPMethodPrefix(const UObject* ContextObject, FString MethodName);
-	
-	static void K2_WizLog(
-		const UObject* ContextObject, 
-		FString MethodName,
-		const FString& Message            = "",
-		bool bAddLogMessage				  = false,
-		FColor OnScreenMessageColor       = FColor::White,
-		float OnScreenMessageDuration     = 7.f,
-		uint64 OnScreenMessageKey         = INDEX_NONE
 	);
 	
 	template <typename T>
@@ -88,5 +88,5 @@ public:
 };
 
 #if CPP
-#include "BlueprintFunctionsLibraries/DASFunctionLibrary.inl"
+#include "DASFunctionLibrary.inl"
 #endif

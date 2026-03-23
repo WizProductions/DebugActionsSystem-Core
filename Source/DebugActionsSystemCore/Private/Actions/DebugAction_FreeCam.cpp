@@ -3,7 +3,7 @@
 #include "Actions/DebugAction_FreeCam.h"
 #include "DebugActionsSystemCoreDefines.h"
 #include "Engine/DebugCameraController.h"
-#include "Enumerations/DebugEnums.h"
+#include "Enumerations/EDebugActionResult.h"
 #include "Inputs/DI_LocalPlayerSelector.h"
 #include "SubSystems/DebugSubsystem.h"
 

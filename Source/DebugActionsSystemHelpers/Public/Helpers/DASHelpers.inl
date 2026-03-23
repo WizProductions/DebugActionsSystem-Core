@@ -3,7 +3,7 @@
 #pragma once
 
 template <typename C>
-C* WizHelpers::AddComponentInConstruction(AActor* Owner, EComponentMobility::Type MobilityType) {
+C* DASHelpers::AddComponentInConstruction(AActor* Owner, EComponentMobility::Type MobilityType) {
 	
 	C* Component = NewObject<C>(Owner);
 	Component->SetMobility(MobilityType);

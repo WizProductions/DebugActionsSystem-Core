@@ -2,7 +2,7 @@
 
 #include "WidgetBases/DebugActionWidgetBase.h"
 #include "Actions/DebugActionBase.h"
-#include "Enumerations/DebugEnums.h"
+#include "Enumerations/EDebugActionResult.h"
 #include "SubSystems/DebugSubsystem.h"
 
 #define LOCTEXT_NAMESPACE "UMG"

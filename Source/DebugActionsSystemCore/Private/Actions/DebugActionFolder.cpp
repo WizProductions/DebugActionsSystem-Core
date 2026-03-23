@@ -3,7 +3,7 @@
 #include "Actions/DebugActionFolder.h"
 #include "DebugActionsSystemCoreDefines.h"
 #include "DataAssets/DebugActionsSystemDataAsset.h"
-#include "Enumerations/DebugEnums.h"
+#include "Enumerations/EDebugActionResult.h"
 #include "SubSystems/DebugSubsystem.h"
 
 #if WITH_EDITOR
@@ -34,7 +34,7 @@ EDebugActionResult UDebugActionFolder::InitializeDebugAction(TArray<TObjectPtr<U
 	Super::InitializeDebugAction(OutActions, Subsystem);
 	
 	OutActions = DebugActionsStored;
-	return EDebugActionResult::InitHierarchy;
+	return EDebugActionResult::HierarchyInitialization;
 }
 
 void UDebugActionFolder::SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int DepthRecursivity) {

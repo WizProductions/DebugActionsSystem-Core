@@ -6,7 +6,7 @@
 #include "DebugInput.generated.h"
 
 //#############################################################################
-//##-------------------------------- STRUCTURE ------------------------------##
+//##---------------------------------- CLASS --------------------------------##
 //#############################################################################
 
 
@@ -28,6 +28,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Settings")
 	FVector2D DebugInputSize = FVector2D(120, 65);
 	
+protected:
 	//==== Properties ====\\.
 	UPROPERTY(BlueprintReadOnly, Category = "References")
 	TObjectPtr<class UWidget> MyWidget = NULL;
