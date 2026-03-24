@@ -10,15 +10,13 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "DebugSubsystem.generated.h"
 
-//Replace the direct link to debug tools menu and DataAsset to find? Get default asset in c++? try add a new debug action in project folder (not plugin)
-
 //#############################################################################
 //##--------------------------------- CLASS ---------------------------------##
 //#############################################################################
 
 //@Upgrade: add a bool in the dataasset to enable/disable DAS
 /**
- * DebugSystem, manage DebugActions and DebugInputs
+ * The DebugSubsystem is the core of Debug Actions System, it manages all actions, inputs and links to widgets.
  */
 UCLASS()
 class DEBUGACTIONSSYSTEMCORE_API UDebugSubsystem : public ULocalPlayerSubsystem
@@ -28,18 +26,15 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugSubsystem : public ULocalPlayerSubsystem
 //#############################################################################
 //##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
-	
-private:
-	bool bDebugSystemInitialized : 1 = false;
-	bool bDebugSystemOpened : 1 = false;
 
-	/* Assets */
-	UPROPERTY(Category="Debug Properties", BlueprintGetter="GetDebugDataAsset")
-	TObjectPtr<class UDebugActionsSystemDataAsset> MyDebugDataAsset = nullptr;
-	UPROPERTY()
-	TObjectPtr<class UDebugToolsWidgetBase> MyDebugToolsWidget = nullptr;
-	UPROPERTY()
-	TObjectPtr<class UDebugActionBase> LastFolderClicked = nullptr;
+protected:
+	//==== References ====\\.
+	UPROPERTY(BlueprintReadWrite, BlueprintGetter="GetDebugDataAsset", Category="Debug Properties")
+	TObjectPtr<class UDebugActionsSystemDataAsset> MyDebugDataAsset = NULL;
+	UPROPERTY(BlueprintReadWrite)
+	TObjectPtr<class UDebugPanelWidgetBase> MyDebugPanelWidget = NULL;
+	UPROPERTY(BlueprintReadWrite)
+	TObjectPtr<class UDebugActionBase> LastFolderClicked = NULL;
 
 public:
 	UPROPERTY()
@@ -48,13 +43,16 @@ public:
 	TArray<TObjectPtr<UDebugInput>> UsedDebugInputs;
 	UPROPERTY()
 	TMap<FSharedDIMapKey, TObjectPtr<UDebugInput>> SharedDebugInputs;
+	
+private:
+	//==== Flags ====\\.
+	bool bDebugSystemOpened : 1 = false;
 
 //#############################################################################
 //##-------------------------------- FUNCTIONS ------------------------------##
 //#############################################################################
 	
 public:
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	static UDebugSubsystem* Get(const UObject* WorldContextObject);
 
 #pragma region Debug Actions System
@@ -62,30 +60,30 @@ public:
 private:
 	void OnDebugMenuKeyPressed();
 public:
-	UDebugToolsWidgetBase* GetDebugToolsWidget() const { return MyDebugToolsWidget; }
+	UDebugPanelWidgetBase* GetDebugPanelWidget() const { return MyDebugPanelWidget; }
 	UFUNCTION(Category="Debug Action", BlueprintCallable)
 	UDebugActionsSystemDataAsset* GetDebugDataAsset() const { return MyDebugDataAsset; }
 #pragma endregion
 
 #pragma region Debug Actions
 public:
-	void OnDebugToolsWidgetVisibilityChange(bool bVisible);
+	void OnDebugPanelWidgetVisibilityChange(bool bVisible);
 	void OnFolderStateChange(bool bIsDeveloped, class UDebugActionBase* InDebugActionFolder);
 #pragma endregion
 
 #pragma region Debug Inputs
 public:
-	/** Request a debug input on specified slot. @param SharedID: is the id used to get the same input of other DA */
+	/** Request a debug input on specified slot. @param SharedKeyTag: is the id used to get the same input of other DA */
 	template <typename T> requires std::is_base_of_v<UDebugInput, T>
 	T* RequestDebugInput(const FGameplayTag& SharedKeyTag = DAS_SharedDIKey_Default);
 	template <typename T> requires std::is_base_of_v<UDebugInput, T>
 	T* Internal_RegisterNewDI();
 	/**
-	 * Create a widget T type and can be directly added to DebugTools Tree.\n
-	 * <b>WARNING:</b> Do not use this method during initialization of the debug tools widget because if the tree is not fully initialized, the game crashes.
+	 * Create a widget T type and can be directly added to Debug Panel Tree.\n
+	 * <b>WARNING:</b> Do not use this method during initialization of the debug panel widget because if the tree is not fully initialized, the game crashes.
 	 */
 	template <typename T> requires std::is_base_of_v<UWidget, T>
-	T* GetNewWidgetInDebugTools();
+	T* GetNewWidgetInDebugPanel();
 	
 private:
 	bool Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag);

@@ -17,7 +17,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionFolder : public UDebugActionBase {
 	GENERATED_BODY()
 
 //#############################################################################
-//##------------------------------- ATTRIBUTES ------------------------------##
+//##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
 	
 public:
@@ -25,7 +25,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	FText DebugFolderTitle = FText::FromString("DefaultFolder");
 	
-	UPROPERTY(EditDefaultsOnly, Instanced)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced, meta = (TitleProperty = "Private_DataAssetActionTitle"))
 	TArray<TObjectPtr<UDebugActionBase>> DebugActionsStored;
 
 //#############################################################################
@@ -33,6 +33,8 @@ public:
 //#############################################################################
 
 #if WITH_EDITOR
+	virtual void UpdateEditorDataAssetTitle() override;
+	virtual void PostLoad() override;
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
 	

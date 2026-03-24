@@ -7,7 +7,7 @@
 #include "Components/TextBlock.h"
 #include "Components/VerticalBoxSlot.h"
 #include "SubSystems/DebugSubsystem.h"
-#include "WidgetBases/DebugToolsWidgetBase.h"
+#include "WidgetBases/DebugPanelWidgetBase.h"
 
 #define LOCTEXT_NAMESPACE "UMG"
 
@@ -18,25 +18,24 @@ void UDebugInputSlotBase::NativeConstruct() {
 	
 	//==== INIT ====\\.
 	if (!((MySlot = Cast<UCanvasPanelSlot>(Slot)))) {
-		WIZ_RET_LOG( , "CanvasSlot is not valid. Are you sure Debug Input Slot is a child of Canvas?", Error, LogDebugActionsSystem);
+		WIZ_RET_LOG( , "CanvasSlot not valid. Are you sure Debug Input Slot is a child of Canvas?", Error, LogDebugActionsSystem);
 	}
 
-	InputWidgetSlot = Cast<UCanvasPanelSlot>(InputNamedSlot->Slot);
+	InputWidgetSlot = Cast<UCanvasPanelSlot>(NS_InputSlot->Slot);
 
-	//First outer -> Widget tree -> outer -> Debug Tools
+	//First outer -> Widget tree -> outer -> Debug Panel
 	UObject* Owner = GetOuter()->GetOuter();
-	UDebugToolsWidgetBase* DebugToolsWidget = UDebugSubsystem::Get(GetWorld())->GetDebugToolsWidget();
+	UDebugPanelWidgetBase* DebugPanelWidget = UDebugSubsystem::Get(GetWorld())->GetDebugPanelWidget();
 
 	//This widget is a child of existing Debug Tools
-	if (Owner != DebugToolsWidget) {
-		UE_LOG(LogDebugActionsSystem, Error, TEXT("DebugInputSlot::NativeConstruct: DebugInputSlot is not a child of UDebugToolsWidget"));
-		return;
+	if (Owner != DebugPanelWidget) {
+		WIZ_RET_LOG( , "DebugInputSlot is not a child of UDebugPanelWidget", Error, LogDebugActionsSystem);
 	}
 
 	MySlot->SetAutoSize(true); //Size to content: true
 	this->SetVisibility(ESlateVisibility::Collapsed);
 	
-	DebugToolsWidget->RegisterDebugInputSlot(this);
+	DebugPanelWidget->RegisterDebugInputSlot(this);
 }
 
 #if WITH_EDITOR
@@ -46,18 +45,18 @@ const FText UDebugInputSlotBase::GetPaletteCategory() {
 #endif
 
 
-UWidget* UDebugInputSlotBase::GetInputWidget() const { return InputNamedSlot->GetContent(); }
+UWidget* UDebugInputSlotBase::GetInputWidget() const { return NS_InputSlot ? NS_InputSlot->GetContent() : NULL; }
 
 void UDebugInputSlotBase::SetInputWidget(UDebugInput* InDebugInput) {
 
 	//Clear Content
 	if (InDebugInput == nullptr) {
-		InputNamedSlot->ClearChildren();
+		NS_InputSlot->ClearChildren();
 		return;
 	}
 
 	//eg: floatSlider wanted? => send to namedSlot
-	InputNamedSlot->SetContent(InDebugInput->GetMyWidget());
+	NS_InputSlot->SetContent(InDebugInput->GetMyWidget());
 	
 	bIsUsed = true;
 	this->SetVisibility(ESlateVisibility::Visible);
@@ -71,6 +70,4 @@ void UDebugInputSlotBase::RemoveInputWidget() {
 	this->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UDebugInputSlotBase::SetTitle(const FText& InTitle) { InputTitle->SetText(InTitle); }
-void UDebugInputSlotBase::SetInputSlotWidget(UNamedSlot* InNamedSlot) { InputNamedSlot = InNamedSlot; }
-void UDebugInputSlotBase::SetInputTitleWidget(UTextBlock* InTextBlock) { InputTitle = InTextBlock; }
+void UDebugInputSlotBase::SetTitle(const FText& InTitle) { TB_InputTitle->SetText(InTitle); }

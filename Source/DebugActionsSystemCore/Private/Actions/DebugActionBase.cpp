@@ -4,6 +4,18 @@
 #include "Enumerations/EDebugActionResult.h"
 #include "WidgetBases/DebugActionWidgetBase.h"
 
+#if WITH_EDITOR
+void UDebugActionBase::PostInitProperties() {
+	Super::PostInitProperties();
+	
+	UpdateEditorDataAssetTitle();
+}
+
+void UDebugActionBase::UpdateEditorDataAssetTitle() {
+	Private_DataAssetActionTitle = GetDebugActionTitle().ToString();
+}
+#endif
+
 EDebugActionResult UDebugActionBase::InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutDebugActionsHierarchy, UDebugSubsystem* Subsystem) {
 	
 	bDebugActionState = false;

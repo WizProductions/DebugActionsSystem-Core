@@ -11,7 +11,8 @@
 //#############################################################################
 
 /**
-* Default.
+* An input that allows you to select a float value between ranges. \n
+* <b>Setup is recommended but optional</b>
 */
 UCLASS()
 class DEBUGACTIONSSYSTEMCORE_API UDI_FloatSlider : public UDebugInput {
@@ -20,12 +21,14 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_FloatSlider : public UDebugInput {
 //#############################################################################
 //##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
-
-	UPROPERTY()
+	
+	//==== Exposed Properties ====\\.
+public:
+	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<class USpinBox> MySpinBox;
 
 //#############################################################################
-//##------------------------------- FUNCTIONS -------------------------------##
+//##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 
 public:

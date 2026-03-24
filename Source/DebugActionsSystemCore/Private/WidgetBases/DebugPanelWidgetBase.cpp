@@ -1,6 +1,6 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
-#include "WidgetBases/DebugToolsWidgetBase.h"
+#include "WidgetBases/DebugPanelWidgetBase.h"
 #include "Components/CanvasPanel.h"
 #include "DataAssets/DebugActionsSystemDataAsset.h"
 #include "DebugActionsSystemCoreDefines.h"
@@ -10,7 +10,7 @@
 
 #define LOCTEXT_NAMESPACE "UMG"
 
-void UDebugToolsWidgetBase::GenerateDebugMenu(TArray<TObjectPtr<UDebugActionBase>>& DebugActions) {
+void UDebugPanelWidgetBase::GenerateDebugMenu(TArray<TObjectPtr<UDebugActionBase>>& DebugActions) {
 
 	int DebugActionIndex = 0;
     TArray<TObjectPtr<UDebugActionBase>> OutDebugActionsStored;
@@ -38,12 +38,12 @@ void UDebugToolsWidgetBase::GenerateDebugMenu(TArray<TObjectPtr<UDebugActionBase
 }
 
 #if WITH_EDITOR
-const FText UDebugToolsWidgetBase::GetPaletteCategory() {
+const FText UDebugPanelWidgetBase::GetPaletteCategory() {
 	return LOCTEXT("Debug Actions System", "Debug Actions System");
 }
 #endif
 
-void UDebugToolsWidgetBase::Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder) {
+void UDebugPanelWidgetBase::Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder) {
 	
 	int DADepthLevel = InDebugActionFolder->GetDepthLevel();
 
@@ -57,7 +57,7 @@ void UDebugToolsWidgetBase::Internal_UpdateDebugActionsDepthLevelsArray(UDebugAc
 	}
 }
 
-void UDebugToolsWidgetBase::OnFolderStateChange(bool bIsDeveloped, bool bIsNewFolderClicked, UDebugActionBase* InDebugActionFolder) {
+void UDebugPanelWidgetBase::OnFolderStateChange(bool bIsDeveloped, bool bIsNewFolderClicked, UDebugActionBase* InDebugActionFolder) {
 	Internal_UpdateDebugActionsDepthLevelsArray(InDebugActionFolder);
 	
 	if (bIsNewFolderClicked == false) {
@@ -65,14 +65,14 @@ void UDebugToolsWidgetBase::OnFolderStateChange(bool bIsDeveloped, bool bIsNewFo
 	}
 }
 
-UDebugActionBase* UDebugToolsWidgetBase::GetDebugActionByDepth(int Depth) const {
+UDebugActionBase* UDebugPanelWidgetBase::GetDebugActionByDepth(int Depth) const {
 	if (DebugActionsDepthsArray.Num() < Depth)
 		WIZ_RET_LOG(NULL, "Depth target is out of bounds.", Warning, LogDebugActionsSystem);
 	
 	return DebugActionsDepthsArray[Depth];
 }
 
-void UDebugToolsWidgetBase::Internal_FindAndInitChildDebugActions(UDebugSubsystem* Subsystem, int ParentDebugActionIndex, int DepthLevel, TArray<TObjectPtr<UDebugActionBase>>& ChildDebugActions, TObjectPtr<UDebugActionBase> ParentDebugAction) {
+void UDebugPanelWidgetBase::Internal_FindAndInitChildDebugActions(UDebugSubsystem* Subsystem, int ParentDebugActionIndex, int DepthLevel, TArray<TObjectPtr<UDebugActionBase>>& ChildDebugActions, TObjectPtr<UDebugActionBase> ParentDebugAction) {
 	
 	//At this point, the debug action is a folder
 	int DebugActionIndex = 0;
@@ -81,12 +81,11 @@ void UDebugToolsWidgetBase::Internal_FindAndInitChildDebugActions(UDebugSubsyste
 	
 	TArray<TObjectPtr<UDebugActionBase>> OutDebugActionsStored;
 	
-	//For every debugAction check children
-	//Recursivity
+	//For every debugAction check children recursively
 	for (auto ChildDebugAction : ChildDebugActions) {
 
 		if (ChildDebugAction == nullptr) {
-			UE_LOG(LogDebugActionsSystem, Error, TEXT("DebugToolsWidgetBase::InitDebugActions(): a ChildDebugAction is nullptr!"));
+			WIZ_LOG("A ChildDebugAction invalid", Error, LogDebugActionsSystem);
 			continue;
 		}
 
@@ -100,14 +99,14 @@ void UDebugToolsWidgetBase::Internal_FindAndInitChildDebugActions(UDebugSubsyste
 	}
 }
 
-void UDebugToolsWidgetBase::RegisterDebugInputSlot(UDebugInputSlotBase* InDebugInputSlot) {
+void UDebugPanelWidgetBase::RegisterDebugInputSlot(UDebugInputSlotBase* InDebugInputSlot) {
 
 	if (InDebugInputSlot) {
 		DebugInputsSlotRegistered.Add(InDebugInputSlot);
 	}
 }
 
-bool UDebugToolsWidgetBase::AssignSlotToDebugInput(class UDebugInput* InDebugInput) {
+bool UDebugPanelWidgetBase::AssignSlotToDebugInput(class UDebugInput* InDebugInput) {
 
 	if (InDebugInput) {
 		for (auto DISlot : DebugInputsSlotRegistered) {
@@ -123,7 +122,7 @@ bool UDebugToolsWidgetBase::AssignSlotToDebugInput(class UDebugInput* InDebugInp
 	return false;
 }
 
-bool UDebugToolsWidgetBase::UnassignSlotToDebugInput(class UDebugInput* InDebugInput) {
+bool UDebugPanelWidgetBase::UnassignSlotToDebugInput(class UDebugInput* InDebugInput) {
 
 	if (InDebugInput) {
 		for (auto DISlot : DebugInputsSlotRegistered) {
@@ -146,7 +145,7 @@ bool UDebugToolsWidgetBase::UnassignSlotToDebugInput(class UDebugInput* InDebugI
 	return false;
 }
 
-void UDebugToolsWidgetBase::ClearSlotsAssigment() {
+void UDebugPanelWidgetBase::ClearSlotsAssigment() {
 	for (auto DISlot : DebugInputsSlotRegistered) {
 		if (DISlot->IsUsed()) {
 
@@ -160,21 +159,21 @@ void UDebugToolsWidgetBase::ClearSlotsAssigment() {
 	}
 }
 
-void UDebugToolsWidgetBase::SetDebugInputSlotsRegisteredVisibility(ESlateVisibility InVisibility) {
+void UDebugPanelWidgetBase::SetDebugInputSlotsRegisteredVisibility(ESlateVisibility InVisibility) {
 	for (auto DISlot : DebugInputsSlotRegistered) {
 		if (DISlot->IsUsed())
 			DISlot->SetVisibility(InVisibility);
 	}
 }
 
-bool UDebugToolsWidgetBase::AddDebugActionChildWidget_Implementation(
+bool UDebugPanelWidgetBase::AddDebugActionChildWidget_Implementation(
 	int ChildDebugActionIndex, int DepthLevel, UDebugActionBase* ChildDebugAction, UDebugActionBase* ParentDebugAction) {
 
 	ChildDebugAction->SetDepthLevel(DepthLevel);
 	return true;
 }
 
-bool UDebugToolsWidgetBase::AddDebugActionParentWidget_Implementation(int DebugActionIndex, int DepthLevel, UDebugActionBase* DebugAction) {
+bool UDebugPanelWidgetBase::AddDebugActionParentWidget_Implementation(int DebugActionIndex, int DepthLevel, UDebugActionBase* DebugAction) {
 
 	DebugAction->SetDepthLevel(DepthLevel);
 	return true;

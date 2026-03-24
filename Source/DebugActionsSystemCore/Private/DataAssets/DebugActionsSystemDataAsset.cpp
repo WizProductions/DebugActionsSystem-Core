@@ -9,7 +9,6 @@ void UDebugActionsSystemDataAsset::PostEditChangeProperty(FPropertyChangedEvent&
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
-
 	//Force a default value to a debug action pointer, catch every nullptr
 	static const FName OptionsName = GET_MEMBER_NAME_CHECKED(UDebugActionsSystemDataAsset, DebugActionsArray);
 

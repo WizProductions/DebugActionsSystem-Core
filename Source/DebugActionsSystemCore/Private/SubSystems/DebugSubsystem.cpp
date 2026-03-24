@@ -5,17 +5,10 @@
 #include "DebugActionsSystemCoreDefines.h"
 #include "Actions/DebugActionFolder.h"
 #include "Inputs/DI_FloatSlider.h"
-#include "WidgetBases/DebugToolsWidgetBase.h"
+#include "WidgetBases/DebugPanelWidgetBase.h"
 #include "Engine/AssetManager.h"
 #include "Engine/StreamableManager.h"
 #include "Settings/DASSettings.h"
-
-void UDebugSubsystem::Initialize(FSubsystemCollectionBase& Collection) {
-	Super::Initialize(Collection); //Register to the collection
-	
-	// - Initialization
-	if (bDebugSystemInitialized) return;
-}
 
 UDebugSubsystem* UDebugSubsystem::Get(const UObject* WorldContextObject) {
 	if (WorldContextObject == NULL)
@@ -33,10 +26,12 @@ UDebugSubsystem* UDebugSubsystem::Get(const UObject* WorldContextObject) {
 }
 
 void UDebugSubsystem::PlayerControllerChanged(APlayerController* NewPlayerController) {
-	
 	Super::PlayerControllerChanged(NewPlayerController);
 	
-	if (MyDebugToolsWidget != NULL)
+	if (NewPlayerController == NULL)
+		WIZ_RET_LOG( , "Player's controller is invalid! Request aborted.", Error, LogDebugActionsSystem);
+	
+	if (MyDebugPanelWidget != NULL)
 		return; //Already created and still valid
 	
 	// - Clean-Up	
@@ -52,37 +47,34 @@ void UDebugSubsystem::PlayerControllerChanged(APlayerController* NewPlayerContro
 	if (DASSettings == NULL)
 		WIZ_RET_LOG( , "Debug Actions System Settings not found, a critical problem occured, please contact developper.", Error, LogDebugActionsSystem);
 	
-	if (NewPlayerController == NULL)
-		WIZ_RET_LOG( , "Player's controller is invalid! Request aborted.", Error, LogDebugActionsSystem);
-	
 	//Assets Loading
 	FStreamableManager& Streamable = UAssetManager::GetStreamableManager();
 	
 	MyDebugDataAsset = Cast<UDebugActionsSystemDataAsset>(Streamable.LoadSynchronous(DASSettings->DebugActionsSystemDataAsset.ToSoftObjectPath()));
-	UObject* DASToolsWidgetClassLoaded = Streamable.LoadSynchronous(DASSettings->DebugActionsSystemToolsWidgetClass);
-
-	//Assets Validation
 	if (MyDebugDataAsset == NULL) {
-		WIZ_RET_LOG( , "DebugActionsSystemDataAsset failed to load (Invalid/Wrong inherited class).", Error, LogDebugActionsSystem);
+		WIZ_RET_LOG( , "failed to load DebugActionsSystemDataAsset (invalid/wrong inherited class).", Error, LogDebugActionsSystem);
 	}
+	
+	if (MyDebugDataAsset->bEnableDebugActionsSystem == false)
+		WIZ_RET_LOG( , "Initialization séquence aborted, system is disabled", Log, LogDebugActionsSystem);
+	
+	UObject* DASPanelWidgetClassLoaded = Streamable.LoadSynchronous(MyDebugDataAsset->DebugActionsSystemPanelWidgetClass);
+	if (DASPanelWidgetClassLoaded == NULL)
+		WIZ_RET_LOG( , "failed to load DebugPanelWidget.", Error, LogDebugActionsSystem);
 
-	if (DASToolsWidgetClassLoaded == NULL) {
-		WIZ_RET_LOG( , "DebugToolsWidget failed to load.", Error, LogDebugActionsSystem);
-	}
-
-	//Debug Tools Widget
-	if (UClass* DASToolsWidgetClass = Cast<UClass>(DASToolsWidgetClassLoaded)) {
-		if (UDebugToolsWidgetBase* WidgetInstance = CreateWidget<UDebugToolsWidgetBase>(NewPlayerController, DASToolsWidgetClass)) {
-			MyDebugToolsWidget = WidgetInstance;
+	//Debug Panel Widget
+	if (UClass* DASPanelWidgetClass = Cast<UClass>(DASPanelWidgetClassLoaded)) {
+		if (UDebugPanelWidgetBase* WidgetInstance = CreateWidget<UDebugPanelWidgetBase>(NewPlayerController, DASPanelWidgetClass)) {
+			MyDebugPanelWidget = WidgetInstance;
 			WidgetInstance->AddToViewport();
 			WidgetInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 
-	if (MyDebugToolsWidget == NULL)
-		WIZ_RET_LOG( , "DebugToolsWidget is invalid! Request aborted.", Error, LogDebugActionsSystem);
+	if (MyDebugPanelWidget == NULL)
+		WIZ_RET_LOG( , "DebugPanelWidget is invalid! Request aborted.", Error, LogDebugActionsSystem);
 	
-	MyDebugToolsWidget->GenerateDebugMenu(MyDebugDataAsset->DebugActionsArray);
+	MyDebugPanelWidget->GenerateDebugMenu(MyDebugDataAsset->DebugActionsArray);
 	
 	//Keybindings
 	if (auto IC = NewPlayerController->InputComponent) {
@@ -96,24 +88,24 @@ void UDebugSubsystem::PlayerControllerChanged(APlayerController* NewPlayerContro
 
 void UDebugSubsystem::OnDebugMenuKeyPressed() {
 
-	MyDebugToolsWidget->SetVisibility(static_cast<ESlateVisibility>(bDebugSystemOpened));
+	MyDebugPanelWidget->SetVisibility(static_cast<ESlateVisibility>(bDebugSystemOpened));
 	bDebugSystemOpened = !bDebugSystemOpened;
 	
 	ULocalPlayer* LP = GetLocalPlayer();
 	LP->PlayerController->SetShowMouseCursor(bDebugSystemOpened);
 	
-	OnDebugToolsWidgetVisibilityChange(bDebugSystemOpened);
+	OnDebugPanelWidgetVisibilityChange(bDebugSystemOpened);
 	
-	WIZ_LOG(FString::Printf(TEXT("New debug tools widget state: %s"), bDebugSystemOpened ? TEXT("true") : TEXT("false")), Log, LogDebugActionsSystem);
+	WIZ_LOG(FString::Printf(TEXT("New debug panel widget state: %s"), bDebugSystemOpened ? TEXT("true") : TEXT("false")), Log, LogDebugActionsSystem);
 }
 
-void UDebugSubsystem::OnDebugToolsWidgetVisibilityChange(bool bVisible) {
+void UDebugSubsystem::OnDebugPanelWidgetVisibilityChange(bool bVisible) {
 	
 	//Clear all DI used array
 	this->Internal_FreeAllDebugInputs();
 
 	//Clear slots in the UI
-	MyDebugToolsWidget->ClearSlotsAssigment();
+	MyDebugPanelWidget->ClearSlotsAssigment();
 	
 	if (bVisible) {
 		for (auto DebugAction : MyDebugDataAsset->DebugActionsArray) {
@@ -134,23 +126,23 @@ void UDebugSubsystem::OnFolderStateChange(bool bIsDeveloped, UDebugActionBase* I
 	this->Internal_FreeAllDebugInputs();
 
 	//Clear slots in the UI
-	MyDebugToolsWidget->ClearSlotsAssigment();
+	MyDebugPanelWidget->ClearSlotsAssigment();
 		
 	LastFolderClicked = InDebugActionFolder;
 	
 	//Change visibility of debug input
-	MyDebugToolsWidget->OnFolderStateChange(bIsDeveloped, bIsNewFolderClicked, InDebugActionFolder);
+	MyDebugPanelWidget->OnFolderStateChange(bIsDeveloped, bIsNewFolderClicked, InDebugActionFolder);
 	
 	if (bIsDeveloped == true)
 		return;
 	
 	if (FolderDepthLevel == 0) {
-		OnDebugToolsWidgetVisibilityChange(true);
+		OnDebugPanelWidgetVisibilityChange(true);
 		return; //Do not change the visibility of debug inputs on collapse a root folder because DI for roots DA just spawned
 	}
 	
 	//Refresh children of parent debug action folder when the child folder is collapse (request DI if needed)
-	UDebugActionBase* DA = MyDebugToolsWidget.Get()->GetDebugActionByDepth(FolderDepthLevel - 1);
+	UDebugActionBase* DA = MyDebugPanelWidget.Get()->GetDebugActionByDepth(FolderDepthLevel - 1);
 	UDebugActionFolder* DAF = Cast<UDebugActionFolder>(DA);
 	
 	if (DAF == NULL)

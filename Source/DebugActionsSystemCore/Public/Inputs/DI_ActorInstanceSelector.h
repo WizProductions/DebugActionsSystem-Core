@@ -20,7 +20,8 @@ concept ActorType = std::is_base_of_v<AActor, A>;
 //#############################################################################
 
 /**
-* Default.
+* An input that retrieves all <b>Actor</b> currently present in the world and allows you to select one. \n
+* <b>Needs a Setup</b>.
 */
 UCLASS()
 class DEBUGACTIONSSYSTEMCORE_API UDI_ActorInstanceSelector : public UDebugInput {
@@ -30,22 +31,16 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_ActorInstanceSelector : public UDebugInput 
 //##--------------------------------- FIELDS ---------------------------------##
 //##############################################################################
 
-	//==== Delegates ====\\.
-private:
-	/* Delegates */
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInputValueChange);
-	
+	//==== Exposed Properties ====\\.
 public:
-	FOnInputValueChange OnInputValueChange;
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<class UComboBoxString> MyComboBox = nullptr;
 	
 	//==== Properties ====\\.
 protected:
 	UPROPERTY()
 	TSubclassOf<UObject> ClassFilter = UObject::StaticClass();
 	UPROPERTY()
-	TObjectPtr<class UComboBoxString> MyComboBox = nullptr;
-	
-private:
 	TArray<TObjectPtr<AActor>> ActorsCache;
 	UPROPERTY()
 	TObjectPtr<UClass> CacheActorClass = NULL;
@@ -62,10 +57,6 @@ public:
 	void Setup(FString InDebugInputTitle);
 	template <ActorType A>
 	A* GetValue() const;
-	
-private:
-	UFUNCTION()
-	void HandleValueChanged(FString fs, ESelectInfo::Type t);
 };
 
 //#############################################################################

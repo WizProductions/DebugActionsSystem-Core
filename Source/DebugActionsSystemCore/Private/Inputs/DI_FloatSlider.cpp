@@ -16,15 +16,15 @@ void UDI_FloatSlider::PostInitProperties() {
 	DebugInputTitle = FText::FromString("Value");
 	DebugInputSize = FVector2D(80, 28);
 	
-	MySpinBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugTools<USpinBox>();
+	MySpinBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<USpinBox>();
 	MyWidget = MySpinBox;
 
 	MySpinBox->SetForegroundColor(FLinearColor(0, 0, 0, 1));
 
-	FSpinBoxStyle nSpinBoxStyle = MySpinBox->GetWidgetStyle();
-	nSpinBoxStyle.BackgroundBrush.TintColor = FLinearColor(0.75, 0.75, 0.75, 1);
+	FSpinBoxStyle NewSpinBoxStyle = MySpinBox->GetWidgetStyle();
+	NewSpinBoxStyle.BackgroundBrush.TintColor = FLinearColor(0.75, 0.75, 0.75, 1);
 
-	MySpinBox->SetWidgetStyle(nSpinBoxStyle);
+	MySpinBox->SetWidgetStyle(NewSpinBoxStyle);
 	MySpinBox->SetDelta(1.0f);
 	MySpinBox->SetSliderExponent(1.f);
 	MySpinBox->SetMinFractionalDigits(0);

@@ -16,7 +16,7 @@ void UDI_IntSlider::PostInitProperties() {
 	DebugInputTitle = FText::FromString("Value");
 	DebugInputSize = FVector2D(80, 28);
 	
-	MySpinBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugTools<USpinBox>();
+	MySpinBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<USpinBox>();
 	MyWidget = MySpinBox;
 
 	MySpinBox->SetForegroundColor(FLinearColor(0, 0, 0, 1));

@@ -11,7 +11,7 @@
 //#############################################################################
 
 /*
-
+* The developer settings of the plugin, allows to add a line in the Project/Engine Settings.
 */
 UCLASS(Config=Game, DefaultConfig, meta=(DisplayName="Debug Actions System - Core"))
 class DEBUGACTIONSSYSTEMCORE_API UDASSettings : public UDeveloperSettings {
@@ -22,11 +22,8 @@ class DEBUGACTIONSSYSTEMCORE_API UDASSettings : public UDeveloperSettings {
 //#############################################################################
 
 public:
-	UPROPERTY(Config, EditAnywhere, Category = "General", meta = (AllowedClasses = "/Script/DebugActionsSystem.DataAsset"))
+	UPROPERTY(Config, EditAnywhere, Category = "Setup", meta = (AllowedClasses = "/Script/DebugActionsSystemCore.DebugActionsSystemDataAsset"))
 	TSoftObjectPtr<UDataAsset> DebugActionsSystemDataAsset;
-
-	UPROPERTY(Config, EditAnywhere, Category = "UI", meta = (AllowedClasses = "/Script/DebugActionsSystem.DebugToolsWidgetBase"))
-	TSoftClassPtr<UUserWidget> DebugActionsSystemToolsWidgetClass;
 	
 	virtual FName GetCategoryName() const override { return FName("Plugins"); }
 	virtual FName GetSectionName() const override { return FName("Debug Actions System - bCore"); }

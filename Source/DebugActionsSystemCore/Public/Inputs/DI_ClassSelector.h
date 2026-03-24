@@ -12,7 +12,8 @@
 //#############################################################################
 
 /**
-* Default.
+* An input that retrieves all <b>Class</b> currently loaded by engine allows you to select one to apply an action in all object of this class type. \n
+* <b>Needs a Setup</b>.
 */
 UCLASS()
 class DEBUGACTIONSSYSTEMCORE_API UDI_ClassSelector : public UDebugInput {
@@ -22,12 +23,15 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_ClassSelector : public UDebugInput {
 //##--------------------------------- FIELDS ---------------------------------##
 //##############################################################################
 
+	//==== Exposed Properties ====\\.
+public:
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<class UComboBoxString> MyClassFilterComboBox = nullptr;
+	
 	//==== Properties ====\\.
 protected:
 	UPROPERTY()
 	TSubclassOf<UObject> ClassFilter = UObject::StaticClass();
-	UPROPERTY()
-	TObjectPtr<class UComboBoxString> MyClassFilterComboBox = nullptr;
 	UPROPERTY()
 	TArray<UClass*> AllDerivedClasses;
 

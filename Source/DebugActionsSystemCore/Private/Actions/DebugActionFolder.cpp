@@ -7,6 +7,19 @@
 #include "SubSystems/DebugSubsystem.h"
 
 #if WITH_EDITOR
+void UDebugActionFolder::UpdateEditorDataAssetTitle() {
+	Private_DataAssetActionTitle = FString("Folder: " + GetDebugActionTitle().ToString());
+}
+
+void UDebugActionFolder::PostLoad() {
+	Super::PostLoad();
+	
+	//Force refresh the data asset view when the folder title is loaded from the disk
+	if (UObject* Outer = GetOuter()) {
+		Outer->PostEditChange();
+	}
+}
+
 void UDebugActionFolder::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
@@ -24,6 +37,15 @@ void UDebugActionFolder::PostEditChangeProperty(FPropertyChangedEvent& PropertyC
 				DebugActionsStored[i] = NewObject<UDebugActionFolder>(this, UDebugActionFolder::StaticClass(), NAME_None, RF_Transactional);
 			}
 		}
+	}
+	
+	//Update folder title by new value
+	UpdateEditorDataAssetTitle();
+	
+	//Force refresh the data asset view
+	if (UObject* Outer = GetOuter())
+	{
+		Outer->PostEditChange();
 	}
 }
 #endif
@@ -64,7 +86,7 @@ EDebugActionResult UDebugActionFolder::ExecuteDebugAction() {
 
 	if (Super::ExecuteDebugAction() == EDebugActionResult::Success) {
 		//Catch the old debug action folder (is different -> hide old children's)
-		MyDebugSubsystem->OnFolderStateChange(bDebugActionState, this); //@UPGRADE: to event delegates to replace GetDebugToolsWidget()?
+		MyDebugSubsystem->OnFolderStateChange(bDebugActionState, this); //@UPGRADE: to event delegates to replace GetDebugPanelWidget()?
 
 		//Change visibility of the debug action folder clicked
 		SetDebugActionWidgetVisibility(!bDebugActionState, this->GetDepthLevel());

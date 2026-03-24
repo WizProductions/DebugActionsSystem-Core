@@ -6,35 +6,35 @@
 #include "Blueprint/UserWidget.h"
 #include "DebugActionWidgetBase.generated.h"
 
+enum class EDebugActionResult : UINT8;
+
 //#############################################################################
 //##--------------------------------- CLASS ---------------------------------##
 //#############################################################################
 
-enum class EDebugActionResult : UINT8;
-/*
- *
-*/
+/**
+ * The widget base of the debug action, you can inherit from this base to customize how actions are painted in the debug panel.
+ */
 UCLASS(Abstract)
 class DEBUGACTIONSSYSTEMCORE_API UDebugActionWidgetBase : public UUserWidget {
 	GENERATED_BODY()
 
-//##############################################################################
-//##------------------------------- ATTRIBUTES -------------------------------##
-//##############################################################################
+//#############################################################################
+//##--------------------------------- FIELDS --------------------------------##
+//#############################################################################
 
 private:
 	UPROPERTY(BlueprintGetter="GetMyDebugAction")
 	TObjectPtr<class UDebugActionBase> MyDebugAction = nullptr;
 
 //#############################################################################
-//##------------------------------- FUNCTIONS -------------------------------##
+//##-------------------------------- METHODS --------------------------------##
 //#############################################################################	
 
 public:
 #if UE_EDITOR
 	virtual const FText GetPaletteCategory() override;
 #endif
-	/** return the linked debug action */
 	UFUNCTION(Category = "Debug Action", BlueprintPure)
 	UDebugActionBase* GetMyDebugAction() const { return MyDebugAction; }
 	

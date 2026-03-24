@@ -11,9 +11,10 @@ enum class EDebugActionResult : UINT8;
 //##---------------------------------- CLASS --------------------------------##
 //#############################################################################
 
-/*
- *
-*/
+/**
+ * Base of all debug actions, cannot be instanced. \n
+ * You can create a custom DebugActions by inheriting from this base and overload <b>ExecuteDebugAction()</b> method
+ */
 UCLASS(Blueprintable, Abstract)
 class DEBUGACTIONSSYSTEMCORE_API UDebugActionBase : public UObject {
 	GENERATED_BODY()
@@ -22,6 +23,11 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionBase : public UObject {
 //##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
 
+protected:
+	//Used for customize title in array (only on editor)
+	UPROPERTY(VisibleAnywhere, Transient, meta = (HideInDetailPanel, EditCondition = "false", EditConditionHides))
+	FString Private_DataAssetActionTitle;
+	
 protected:
 	//==== Properties ====\\.
 	UPROPERTY(BlueprintGetter="GetMyDebugActionWidget", BlueprintSetter="SetMyDebugActionWidget")
@@ -38,6 +44,11 @@ protected:
 //#############################################################################
 
 public:
+#if WITH_EDITOR
+	virtual void PostInitProperties() override;
+	virtual void UpdateEditorDataAssetTitle();
+#endif
+
 	/** @param OutDebugActionsHierarchy: Reserved for UDebugActionFolder subclass */
 	virtual EDebugActionResult InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutDebugActionsHierarchy, class UDebugSubsystem* Subsystem);
 	virtual void SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int DepthRecursivity);

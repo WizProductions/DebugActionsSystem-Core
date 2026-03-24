@@ -11,7 +11,7 @@
 //#############################################################################
 
 /**
-* Default.
+* An input that allows you to select a local player connected in local (Alone or Splitscreen). \n
 */
 UCLASS()
 class DEBUGACTIONSSYSTEMCORE_API UDI_LocalPlayerSelector : public UDebugInput {

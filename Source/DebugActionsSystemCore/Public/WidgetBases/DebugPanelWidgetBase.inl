@@ -3,11 +3,11 @@
 #pragma once
 
 #include "DebugActionsSystemCoreDefines.h"
-#include "DebugToolsWidgetBase.h"
+#include "DebugPanelWidgetBase.h"
 #include "Blueprint/WidgetTree.h"
 
 template <typename T> requires std::is_base_of_v<UWidget, T>
-T* UDebugToolsWidgetBase::Internal_NewWidget() {
+T* UDebugPanelWidgetBase::Internal_NewWidget() {
 
 	if (WidgetTree) {
 		T* NewWidget = WidgetTree->ConstructWidget<T>();

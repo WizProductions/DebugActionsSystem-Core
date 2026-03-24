@@ -10,7 +10,7 @@
 //#############################################################################
 
 /**
-* Struct.
+* A simple structure for the FreeDebugInputs Map line.
 */
 USTRUCT(BlueprintType)
 struct FFreeDebugInputsLine {

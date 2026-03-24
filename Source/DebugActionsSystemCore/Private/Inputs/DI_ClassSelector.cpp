@@ -18,7 +18,7 @@ void UDI_ClassSelector::PostInitProperties() {
 	DebugInputSize = FVector2D(120, 28);
 
 	//==== Combo Box ====\\.
-	MyClassFilterComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugTools<UComboBoxString>();
+	MyClassFilterComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<UComboBoxString>();
 	MyWidget = MyClassFilterComboBox;
 }
 

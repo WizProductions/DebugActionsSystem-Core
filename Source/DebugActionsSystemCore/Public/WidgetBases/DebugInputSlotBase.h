@@ -11,38 +11,38 @@
 //#############################################################################
 
 /**
- * The Debug Input Slot, it needs to be added in debug tools widget.
+ * The widget base of the debug input, you can inherit from this base to customize how inputs are painted in the debug panel. \n
+ * <b>Need to be added in the panel manually to create slots for debug inputs</b>.
  */
-UCLASS()
+UCLASS(Abstract)
 class DEBUGACTIONSSYSTEMCORE_API UDebugInputSlotBase : public UUserWidget {
 	GENERATED_BODY()
 
-//##############################################################################
-//##------------------------------- ATTRIBUTES -------------------------------##
-//##############################################################################
+//#############################################################################
+//##---------------------------------- FIELDS -------------------------------##
+//#############################################################################
 
 protected:
+	//==== Widgets Binding ====\\.
 	//==== Properties ====\\.
-	UPROPERTY(BlueprintSetter = "SetInputSlotWidget")
-	TObjectPtr<class UNamedSlot> InputNamedSlot;
-	UPROPERTY(BlueprintSetter = "SetInputTitleWidget")
-	TObjectPtr<class UTextBlock> InputTitle;
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget), Category = "UserInterface|Interaction")
+	TObjectPtr<class UNamedSlot> NS_InputSlot;
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget), Category = "UserInterface|Painting")
+	TObjectPtr<class UTextBlock> TB_InputTitle;
 
 private:
-	/** Debug tools canvas */
+	/** Slot in the debug panel canvas */
 	UPROPERTY()
 	TObjectPtr<class UCanvasPanelSlot> MySlot;
-	/**
-	 * Canvas Slot of Named Slot contains InputSlot
-	 */
+	/** Canvas Slot of Named Slot contains InputSlot */
 	UPROPERTY()
 	TObjectPtr<class UCanvasPanelSlot> InputWidgetSlot;
 	
 	//==== Flags ====\\.
-	bool bIsUsed;
+	bool bIsUsed : 1 = false;
 	
 //#############################################################################
-//##------------------------------- FUNCTIONS -------------------------------##
+//##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 
 public:
@@ -61,10 +61,4 @@ public:
 	void RemoveInputWidget();
 
 	void SetTitle(const FText& InTitle);	
-
-protected:
-	UFUNCTION(BlueprintCallable)
-	void SetInputSlotWidget(UNamedSlot* InNamedSlot);
-	UFUNCTION(BlueprintCallable)
-	void SetInputTitleWidget(UTextBlock* InTextBlock);
 };

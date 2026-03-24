@@ -16,12 +16,6 @@ void UDI_ActorInstanceSelector::PostInitProperties() {
 	DebugInputSize = FVector2D(120, 28);
 
 	//==== Combo Box (Class Filter) ====\\.
-	MyComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugTools<UComboBoxString>();
+	MyComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<UComboBoxString>();
 	MyWidget = MyComboBox;
-	
-	MyComboBox->OnSelectionChanged.AddDynamic(this, &UDI_ActorInstanceSelector::HandleValueChanged);
-}
-
-void UDI_ActorInstanceSelector::HandleValueChanged(FString fs, ESelectInfo::Type t) {
-	OnInputValueChange.Broadcast();
 }

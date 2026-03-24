@@ -3,7 +3,7 @@
 #pragma once
 
 #include "DebugSubsystem.h"
-#include "WidgetBases/DebugToolsWidgetBase.h"
+#include "WidgetBases/DebugPanelWidgetBase.h"
 
 template <typename T> requires std::is_base_of_v<UDebugInput, T>
 T* UDebugSubsystem::RequestDebugInput(const FGameplayTag& SharedKeyTag) {
@@ -52,11 +52,11 @@ T* UDebugSubsystem::RequestDebugInput(const FGameplayTag& SharedKeyTag) {
 	
 
 	//Assign a slot to DI
-	if (MyDebugToolsWidget->AssignSlotToDebugInput(OutDI)) {
+	if (MyDebugPanelWidget->AssignSlotToDebugInput(OutDI)) {
 		return OutDI;
 	}
 
-	WIZ_RET_LOG(NULL, "Request aborted, no slot available. Try to add new one in DebugToolsWidget", Error, LogDebugActionsSystem);
+	WIZ_RET_LOG(NULL, "Request aborted, no slot available. Try to add new one in DebugPanelWidget", Error, LogDebugActionsSystem);
 }
 
 template <typename T> requires std::is_base_of_v<UDebugInput, T>
@@ -67,6 +67,6 @@ T* UDebugSubsystem::Internal_RegisterNewDI() {
 }
 
 template <typename T> requires std::is_base_of_v<UWidget, T>
-T* UDebugSubsystem::GetNewWidgetInDebugTools() {
-	return MyDebugToolsWidget->Internal_NewWidget<T>();
+T* UDebugSubsystem::GetNewWidgetInDebugPanel() {
+	return MyDebugPanelWidget->Internal_NewWidget<T>();
 }

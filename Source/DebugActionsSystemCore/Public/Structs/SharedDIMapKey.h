@@ -11,7 +11,7 @@
 //#############################################################################
 
 /**
-* Common structure used as key, mix GameplayTag and TSubclassOf<UDebugInput> to make unique key.
+* A simple structure used as key, mix GameplayTag and TSubclassOf<UDebugInput> to make unique key.
 */
 USTRUCT()
 struct FSharedDIMapKey {

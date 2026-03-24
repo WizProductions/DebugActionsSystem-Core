@@ -16,12 +16,6 @@ void UDI_EnumSelectorCB::PostInitProperties() {
 	DebugInputSize = FVector2D(120, 28);
 
 	//==== Combo Box (Class Filter) ====\\.
-	MyComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugTools<UComboBoxString>();
+	MyComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<UComboBoxString>();
 	MyWidget = MyComboBox;
-	
-	MyComboBox->OnSelectionChanged.AddDynamic(this, &UDI_EnumSelectorCB::HandleValueChanged);
-}
-
-void UDI_EnumSelectorCB::HandleValueChanged(FString fs, ESelectInfo::Type t) {
-	OnInputValueChange.Broadcast();
 }

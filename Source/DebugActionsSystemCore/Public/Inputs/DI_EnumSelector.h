@@ -18,7 +18,8 @@ concept Enum = std::is_enum_v<T>;
 //#############################################################################
 
 /**
-* Default.
+* An input that allows you to select a value from a specific enum. \n
+* <b>Needs a Setup</b>.
 */
 UCLASS()
 class DEBUGACTIONSSYSTEMCORE_API UDI_EnumSelectorCB : public UDebugInput {
@@ -27,24 +28,16 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_EnumSelectorCB : public UDebugInput {
 //##############################################################################
 //##--------------------------------- FIELDS ---------------------------------##
 //##############################################################################
-
-	//==== Delegates ====\\.
-private:
-	/* Delegates */
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInputValueChange);
 	
+	//==== Exposed Properties ====\\.
 public:
-	FOnInputValueChange OnInputValueChange;
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<class UComboBoxString> MyComboBox = nullptr;
 	
 	//==== Properties ====\\.
 protected:
 	UPROPERTY()
 	TSubclassOf<UObject> EnumValueSelector = UObject::StaticClass();
-	UPROPERTY()
-	TObjectPtr<class UComboBoxString> MyComboBox = nullptr;
-	
-
-private:
 	UPROPERTY()
 	UEnum* MyEnumPtr = NULL;
 
@@ -60,10 +53,6 @@ public:
 	void Setup(FText InDebugInputTitle);
 	template <Enum E>
 	E GetValue() const;
-	
-private:
-	UFUNCTION()
-	void HandleValueChanged(FString fs, ESelectInfo::Type t);
 };
 
 //#############################################################################

@@ -9,15 +9,15 @@
 //##--------------------------------- CLASS ---------------------------------##
 //#############################################################################
 
-/*
-
-*/
+/**
+ * A simple debug action that enables FreeCam mode with a simple click.
+ */
 UCLASS(BlueprintType, EditInlineNew, meta=(ToolTip="Toggles freecam mode for selected player"))
 class DEBUGACTIONSSYSTEMCORE_API UDebugAction_FreeCam : public UDebugActionBase {
 	GENERATED_BODY()
 
 //#############################################################################
-//##------------------------------- ATTRIBUTES ------------------------------##
+//##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
 
 protected:

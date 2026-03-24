@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "DebugToolsWidgetBase.generated.h"
+#include "DebugPanelWidgetBase.generated.h"
 
 class UDebugActionsSystemDataAsset;
 class UDebugActionBase;
@@ -14,16 +14,16 @@ class UDebugInputSlotBase;
 //##--------------------------------- CLASS ---------------------------------##
 //#############################################################################
 
-/*
- *
-*/
+/**
+ * The widget panel of Debug Actions System, you can inherit from this base to customize its appearance. \n
+ */
 UCLASS(Abstract)
-class DEBUGACTIONSSYSTEMCORE_API UDebugToolsWidgetBase : public UUserWidget {
+class DEBUGACTIONSSYSTEMCORE_API UDebugPanelWidgetBase : public UUserWidget {
 	GENERATED_BODY()
 	
-//##############################################################################
-//##------------------------------- ATTRIBUTES -------------------------------##
-//##############################################################################
+//#############################################################################
+//##--------------------------------- FIELDS --------------------------------##
+//#############################################################################
 
 protected:
 	//==== Widgets Binding ====\\.
@@ -40,36 +40,28 @@ protected:
 	TArray<TObjectPtr<UDebugInputSlotBase>> DebugInputsSlotRegistered = {};
 
 //#############################################################################
-//##------------------------------- FUNCTIONS -------------------------------##
+//##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 	
 #if UE_EDITOR
 	virtual const FText GetPaletteCategory() override;
 #endif
 
-	//======= Debug Actions ========\\.
 private:
 	void Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder);
-	
 protected:
 	void Internal_FindAndInitChildDebugActions(class UDebugSubsystem* Subsystem, int ParentDebugActionIndex, int DepthLevel, TArray<TObjectPtr<UDebugActionBase>>& ChildDebugActions, TObjectPtr<UDebugActionBase> ParentDebugAction);
-	
 	UFUNCTION(Category="Debug Action", BlueprintNativeEvent)
 	bool AddDebugActionParentWidget(int DebugActionIndex, int DepthLevel, UDebugActionBase* DebugAction);
 	UFUNCTION(Category="Debug Action", BlueprintNativeEvent)
 	bool AddDebugActionChildWidget(int ChildDebugActionIndex, int DepthLevel, UDebugActionBase* ChildDebugAction, UDebugActionBase* ParentDebugAction);
-	
 public:
 	void GenerateDebugMenu(TArray<TObjectPtr<UDebugActionBase>>& DebugActions);
 	void OnFolderStateChange(bool bIsDeveloped, bool bIsNewFolderClicked, UDebugActionBase* InDebugActionFolder);
 	UDebugActionBase* GetDebugActionByDepth(int Depth) const;
-	
-	//======= Debug Inputs ========\\.
 private:
 	template <typename T> requires std::is_base_of_v<UWidget, T>
 	T* Internal_NewWidget();
-	
-	//======= Debug Inputs Slots ========\\.
 public:
 	void RegisterDebugInputSlot(class UDebugInputSlotBase* InDebugInputSlot);
 	/** Request a slot assignment to DI @return True if a slot is free and DI is assigned to his, otherwise False */
@@ -80,9 +72,10 @@ public:
 	/** Set a new visibility to all registered and used debug input slots */
 	void SetDebugInputSlotsRegisteredVisibility(ESlateVisibility InVisibility);
 
+	
 	friend class UDebugSubsystem;
 };
 
 #if CPP
-#include "WidgetBases/DebugToolsWidgetBase.inl"
+#include "DebugPanelWidgetBase.inl"
 #endif

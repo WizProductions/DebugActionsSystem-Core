@@ -10,7 +10,7 @@
 //#############################################################################
 
 /**
-* Common enum used as result of execute debug action method, used for init hierarchy at start and result of action execution.
+* The enum used as result of execute debug action method, used for init hierarchy at start and result of action execution.
 */
 UENUM(Blueprintable)
 enum class EDebugActionResult : uint8 {
