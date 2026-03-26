@@ -1,46 +1,29 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
 #include "WidgetBases/DebugPanelWidgetBase.h"
-#include "Components/CanvasPanel.h"
 #include "DataAssets/DebugActionsSystemDataAsset.h"
 #include "DebugActionsSystemCoreDefines.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
 #include "Enumerations/EDebugActionResult.h"
 #include "SubSystems/DebugSubsystem.h"
-#include "WidgetBases/DebugInputSlotBase.h"
+#include "WidgetBases/DebugActionWidgetBase.h"
+#include "WidgetBases/DebugInputSlotWidgetBase.h"
 
 #define LOCTEXT_NAMESPACE "UMG"
-
-void UDebugPanelWidgetBase::GenerateDebugMenu(TArray<TObjectPtr<UDebugActionBase>>& DebugActions) {
-
-	int DebugActionIndex = 0;
-    TArray<TObjectPtr<UDebugActionBase>> OutDebugActionsStored;
-	
-	UDebugSubsystem* Subsystem = UDebugSubsystem::Get(GetWorld());
-	
-    for (auto ChildDebugAction : DebugActions) {
-
-    	if (ChildDebugAction == NULL) {
-    		WIZ_LOG("A ChildDebugAction is NULL", Error, LogDebugActionsSystem);
-    		continue;
-    	}
-
-    	if (AddDebugActionParentWidget(DebugActionIndex, 0, ChildDebugAction)) {
-    		if (ChildDebugAction->InitializeDebugAction(OutDebugActionsStored, Subsystem) == EDebugActionResult::HierarchyInitialization) {
-    			Internal_FindAndInitChildDebugActions(Subsystem, DebugActionIndex, 1, OutDebugActionsStored, ChildDebugAction);
-    		}
-    	}
-
-    	DebugActionIndex++;
-    }
-
-	if (MaxDepthLevel < 0) MaxDepthLevel = 0;
-	DebugActionsDepthsArray.SetNum(MaxDepthLevel+1);
-}
 
 #if WITH_EDITOR
 const FText UDebugPanelWidgetBase::GetPaletteCategory() {
 	return LOCTEXT("Debug Actions System", "Debug Actions System");
 }
+
+UDebugSubsystem* UDebugPanelWidgetBase::GetDebugSubSystemChecked() {
+	if (MyDebugSubsystem == NULL)
+		MyDebugSubsystem = UDebugSubsystem::Get(GetWorld());
+	
+	return MyDebugSubsystem;
+}
+
 #endif
 
 void UDebugPanelWidgetBase::Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder) {
@@ -55,21 +38,6 @@ void UDebugPanelWidgetBase::Internal_UpdateDebugActionsDepthLevelsArray(UDebugAc
 		}
 		DebugActionsDepthsArray[DADepthLevel] = InDebugActionFolder;
 	}
-}
-
-void UDebugPanelWidgetBase::OnFolderStateChange(bool bIsDeveloped, bool bIsNewFolderClicked, UDebugActionBase* InDebugActionFolder) {
-	Internal_UpdateDebugActionsDepthLevelsArray(InDebugActionFolder);
-	
-	if (bIsNewFolderClicked == false) {
-		SetDebugInputSlotsRegisteredVisibility(bIsDeveloped ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
-	}
-}
-
-UDebugActionBase* UDebugPanelWidgetBase::GetDebugActionByDepth(int Depth) const {
-	if (DebugActionsDepthsArray.Num() < Depth)
-		WIZ_RET_LOG(NULL, "Depth target is out of bounds.", Warning, LogDebugActionsSystem);
-	
-	return DebugActionsDepthsArray[Depth];
 }
 
 void UDebugPanelWidgetBase::Internal_FindAndInitChildDebugActions(UDebugSubsystem* Subsystem, int ParentDebugActionIndex, int DepthLevel, TArray<TObjectPtr<UDebugActionBase>>& ChildDebugActions, TObjectPtr<UDebugActionBase> ParentDebugAction) {
@@ -99,73 +67,6 @@ void UDebugPanelWidgetBase::Internal_FindAndInitChildDebugActions(UDebugSubsyste
 	}
 }
 
-void UDebugPanelWidgetBase::RegisterDebugInputSlot(UDebugInputSlotBase* InDebugInputSlot) {
-
-	if (InDebugInputSlot) {
-		DebugInputsSlotRegistered.Add(InDebugInputSlot);
-	}
-}
-
-bool UDebugPanelWidgetBase::AssignSlotToDebugInput(class UDebugInput* InDebugInput) {
-
-	if (InDebugInput) {
-		for (auto DISlot : DebugInputsSlotRegistered) {
-			if (DISlot->IsUsed() == false) {
-
-				DISlot->SetInputWidget(InDebugInput);
-				DISlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-				return true;
-			}
-		}
-	}
-	
-	return false;
-}
-
-bool UDebugPanelWidgetBase::UnassignSlotToDebugInput(class UDebugInput* InDebugInput) {
-
-	if (InDebugInput) {
-		for (auto DISlot : DebugInputsSlotRegistered) {
-			if (DISlot->IsUsed()) {
-
-				//Why need this if? //@TODO: Try to delete this and use unassign in ClearSlotsAssigment method
-				if (DISlot->GetInputWidget() == InDebugInput->GetMyWidget()) {
-
-					//Callback to UDebugInput
-					InDebugInput->OnRemovedFromSlot(DISlot);
-					
-					DISlot->RemoveInputWidget();
-					DISlot->SetVisibility(ESlateVisibility::Collapsed);
-					return true;
-				}
-			}
-		}
-	}
-
-	return false;
-}
-
-void UDebugPanelWidgetBase::ClearSlotsAssigment() {
-	for (auto DISlot : DebugInputsSlotRegistered) {
-		if (DISlot->IsUsed()) {
-
-			//Callback to UDebugInput
-			//@TODO: To add this callback need to add DebugInputLinkedArray in UDebugInputSlot and register dynamically in RequestDebugInput<T>()
-			//InDebugInput->OnRemovedFromSlot(DISlot);
-			
-			DISlot->RemoveInputWidget();
-			DISlot->SetVisibility(ESlateVisibility::Collapsed);
-		}
-	}
-}
-
-void UDebugPanelWidgetBase::SetDebugInputSlotsRegisteredVisibility(ESlateVisibility InVisibility) {
-	for (auto DISlot : DebugInputsSlotRegistered) {
-		if (DISlot->IsUsed())
-			DISlot->SetVisibility(InVisibility);
-	}
-}
-
 bool UDebugPanelWidgetBase::AddDebugActionChildWidget_Implementation(
 	int ChildDebugActionIndex, int DepthLevel, UDebugActionBase* ChildDebugAction, UDebugActionBase* ParentDebugAction) {
 
@@ -177,4 +78,121 @@ bool UDebugPanelWidgetBase::AddDebugActionParentWidget_Implementation(int DebugA
 
 	DebugAction->SetDepthLevel(DepthLevel);
 	return true;
+}
+
+bool UDebugPanelWidgetBase::CreateDebugActionWidget_Implementation(UDebugActionBase* LinkedDebugAction, class UDebugActionWidgetBase*& NewWidget, class UCanvasPanelSlot*& NewWidgetCanvasSlot) {
+	
+	if (LinkedDebugAction == NULL)
+		WIZ_RET_LOG(false , "Debug action invalid", Error, LogDebugActionsSystem);
+	
+	UDebugActionsSystemDataAsset* DAS_DA = GetDebugSubSystemChecked()->GetDebugDataAsset();
+	
+	UClass* DAWClass = NULL;
+	if (DAS_DA->DebugActionWidgetClass.IsNull() == false)
+		DAWClass = DAS_DA->DebugActionWidgetClass.LoadSynchronous();
+	if (DAWClass == NULL)
+		WIZ_RET_LOG(false , "Debug Action widget class failed to load.", Error, LogDebugActionsSystem);
+	
+	NewWidget = WidgetTree->ConstructWidget<UDebugActionWidgetBase>(DAWClass);
+	NewWidgetCanvasSlot = Cast<UCanvasPanelSlot>(CP_Root.Get()->AddChild(NewWidget));
+	
+	if (NewWidget == NULL or NewWidgetCanvasSlot == NULL)
+		WIZ_RET_LOG(false, "One of output object reference is invalid", Error, LogDebugActionsSystem);
+	
+	
+	return NewWidget->InitDebugActionWidget(LinkedDebugAction);
+}
+
+void UDebugPanelWidgetBase::GenerateDebugMenu(TArray<TObjectPtr<UDebugActionBase>>& DebugActions) {
+
+	int DebugActionIndex = 0;
+	TArray<TObjectPtr<UDebugActionBase>> OutDebugActionsStored;
+	
+	UDebugSubsystem* DebugSubSystem = GetDebugSubSystemChecked();
+	for (auto ChildDebugAction : DebugActions) {
+
+		if (ChildDebugAction == NULL) {
+			WIZ_LOG("A ChildDebugAction is NULL", Error, LogDebugActionsSystem);
+			continue;
+		}
+
+		if (AddDebugActionParentWidget(DebugActionIndex, 0, ChildDebugAction)) {
+			if (ChildDebugAction->InitializeDebugAction(OutDebugActionsStored, DebugSubSystem) == EDebugActionResult::HierarchyInitialization) {
+				Internal_FindAndInitChildDebugActions(DebugSubSystem, DebugActionIndex, 1, OutDebugActionsStored, ChildDebugAction);
+			}
+		}
+
+		DebugActionIndex++;
+	}
+
+	if (MaxDepthLevel < 0) MaxDepthLevel = 0;
+	DebugActionsDepthsArray.SetNum(MaxDepthLevel+1);
+}
+
+void UDebugPanelWidgetBase::OnFolderStateChange(bool bIsDeveloped, bool bIsNewFolderClicked, UDebugActionBase* InDebugActionFolder) {
+	Internal_UpdateDebugActionsDepthLevelsArray(InDebugActionFolder);
+	
+	if (bIsNewFolderClicked == false) {
+		SetActiveDebugInputSlotsVisibility(bIsDeveloped ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	}
+}
+
+UDebugActionBase* UDebugPanelWidgetBase::GetDebugActionByDepth(int Depth) const {
+	if (DebugActionsDepthsArray.Num() < Depth)
+		WIZ_RET_LOG(NULL, "Depth target is out of bounds.", Warning, LogDebugActionsSystem);
+	
+	return DebugActionsDepthsArray[Depth];
+}
+
+void UDebugPanelWidgetBase::RegisterDebugInputSlot(UDebugInputSlotWidgetBase* InDebugInputSlot) {
+
+	if (InDebugInputSlot == NULL)
+		return;
+	
+	DebugInputsSlotRegistered.Add(InDebugInputSlot);
+}
+
+bool UDebugPanelWidgetBase::AssignSlotToDebugInput(class UDebugInput* InDebugInput) {
+	
+	if (InDebugInput == NULL)
+		return false;
+	
+	for (auto DISlot : DebugInputsSlotRegistered) {
+		if (DISlot->IsUsed() == false) {
+
+			DISlot->SetInputWidget(InDebugInput);
+			DISlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			return true;
+		}
+	}
+	
+	WIZ_RET_LOG(false, "No debug input slot available, please add new one in debug panel.", Error, LogDebugActionsSystem);
+}
+
+bool UDebugPanelWidgetBase::UnassignSlotToDebugInput(class UDebugInput* InDebugInput) {
+
+	if (InDebugInput == NULL)
+		return false;
+	
+	//Not assigned
+	if (InDebugInput->GetMyDebugInputSlotWidget() == NULL)
+		return true;
+	
+	InDebugInput->GetMyDebugInputSlotWidget()->RemoveInputWidget();
+	return true;
+}
+
+void UDebugPanelWidgetBase::ClearSlotsAssigment() {
+	for (auto DISlot : DebugInputsSlotRegistered) {
+		if (DISlot->IsUsed()) {			
+			DISlot->RemoveInputWidget();
+		}
+	}
+}
+
+void UDebugPanelWidgetBase::SetActiveDebugInputSlotsVisibility(ESlateVisibility InVisibility) {
+	for (auto DISlot : DebugInputsSlotRegistered) {
+		if (DISlot->IsUsed())
+			DISlot->SetVisibility(InVisibility);
+	}
 }

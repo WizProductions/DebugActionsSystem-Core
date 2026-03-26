@@ -3,11 +3,11 @@
 #include "Inputs/DebugInput.h"
 #include "Components/CanvasPanelSlot.h"
 #include "DebugActionsSystemCoreDefines.h"
-#include "WidgetBases/DebugInputSlotBase.h"
+#include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDebugInput::OnAddedToSlot(UDebugInputSlotBase* InSlot) {
+void UDebugInput::OnAddedToSlot(UDebugInputSlotWidgetBase* InSlot) {
 
-	MyDebugInputSlot = InSlot;
+	MyDebugInputSlotWidget = InSlot;
 	
 	if (InSlot == NULL)
 		WIZ_RET_LOG( , "New textblock is invalid.", Error, LogDebugActionsSystem);
@@ -22,13 +22,13 @@ void UDebugInput::OnAddedToSlot(UDebugInputSlotBase* InSlot) {
 	}
 }
 
-void UDebugInput::OnRemovedFromSlot(class UDebugInputSlotBase* InSlot) {
-	MyDebugInputSlot = NULL;
+void UDebugInput::OnRemovedFromSlot(class UDebugInputSlotWidgetBase* InSlot) {
+	MyDebugInputSlotWidget = NULL;
 }
 
 void UDebugInput::SetWidgetVisibility(ESlateVisibility InVisibility) {
-	if (MyWidget) {
-		MyWidget->SetVisibility(InVisibility);
+	if (MyInputDataWidget) {
+		MyInputDataWidget->SetVisibility(InVisibility);
 	}
 	else {
 		WIZ_LOG("Widget is invalid, make sure UDebugInput has set MyWidget to created widget.", Error, LogDebugActionsSystem);

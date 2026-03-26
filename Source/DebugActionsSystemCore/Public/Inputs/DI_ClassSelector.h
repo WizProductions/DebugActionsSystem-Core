@@ -26,7 +26,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_ClassSelector : public UDebugInput {
 	//==== Exposed Properties ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class UComboBoxString> MyClassFilterComboBox = nullptr;
+	TObjectPtr<class UComboBoxString> MyClassFilterComboBox = NULL;
 	
 	//==== Properties ====\\.
 protected:

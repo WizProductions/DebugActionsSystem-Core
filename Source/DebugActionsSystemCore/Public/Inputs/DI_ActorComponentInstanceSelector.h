@@ -9,7 +9,7 @@
 #include <type_traits>
 #include "EngineUtils.h"
 #include "DebugActionsSystemCoreDefines.h"
-#include "WidgetBases/DebugInputSlotBase.h"
+#include "WidgetBases/DebugInputSlotWidgetBase.h"
 #include "DI_ActorComponentInstanceSelector.generated.h"
 
 template <typename C>
@@ -34,7 +34,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_ActorComponentInstanceSelector : public UDe
 	//==== Exposed Properties ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class UComboBoxString> MyComboBox = nullptr;
+	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
 	
 	//==== Properties ====\\.
 protected:
@@ -70,6 +70,9 @@ void UDI_ActorComponentInstanceSelector::Setup(FString InDebugInputTitle) {
 	if (World == NULL)
 		WIZ_RET_LOG( ,"World is invalid.", Error, LogDebugActionsSystem);
 	
+	if (MyComboBox == NULL)
+		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);
+	
 	if (MyComboBox.Get()->GetOptionCount() != 0) {
 		MyComboBox->ClearOptions();
 	}
@@ -79,14 +82,16 @@ void UDI_ActorComponentInstanceSelector::Setup(FString InDebugInputTitle) {
 	TActorIterator<AActor> ActorIt(World);
 	for (; ActorIt; ++ActorIt) {
 		
-		if (!IsValid(*ActorIt)) continue;
+		if (IsValid(*ActorIt) == false) 
+			continue;
 		
 		TArray<C*> Components;
 		ActorIt->GetComponents(CacheActorComponentClass, Components);
 		
 		for (int i(0); i < Components.Num(); ++i) {
 			
-			if (!IsValid(Components[i])) continue;
+			if (IsValid(Components[i]) == false) 
+				continue;
 			
 			ActorComponentsCache.Add(Components[i]);
 			
@@ -96,11 +101,14 @@ void UDI_ActorComponentInstanceSelector::Setup(FString InDebugInputTitle) {
 	}
 	
 	DebugInputTitle = FText::FromString(InDebugInputTitle);
-	MyDebugInputSlot->SetTitle(DebugInputTitle);
+	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
 }
 
 template <ActorComponentType C>
 C* UDI_ActorComponentInstanceSelector::GetValue() const {
+	
+	if (MyComboBox == NULL)
+		WIZ_RET_LOG(NULL, "My ComboBox is invalid", Error, LogDebugActionsSystem);
 	
 	if (CacheActorComponentClass == NULL) {
 		WIZ_RET_LOG(NULL, "Component selector not set up, do you call SetupSelector() after request debug input?", Error, LogDebugActionsSystem);

@@ -23,7 +23,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDASSettings : public UDeveloperSettings {
 
 public:
 	UPROPERTY(Config, EditAnywhere, Category = "Setup", meta = (AllowedClasses = "/Script/DebugActionsSystemCore.DebugActionsSystemDataAsset"))
-	TSoftObjectPtr<UDataAsset> DebugActionsSystemDataAsset;
+	TSoftObjectPtr<class UDebugActionsSystemDataAsset> DebugActionsSystemDataAsset;
 	
 	virtual FName GetCategoryName() const override { return FName("Plugins"); }
 	virtual FName GetSectionName() const override { return FName("Debug Actions System - bCore"); }

@@ -9,7 +9,7 @@ void UDI_EnumSelectorCB::PostInitProperties() {
 	Super::PostInitProperties();
 
 	//In game only
-	if (!GetWorld())
+	if (GetWorld() == NULL)
 		return;
 
 	DebugInputTitle = FText::FromString("Default Enum Selector");
@@ -17,5 +17,5 @@ void UDI_EnumSelectorCB::PostInitProperties() {
 
 	//==== Combo Box (Class Filter) ====\\.
 	MyComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<UComboBoxString>();
-	MyWidget = MyComboBox;
+	MyInputDataWidget = MyComboBox;
 }

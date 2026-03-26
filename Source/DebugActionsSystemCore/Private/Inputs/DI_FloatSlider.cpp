@@ -4,20 +4,23 @@
 #include "Inputs/DI_FloatSlider.h"
 #include "Components/SpinBox.h"
 #include "SubSystems/DebugSubsystem.h"
-#include "WidgetBases/DebugInputSlotBase.h"
+#include "WidgetBases/DebugInputSlotWidgetBase.h"
 
 void UDI_FloatSlider::PostInitProperties() {
 	Super::PostInitProperties();
 
 	//In game only
-	if (!GetWorld())
+	if (GetWorld() == NULL)
 		return;
 
 	DebugInputTitle = FText::FromString("Value");
 	DebugInputSize = FVector2D(80, 28);
 	
 	MySpinBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<USpinBox>();
-	MyWidget = MySpinBox;
+	MyInputDataWidget = MySpinBox;
+	
+	if (MySpinBox == NULL)
+		WIZ_RET_LOG( , "My SpinBox is invalid", Error, LogDebugActionsSystem);
 
 	MySpinBox->SetForegroundColor(FLinearColor(0, 0, 0, 1));
 
@@ -33,6 +36,12 @@ void UDI_FloatSlider::PostInitProperties() {
 
 void UDI_FloatSlider::Setup(FText InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue) {
 	
+	if (MySpinBox == NULL)
+		WIZ_RET_LOG( , "My SpinBox is invalid", Error, LogDebugActionsSystem);
+	
+	if (InDebugInputTitle.IsEmpty())
+		WIZ_LOG("Title is empty", Warning, LogDebugActionsSystem);
+	
 	DebugInputTitle = InDebugInputTitle;
 	MySpinBox->SetValue(MySpinBox->GetValue() > BothMinMaxValue.Y ? BothMinMaxValue.Y : MySpinBox->GetValue() < BothMinMaxValue.X ? BothMinMaxValue.X : MySpinBox->GetValue());
 	
@@ -47,9 +56,13 @@ void UDI_FloatSlider::Setup(FText InDebugInputTitle, FVector2f BothMinMaxValue, 
 	MySpinBox->SetMaxSliderValue(BothMinMaxValue.Y);
 	MySpinBox->SetMaxValue(BothMinMaxValue.Y);
 	
-	MyDebugInputSlot->SetTitle(DebugInputTitle);
+	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
 }
 
 float UDI_FloatSlider::GetValue() const {
-	return MySpinBox ? MySpinBox->GetValue() : 0.0f;
+	
+	if (MySpinBox == NULL)
+		WIZ_RET_LOG(0.0f, "My SpinBox is invalid", Error, LogDebugActionsSystem);
+	
+	return MySpinBox->GetValue();
 }

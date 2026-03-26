@@ -23,9 +23,9 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionWidgetBase : public UUserWidget {
 //##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
 
-private:
+protected:
 	UPROPERTY(BlueprintGetter="GetMyDebugAction")
-	TObjectPtr<class UDebugActionBase> MyDebugAction = nullptr;
+	TObjectPtr<class UDebugActionBase> MyDebugAction = NULL;
 
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##
@@ -35,6 +35,11 @@ public:
 #if UE_EDITOR
 	virtual const FText GetPaletteCategory() override;
 #endif
+
+protected:
+	virtual void NativeConstruct() override;
+
+public:
 	UFUNCTION(Category = "Debug Action", BlueprintPure)
 	UDebugActionBase* GetMyDebugAction() const { return MyDebugAction; }
 	

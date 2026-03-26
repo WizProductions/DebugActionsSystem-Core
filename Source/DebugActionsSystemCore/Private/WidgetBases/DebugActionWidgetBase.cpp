@@ -26,6 +26,12 @@ bool UDebugActionWidgetBase::InitDebugActionWidget_Implementation(UDebugActionBa
 const FText UDebugActionWidgetBase::GetPaletteCategory() {
 	return LOCTEXT("Debug Actions System", "Debug Actions System");
 }
+
+void UDebugActionWidgetBase::NativeConstruct() {
+	Super::NativeConstruct();
+	
+	
+}
 #endif
 
 EDebugActionResult UDebugActionWidgetBase::ExecuteMyDebugAction() {

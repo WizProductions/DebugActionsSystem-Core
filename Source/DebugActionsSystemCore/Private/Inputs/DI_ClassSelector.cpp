@@ -5,13 +5,13 @@
 #include "BlueprintFunctionsLibraries/DASFunctionLibrary.h"
 #include "Components/ComboBoxString.h"
 #include "SubSystems/DebugSubsystem.h"
-#include "WidgetBases/DebugInputSlotBase.h"
+#include "WidgetBases/DebugInputSlotWidgetBase.h"
 
 void UDI_ClassSelector::PostInitProperties() {
 	Super::PostInitProperties();
 
 	//In game only
-	if (!GetWorld())
+	if (GetWorld() == NULL)
 		return;
 
 	DebugInputTitle = FText::FromString("Default CF title");
@@ -19,24 +19,28 @@ void UDI_ClassSelector::PostInitProperties() {
 
 	//==== Combo Box ====\\.
 	MyClassFilterComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<UComboBoxString>();
-	MyWidget = MyClassFilterComboBox;
+	MyInputDataWidget = MyClassFilterComboBox;
 }
 
 TSubclassOf<class UObject> UDI_ClassSelector::GetValue() const {
 
-	if (MyClassFilterComboBox) {
-		if (AllDerivedClasses.IsValidIndex(MyClassFilterComboBox->GetSelectedIndex())) {
-			return AllDerivedClasses[MyClassFilterComboBox->GetSelectedIndex()];
-		}
+	if (MyClassFilterComboBox == NULL)
+		WIZ_RET_LOG(NULL, "My ComboBox is invalid", Error, LogDebugActionsSystem);
+	
+	if (AllDerivedClasses.IsValidIndex(MyClassFilterComboBox->GetSelectedIndex())) {
+		return AllDerivedClasses[MyClassFilterComboBox->GetSelectedIndex()];
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 void UDI_ClassSelector::Setup(FText InDebugInputTitle, TSubclassOf<UObject> InClassFilter) {
 	
 	if (ClassFilter == InClassFilter)
 		return;
+	
+	if (MyClassFilterComboBox == NULL)
+		WIZ_RET_LOG( , "My combo box is invalid", Error, LogDebugActionsSystem);
 	
 	ClassFilter = InClassFilter;
 	
@@ -53,5 +57,5 @@ void UDI_ClassSelector::Setup(FText InDebugInputTitle, TSubclassOf<UObject> InCl
 	ClassFilter = InClassFilter;
 	DebugInputTitle = InDebugInputTitle;
 	
-	MyDebugInputSlot->SetTitle(DebugInputTitle);
+	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
 }

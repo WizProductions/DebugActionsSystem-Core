@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "DebugInput.h"
 #include "Components/ComboBoxString.h"
-#include "WidgetBases/DebugInputSlotBase.h"
+#include "WidgetBases/DebugInputSlotWidgetBase.h"
 #include <type_traits>
 #include "DebugActionsSystemCoreDefines.h"
 #include "DI_EnumSelector.generated.h"
@@ -32,7 +32,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_EnumSelectorCB : public UDebugInput {
 	//==== Exposed Properties ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class UComboBoxString> MyComboBox = nullptr;
+	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
 	
 	//==== Properties ====\\.
 protected:
@@ -62,6 +62,12 @@ public:
 template <Enum E>
 void UDI_EnumSelectorCB::Setup(FText InDebugInputTitle) {
 	
+	if (MyComboBox == NULL)
+		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);
+	
+	if (InDebugInputTitle.IsEmpty())
+		WIZ_LOG("Title is empty", Warning, LogDebugActionsSystem);
+	
 	MyEnumPtr = StaticEnum<E>();
 	if (!MyEnumPtr) return;
 	
@@ -77,18 +83,18 @@ void UDI_EnumSelectorCB::Setup(FText InDebugInputTitle) {
 	}
 	
 	DebugInputTitle = InDebugInputTitle;
-	MyDebugInputSlot->SetTitle(DebugInputTitle);
+	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
 }
 
 template <Enum E>
 E UDI_EnumSelectorCB::GetValue() const {
 	
-	if (MyEnumPtr == NULL) {
-		WIZ_RET_LOG(static_cast<E>(0), "Enum are not initialized, do you call SetupEnumSelector method before?", Error, LogDebugActionsSystem);
-	}
-	if (MyComboBox) {
-		return static_cast<E>(MyComboBox->GetSelectedIndex());
-	}
+	if (MyComboBox == NULL)
+		WIZ_RET_LOG(static_cast<E>(0), "My ComboBox is invalid", Error, LogDebugActionsSystem);
 	
-	return static_cast<E>(0);
+	if (MyEnumPtr == NULL) {
+		WIZ_RET_LOG(static_cast<E>(0), "Enum are not initialized, did you call SetupEnumSelector method before?", Error, LogDebugActionsSystem);
+	}
+
+	return static_cast<E>(MyComboBox->GetSelectedIndex());
 }

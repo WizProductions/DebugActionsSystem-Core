@@ -25,7 +25,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_FloatSlider : public UDebugInput {
 	//==== Exposed Properties ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class USpinBox> MySpinBox;
+	TObjectPtr<class USpinBox> MySpinBox = NULL;
 
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##

@@ -24,7 +24,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_LocalPlayerSelector : public UDebugInput {
 public:
 	//==== Exposed Properties ====\\.
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class UComboBoxString> MyComboBox = nullptr;
+	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
 
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##

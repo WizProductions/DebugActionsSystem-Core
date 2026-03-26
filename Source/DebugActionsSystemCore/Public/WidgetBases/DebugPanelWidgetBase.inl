@@ -6,13 +6,11 @@
 #include "DebugPanelWidgetBase.h"
 #include "Blueprint/WidgetTree.h"
 
-template <typename T> requires std::is_base_of_v<UWidget, T>
-T* UDebugPanelWidgetBase::Internal_NewWidget() {
+template <typename WidgetT> requires std::is_base_of_v<UWidget, WidgetT>
+WidgetT* UDebugPanelWidgetBase::Internal_NewWidget(TSubclassOf<UWidget> WidgetClass) {
 
-	if (WidgetTree) {
-		T* NewWidget = WidgetTree->ConstructWidget<T>();
-		return NewWidget;
-	}
-
-	WIZ_RET_LOG(NULL, "WidgetTree is not properly created!", Error, LogDebugActionsSystem);
+	if (WidgetTree == NULL)
+		WIZ_RET_LOG(NULL, "WidgetTree is not properly created!", Error, LogDebugActionsSystem);
+	
+	return WidgetTree->ConstructWidget<WidgetT>(WidgetClass);
 }

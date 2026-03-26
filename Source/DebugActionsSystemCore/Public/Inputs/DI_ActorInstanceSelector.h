@@ -9,7 +9,7 @@
 #include <type_traits>
 #include "EngineUtils.h"
 #include "DebugActionsSystemCoreDefines.h"
-#include "WidgetBases/DebugInputSlotBase.h"
+#include "WidgetBases/DebugInputSlotWidgetBase.h"
 #include "DI_ActorInstanceSelector.generated.h"
 
 template <typename A>
@@ -34,7 +34,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_ActorInstanceSelector : public UDebugInput 
 	//==== Exposed Properties ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class UComboBoxString> MyComboBox = nullptr;
+	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
 	
 	//==== Properties ====\\.
 protected:
@@ -71,6 +71,9 @@ void UDI_ActorInstanceSelector::Setup(FString InDebugInputTitle) {
 		WIZ_RET_LOG( , "World is invalid.", Error, LogDebugActionsSystem);
 	}
 	
+	if (MyComboBox == NULL)
+		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);
+	
 	if (MyComboBox.Get()->GetOptionCount() != 0) {
 		MyComboBox->ClearOptions();
 	}
@@ -80,7 +83,8 @@ void UDI_ActorInstanceSelector::Setup(FString InDebugInputTitle) {
 	TActorIterator<A> ActorIt(World, CacheActorClass);
 	for (; ActorIt; ++ActorIt) {
 		
-		if (!IsValid(*ActorIt)) continue;
+		if (IsValid(*ActorIt) == false) 
+			continue;
 		
 		ActorsCache.Add(*ActorIt);
 		
@@ -89,15 +93,17 @@ void UDI_ActorInstanceSelector::Setup(FString InDebugInputTitle) {
 	}
 	
 	DebugInputTitle = FText::FromString(InDebugInputTitle);
-	MyDebugInputSlot->SetTitle(DebugInputTitle);
+	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
 }
 
 template <ActorType A>
 A* UDI_ActorInstanceSelector::GetValue() const {
 	
-	if (CacheActorClass == NULL) {
+	if (MyComboBox == NULL)
+		WIZ_RET_LOG(NULL, "My ComboBox is invalid", Error, LogDebugActionsSystem);
+	
+	if (CacheActorClass == NULL)
 		WIZ_RET_LOG(NULL, "Component selector not set up, do you call SetupSelector() after request debug input?", Error, LogDebugActionsSystem);
-	}
 	
 	auto Index = MyComboBox.Get()->GetSelectedIndex();
 	if (ActorsCache.IsValidIndex(Index)) {

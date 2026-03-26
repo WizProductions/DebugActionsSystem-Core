@@ -9,7 +9,7 @@ void UDI_ActorInstanceSelector::PostInitProperties() {
 	Super::PostInitProperties();
 
 	//In game only
-	if (!GetWorld())
+	if (GetWorld() == NULL)
 		return;
 
 	DebugInputTitle = FText::FromString("Default AIS Title");
@@ -17,5 +17,8 @@ void UDI_ActorInstanceSelector::PostInitProperties() {
 
 	//==== Combo Box (Class Filter) ====\\.
 	MyComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<UComboBoxString>();
-	MyWidget = MyComboBox;
+	if (MyComboBox == NULL)
+		WIZ_RET_LOG( , "Widget is invalid", Error, LogDebugActionsSystem);
+	
+	MyInputDataWidget = MyComboBox;
 }

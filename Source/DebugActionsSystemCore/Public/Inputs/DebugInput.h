@@ -31,9 +31,9 @@ protected:
 protected:
 	//==== Properties ====\\.
 	UPROPERTY(BlueprintReadOnly, Category = "References")
-	TObjectPtr<class UWidget> MyWidget = NULL;
+	TObjectPtr<class UWidget> MyInputDataWidget = NULL;
 	UPROPERTY(BlueprintReadOnly, Category = "References")
-	class UDebugInputSlotBase* MyDebugInputSlot = NULL;
+	class UDebugInputSlotWidgetBase* MyDebugInputSlotWidget = NULL;
 
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##
@@ -41,10 +41,12 @@ protected:
 	
 public:
 	UFUNCTION(BlueprintCallable, Category = "References")
-	UWidget* GetMyWidget() { return MyWidget; }
+	UWidget* GetMyInputDataWidget() { return MyInputDataWidget; }
+	UFUNCTION(BlueprintCallable, Category = "References")
+	UDebugInputSlotWidgetBase* GetMyDebugInputSlotWidget() const { return MyDebugInputSlotWidget; }
 	
-	virtual void OnAddedToSlot(class UDebugInputSlotBase* InSlot);
-	virtual void OnRemovedFromSlot(class UDebugInputSlotBase* InSlot);
+	virtual void OnAddedToSlot(class UDebugInputSlotWidgetBase* InSlot);
+	virtual void OnRemovedFromSlot(class UDebugInputSlotWidgetBase* InSlot);
 	virtual void SetWidgetVisibility(ESlateVisibility InVisibility);
 	virtual void RefreshValues();
 };

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "DebugInputSlotBase.generated.h"
+#include "DebugInputSlotWidgetBase.generated.h"
 
 //#############################################################################
 //##--------------------------------- CLASS ---------------------------------##
@@ -15,7 +15,7 @@
  * <b>Need to be added in the panel manually to create slots for debug inputs</b>.
  */
 UCLASS(Abstract)
-class DEBUGACTIONSSYSTEMCORE_API UDebugInputSlotBase : public UUserWidget {
+class DEBUGACTIONSSYSTEMCORE_API UDebugInputSlotWidgetBase : public UUserWidget {
 	GENERATED_BODY()
 
 //#############################################################################
@@ -24,19 +24,22 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugInputSlotBase : public UUserWidget {
 
 protected:
 	//==== Widgets Binding ====\\.
-	//==== Properties ====\\.
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget), Category = "UserInterface|Interaction")
 	TObjectPtr<class UNamedSlot> NS_InputSlot;
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget), Category = "UserInterface|Painting")
 	TObjectPtr<class UTextBlock> TB_InputTitle;
-
+	
+	//==== Properties ====\\.
 private:
 	/** Slot in the debug panel canvas */
 	UPROPERTY()
 	TObjectPtr<class UCanvasPanelSlot> MySlot;
 	/** Canvas Slot of Named Slot contains InputSlot */
 	UPROPERTY()
-	TObjectPtr<class UCanvasPanelSlot> InputWidgetSlot;
+	TObjectPtr<class UCanvasPanelSlot> NamedSlotWidgetSlot;
+	
+	UPROPERTY()
+	TObjectPtr<class UDebugInput> MyDebugInput;
 	
 	//==== Flags ====\\.
 	bool bIsUsed : 1 = false;
@@ -56,9 +59,10 @@ public:
 	bool IsUsed() { return bIsUsed; }
 
 	UWidget* GetInputWidget() const;
-	UCanvasPanelSlot* GetInputWidgetSlot() const { return InputWidgetSlot; }
+	UCanvasPanelSlot* GetInputWidgetSlot() const { return NamedSlotWidgetSlot; }
+	
 	void SetInputWidget(class UDebugInput* InDebugInput);
-	void RemoveInputWidget();
+	void RemoveInputWidget() { SetInputWidget(nullptr); }
 
 	void SetTitle(const FText& InTitle);	
 };

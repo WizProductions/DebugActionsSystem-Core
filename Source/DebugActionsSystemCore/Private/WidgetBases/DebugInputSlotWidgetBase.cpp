@@ -1,6 +1,6 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
-#include "WidgetBases/DebugInputSlotBase.h"
+#include "WidgetBases/DebugInputSlotWidgetBase.h"
 #include "DebugActionsSystemCoreDefines.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/NamedSlot.h"
@@ -11,7 +11,7 @@
 
 #define LOCTEXT_NAMESPACE "UMG"
 
-void UDebugInputSlotBase::NativeConstruct() {
+void UDebugInputSlotWidgetBase::NativeConstruct() {
 	Super::NativeConstruct();
 
 	bIsUsed = false;
@@ -21,7 +21,7 @@ void UDebugInputSlotBase::NativeConstruct() {
 		WIZ_RET_LOG( , "CanvasSlot not valid. Are you sure Debug Input Slot is a child of Canvas?", Error, LogDebugActionsSystem);
 	}
 
-	InputWidgetSlot = Cast<UCanvasPanelSlot>(NS_InputSlot->Slot);
+	NamedSlotWidgetSlot = Cast<UCanvasPanelSlot>(NS_InputSlot->Slot);
 
 	//First outer -> Widget tree -> outer -> Debug Panel
 	UObject* Owner = GetOuter()->GetOuter();
@@ -39,35 +39,38 @@ void UDebugInputSlotBase::NativeConstruct() {
 }
 
 #if WITH_EDITOR
-const FText UDebugInputSlotBase::GetPaletteCategory() {
+const FText UDebugInputSlotWidgetBase::GetPaletteCategory() {
 	return LOCTEXT("Debug Actions System", "Debug Actions System");
 }
 #endif
 
 
-UWidget* UDebugInputSlotBase::GetInputWidget() const { return NS_InputSlot ? NS_InputSlot->GetContent() : NULL; }
+UWidget* UDebugInputSlotWidgetBase::GetInputWidget() const { return NS_InputSlot ? NS_InputSlot->GetContent() : NULL; }
 
-void UDebugInputSlotBase::SetInputWidget(UDebugInput* InDebugInput) {
+void UDebugInputSlotWidgetBase::SetInputWidget(UDebugInput* InDebugInput) {
 
 	//Clear Content
-	if (InDebugInput == nullptr) {
+	if (InDebugInput == NULL) {
+		
+		MyDebugInput->OnRemovedFromSlot(this);
+		
 		NS_InputSlot->ClearChildren();
+		MyDebugInput = NULL;
+		bIsUsed = false;
+		
+		this->SetVisibility(ESlateVisibility::Collapsed);
+		
 		return;
 	}
-
-	//eg: floatSlider wanted? => send to namedSlot
-	NS_InputSlot->SetContent(InDebugInput->GetMyWidget());
+	
+	MyDebugInput = InDebugInput;
+	
+	NS_InputSlot->SetContent(MyDebugInput->GetMyInputDataWidget());
 	
 	bIsUsed = true;
 	this->SetVisibility(ESlateVisibility::Visible);
-	InDebugInput->OnAddedToSlot(this);
-
+	
+	MyDebugInput->OnAddedToSlot(this);
 }
 
-void UDebugInputSlotBase::RemoveInputWidget() {
-	SetInputWidget(nullptr);
-	bIsUsed = false;
-	this->SetVisibility(ESlateVisibility::Collapsed);
-}
-
-void UDebugInputSlotBase::SetTitle(const FText& InTitle) { TB_InputTitle->SetText(InTitle); }
+void UDebugInputSlotWidgetBase::SetTitle(const FText& InTitle) { TB_InputTitle->SetText(InTitle); }
