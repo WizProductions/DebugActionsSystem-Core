@@ -8,7 +8,7 @@
 
 #if WITH_EDITOR
 void UDebugActionFolder::UpdateEditorDataAssetTitle() {
-	Private_DataAssetActionTitle = FString("Folder: " + GetDebugActionTitle().ToString());
+	Private_DataAssetActionTitle = FString(/*"Folder: " + */GetDebugActionTitle().ToString());
 }
 
 void UDebugActionFolder::PostLoad() {
@@ -50,6 +50,12 @@ void UDebugActionFolder::PostEditChangeProperty(FPropertyChangedEvent& PropertyC
 }
 #endif
 
+void UDebugActionFolder::RefreshChildren() {
+	for (auto DA : DebugActionsStored) {
+		DA->OnParentFolderIsDeveloped(this);
+	}
+}
+
 EDebugActionResult UDebugActionFolder::InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutActions, UDebugSubsystem* Subsystem) {
 
 	//Set properties
@@ -59,7 +65,7 @@ EDebugActionResult UDebugActionFolder::InitializeDebugAction(TArray<TObjectPtr<U
 	return EDebugActionResult::HierarchyInitialization;
 }
 
-void UDebugActionFolder::SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int DepthRecursivity) {
+void UDebugActionFolder::SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int32 DepthRecursivity) {
 	
 	if (DepthRecursivity <= DepthLevel) { //Change children's visibility by recursivity
 		if (bNewIsCollapsed) { //Hide all children
@@ -82,9 +88,9 @@ void UDebugActionFolder::SetDebugActionWidgetVisibility(bool bNewIsCollapsed, in
 	}
 }
 
-EDebugActionResult UDebugActionFolder::ExecuteDebugAction() {
+EDebugActionResult UDebugActionFolder::ExecuteDebugAction_Implementation() {
 
-	if (Super::ExecuteDebugAction() == EDebugActionResult::Success) {
+	if (Super::ExecuteDebugAction_Implementation() == EDebugActionResult::Success) {
 		//Catch the old debug action folder (is different -> hide old children's)
 		MyDebugSubsystem->OnFolderStateChange(bDebugActionState, this); //@UPGRADE: to event delegates to replace GetDebugPanelWidget()?
 
@@ -106,11 +112,4 @@ EDebugActionResult UDebugActionFolder::ExecuteDebugAction() {
 	}
 	
 	return EDebugActionResult::Fail;
-}
-
-void UDebugActionFolder::RefreshChildren() {
-	
-	for (auto DA : DebugActionsStored) {
-		DA->OnParentFolderIsDeveloped(this);
-	}
 }

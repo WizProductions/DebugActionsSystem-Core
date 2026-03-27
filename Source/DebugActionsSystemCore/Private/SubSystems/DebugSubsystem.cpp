@@ -34,7 +34,7 @@ void UDebugSubsystem::PlayerControllerChanged(APlayerController* NewPlayerContro
 	Internal_SetupDebugActionsSystem(false);
 }
 
-void UDebugSubsystem::OnDebugMenuKeyPressed() {
+void UDebugSubsystem::OnDebugMenuKeyPressed_Implementation() {
 
 	WIZ_LOG(FString::Printf(TEXT("New debug panel widget state: %s"), !bDebugSystemOpened ? TEXT("true") : TEXT("false")), Log, LogDebugActionsSystem);
 	
@@ -50,7 +50,7 @@ void UDebugSubsystem::OnDebugMenuKeyPressed() {
 	OnDebugPanelWidgetVisibilityChange(bDebugSystemOpened);
 }
 
-void UDebugSubsystem::OnDebugPanelWidgetVisibilityChange(bool bVisible) {
+void UDebugSubsystem::OnDebugPanelWidgetVisibilityChange_Implementation(bool bVisible) {
 	
 	//Clear all DI used
 	this->Internal_FreeAllDebugInputs();
@@ -65,13 +65,13 @@ void UDebugSubsystem::OnDebugPanelWidgetVisibilityChange(bool bVisible) {
 	}
 }
 
-void UDebugSubsystem::OnFolderStateChange(bool bIsDeveloped, UDebugActionBase* InDebugActionFolder) {
+void UDebugSubsystem::OnFolderStateChange_Implementation(bool bIsDeveloped, UDebugActionBase* InDebugActionFolder) {
 
 	if (InDebugActionFolder == NULL)
 		WIZ_RET_LOG( , "DebugActionFolder invalid", Warning, LogDebugActionsSystem);
 	
 	bool bIsNewFolderClicked = LastFolderClicked != InDebugActionFolder;
-	int FolderDepthLevel = InDebugActionFolder->GetDepthLevel();
+	int32 FolderDepthLevel = InDebugActionFolder->GetDepthLevel();
 	
 	//Clear all DI used array
 	this->Internal_FreeAllDebugInputs();
@@ -92,10 +92,12 @@ void UDebugSubsystem::OnFolderStateChange(bool bIsDeveloped, UDebugActionBase* I
 		return; //Do not change the visibility of debug inputs on collapse a root folder because DI for roots DA just spawned
 	}
 	
-	//Refresh children of parent debug action folder when the child folder is collapse (request DI if needed)
+	//Refresh children of parent debug action folder when the child folder is collapse
 	UDebugActionBase* DA = MyDebugPanelWidget.Get()->GetDebugActionByDepth(FolderDepthLevel - 1);
-	UDebugActionFolder* DAF = Cast<UDebugActionFolder>(DA);
+	if (DA == NULL)
+		WIZ_RET_LOG( , FString::Printf(TEXT("Debug action on depth %d not found"), FolderDepthLevel), Warning, LogDebugActionsSystem);
 	
+	UDebugActionFolder* DAF = Cast<UDebugActionFolder>(DA);
 	if (DAF == NULL)
 		WIZ_RET_LOG( , FString::Printf(TEXT("Cast failed, the DA %s on depth %d is not a folder"), *DA->GetClass()->GetName(), FolderDepthLevel), Warning, LogDebugActionsSystem);
 	

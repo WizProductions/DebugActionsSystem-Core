@@ -46,8 +46,8 @@ ULocalPlayer* UDI_LocalPlayerSelector::GetValue() const {
 	return LocalPlayers[SelectedIndex];
 }
 
-void UDI_LocalPlayerSelector::RefreshValues() {
-	Super::RefreshValues();
+void UDI_LocalPlayerSelector::RefreshValues_Implementation() {
+	Super::RefreshValues_Implementation();
 	
 	if (MyComboBox == NULL)
 		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);

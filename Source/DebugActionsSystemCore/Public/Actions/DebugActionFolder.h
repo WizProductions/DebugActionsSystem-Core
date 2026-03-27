@@ -39,9 +39,10 @@ public:
 #endif
 	
 	virtual EDebugActionResult InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutActions, UDebugSubsystem* Subsystem) override;
-	virtual void SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int DepthRecursivity) override;
-	virtual FText GetDebugActionTitle() const override { return DebugFolderTitle; }
-	virtual EDebugActionResult ExecuteDebugAction() override;
+	virtual void SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int32 DepthRecursivity) override;
 	
 	void RefreshChildren();
+	
+	virtual FText GetDebugActionTitle_Implementation() const override { return FText::FromString("[F] " + DebugFolderTitle.ToString()); }
+	virtual EDebugActionResult ExecuteDebugAction_Implementation() override;
 };

@@ -57,21 +57,22 @@ private:
 	
 public:
 	static UDebugSubsystem* Get(const UObject* WorldContextObject);
-
-#pragma region Debug Actions System
+	
 	virtual void PlayerControllerChanged(APlayerController* NewPlayerController) override;
-private:
+protected:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Inputs")
 	void OnDebugMenuKeyPressed();
 public:
 	UFUNCTION(BlueprintCallable, Category="References")
-	UDebugPanelWidgetBase* GetDebugPanelWidget() const { return MyDebugPanelWidget; }
+	FORCEINLINE UDebugPanelWidgetBase* GetDebugPanelWidget() const { return MyDebugPanelWidget; }
 	UFUNCTION(BlueprintCallable, Category="References")
-	UDebugActionsSystemDataAsset* GetDebugDataAsset() const { return MyDebugDataAsset; }
-#pragma endregion
+	FORCEINLINE UDebugActionsSystemDataAsset* GetDebugDataAsset() const { return MyDebugDataAsset; }
 
 #pragma region Debug Actions
 public:
+	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
 	void OnDebugPanelWidgetVisibilityChange(bool bVisible);
+	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
 	void OnFolderStateChange(bool bIsDeveloped, class UDebugActionBase* InDebugActionFolder);
 #pragma endregion
 
@@ -81,7 +82,11 @@ public:
 	template <typename T> requires std::is_base_of_v<UDebugInput, T>
 	T* RequestDebugInput(const FGameplayTag& SharedKeyTag = DAS_SharedDIKey_Default);
 	/** Request a debug input on specified slot. @param SharedKeyTag: is the id used to get the same input of other DA, both action who requested the same input type with the same key get the exactly same input */
-	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "DebugInputClass", DynamicOutputParam = "OutDebugInput", AutoCreateRefTerm = "SharedKeyTag"))
+	UFUNCTION(BlueprintCallable, meta = (
+			DeterminesOutputType = "DebugInputClass", 
+			DynamicOutputParam = "OutDebugInput",
+			AutoCreateRefTerm = "SharedKeyTag", 
+			Categories = "DAS.SharedDIKey"))
 	bool RequestDebugInput(TSubclassOf<UDebugInput> DebugInputClass, UDebugInput*& OutDebugInput, const FGameplayTag& SharedKeyTag);
 
 	/**

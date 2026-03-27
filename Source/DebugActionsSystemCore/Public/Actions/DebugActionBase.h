@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "DebugActionBase.generated.h"
 
-enum class EDebugActionResult : UINT8;
+enum class EDebugActionResult : uint8;
 
 //#############################################################################
 //##---------------------------------- CLASS --------------------------------##
@@ -15,7 +15,7 @@ enum class EDebugActionResult : UINT8;
  * Base of all debug actions, cannot be instanced. \n
  * You can create a custom DebugActions by inheriting from this base and overload <b>ExecuteDebugAction()</b> method
  */
-UCLASS(Blueprintable, Abstract)
+UCLASS(Blueprintable, EditInlineNew, Abstract, HideDropdown)
 class DEBUGACTIONSSYSTEMCORE_API UDebugActionBase : public UObject {
 	GENERATED_BODY()
 
@@ -32,12 +32,16 @@ protected:
 	//==== Properties ====\\.
 	UPROPERTY(BlueprintGetter="GetMyDebugActionWidget", BlueprintSetter="SetMyDebugActionWidget")
 	TObjectPtr<class UDebugActionWidgetBase> MyDebugActionWidget;
-	
-	int DepthLevel = -1;
-	bool bDebugActionState = false;
-	
-	UPROPERTY()
+
+	UPROPERTY(BlueprintReadOnly, Category = "References")
 	class UDebugSubsystem* MyDebugSubsystem = NULL;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Properties")
+	int32 DepthLevel = -1;
+	
+	//==== Flags ====\\.
+	UPROPERTY(BlueprintReadOnly, Category = "Properties|Flags")
+	bool bDebugActionState = false;
 
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##
@@ -48,26 +52,33 @@ public:
 	virtual void PostInitProperties() override;
 	virtual void UpdateEditorDataAssetTitle();
 #endif
-
+	
 	/** @param OutDebugActionsHierarchy: Reserved for UDebugActionFolder subclass */
 	virtual EDebugActionResult InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutDebugActionsHierarchy, class UDebugSubsystem* Subsystem);
 	virtual void SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int DepthRecursivity);
 	virtual void SetDebugActionWidgetVisibility(bool bNewIsCollapsed);
-	virtual void OnParentFolderIsDeveloped(class UDebugActionFolder* ParentFolder);
-	virtual void OnParentFolderIsCollapsed(class UDebugActionFolder* ParentFolder);
-	void SetDepthLevel(const int InDepthLevel) { DepthLevel = InDepthLevel; }
-	int GetDepthLevel() const { return DepthLevel; }
 	
-	UFUNCTION(BlueprintCallable, Category = "Debug Action")
-	virtual FText GetDebugActionTitle() const { return FText::FromString("DefaultAction"); }
-	UFUNCTION(BlueprintCallable, Category = "Debug Action")
-	UDebugActionWidgetBase* GetMyDebugActionWidget() const { return MyDebugActionWidget; }
-	UFUNCTION(BlueprintCallable, Category = "Debug Action")
-	void SetMyDebugActionWidget(UDebugActionWidgetBase* InDebugActionWidget) { MyDebugActionWidget = InDebugActionWidget; }
-	UFUNCTION(BlueprintCallable, Category = "Debug Action")
-	bool GetDebugActionState() const { return bDebugActionState; }
-	UFUNCTION(BlueprintCallable, Category = "Debug Action")
-	void SetDebugActionState(const bool bInDebugActionState) { bDebugActionState = bInDebugActionState; }
-	UFUNCTION(BlueprintCallable, Category = "Debug Action")
-	virtual EDebugActionResult ExecuteDebugAction();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "DebugActionsSystem")
+	void OnPostInitProperties();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
+	void OnParentFolderIsDeveloped(class UDebugActionFolder* ParentFolder);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
+	void OnParentFolderIsCollapsed(class UDebugActionFolder* ParentFolder);
+	
+	FORCEINLINE void SetDepthLevel(const int InDepthLevel) { DepthLevel = InDepthLevel; }
+	
+	UFUNCTION(BlueprintCallable, Category = "Properties")
+	FORCEINLINE int32 GetDepthLevel() const { return DepthLevel; }
+	UFUNCTION(BlueprintCallable, Category = "Properties")
+	FORCEINLINE UDebugActionWidgetBase* GetMyDebugActionWidget() const { return MyDebugActionWidget; }
+	UFUNCTION(BlueprintCallable, Category = "Properties")
+	FORCEINLINE void SetMyDebugActionWidget(UDebugActionWidgetBase* InDebugActionWidget) { MyDebugActionWidget = InDebugActionWidget; }
+	UFUNCTION(BlueprintCallable, Category = "Properties")
+	FORCEINLINE bool GetDebugActionState() const { return bDebugActionState; }
+	UFUNCTION(BlueprintCallable, Category = "Properties")
+	FORCEINLINE void SetDebugActionState(const bool bInDebugActionState) { bDebugActionState = bInDebugActionState; }
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem|Settings")
+	FText GetDebugActionTitle() const;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
+	EDebugActionResult ExecuteDebugAction();
 };

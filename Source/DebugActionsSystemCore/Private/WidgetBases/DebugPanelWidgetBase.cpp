@@ -26,47 +26,6 @@ UDebugSubsystem* UDebugPanelWidgetBase::GetDebugSubSystemChecked() {
 
 #endif
 
-void UDebugPanelWidgetBase::Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder) {
-	
-	int DADepthLevel = InDebugActionFolder->GetDepthLevel();
-
-	//User clicked on another debug action folder -> hide old debug action folder children's (same depth)
-	if (DebugActionsDepthsArray[DADepthLevel] != InDebugActionFolder) {
-		if (UDebugActionBase* OldOnDepthDebugAction = DebugActionsDepthsArray[DADepthLevel]) {
-			OldOnDepthDebugAction->SetDebugActionWidgetVisibility(true, DADepthLevel);
-			OldOnDepthDebugAction->SetDebugActionState(false);
-		}
-		DebugActionsDepthsArray[DADepthLevel] = InDebugActionFolder;
-	}
-}
-
-void UDebugPanelWidgetBase::Internal_FindAndInitChildDebugActions(UDebugSubsystem* Subsystem, int ParentDebugActionIndex, int DepthLevel, TArray<TObjectPtr<UDebugActionBase>>& ChildDebugActions, TObjectPtr<UDebugActionBase> ParentDebugAction) {
-	
-	//At this point, the debug action is a folder
-	int DebugActionIndex = 0;
-	int NextDepthLevel = DepthLevel + 1;
-	if (MaxDepthLevel < DepthLevel) MaxDepthLevel = DepthLevel;
-	
-	TArray<TObjectPtr<UDebugActionBase>> OutDebugActionsStored;
-	
-	//For every debugAction check children recursively
-	for (auto ChildDebugAction : ChildDebugActions) {
-
-		if (ChildDebugAction == nullptr) {
-			WIZ_LOG("A ChildDebugAction invalid", Error, LogDebugActionsSystem);
-			continue;
-		}
-
-		AddDebugActionChildWidget(DebugActionIndex, DepthLevel, ChildDebugAction, ParentDebugAction);
-		
-		if (ChildDebugAction->InitializeDebugAction(OutDebugActionsStored, Subsystem) == EDebugActionResult::HierarchyInitialization) {
-			Internal_FindAndInitChildDebugActions(Subsystem, DebugActionIndex, NextDepthLevel, OutDebugActionsStored, ChildDebugAction);
-		}
-
-		DebugActionIndex++;
-	}
-}
-
 bool UDebugPanelWidgetBase::AddDebugActionChildWidget_Implementation(
 	int ChildDebugActionIndex, int DepthLevel, UDebugActionBase* ChildDebugAction, UDebugActionBase* ParentDebugAction) {
 
@@ -103,7 +62,15 @@ bool UDebugPanelWidgetBase::CreateDebugActionWidget_Implementation(UDebugActionB
 	return NewWidget->InitDebugActionWidget(LinkedDebugAction);
 }
 
-void UDebugPanelWidgetBase::GenerateDebugMenu(TArray<TObjectPtr<UDebugActionBase>>& DebugActions) {
+void UDebugPanelWidgetBase::OnFolderStateChange_Implementation(bool bIsDeveloped, bool bIsNewFolderClicked, UDebugActionBase* InDebugActionFolder) {
+	Internal_UpdateDebugActionsDepthLevelsArray(InDebugActionFolder);
+	
+	if (bIsNewFolderClicked == false) {
+		SetActiveDebugInputSlotsVisibility(bIsDeveloped ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	}
+}
+
+void UDebugPanelWidgetBase::GenerateDebugMenu(const TArray<TObjectPtr<UDebugActionBase>>& DebugActions) {
 
 	int DebugActionIndex = 0;
 	TArray<TObjectPtr<UDebugActionBase>> OutDebugActionsStored;
@@ -125,16 +92,8 @@ void UDebugPanelWidgetBase::GenerateDebugMenu(TArray<TObjectPtr<UDebugActionBase
 		DebugActionIndex++;
 	}
 
-	if (MaxDepthLevel < 0) MaxDepthLevel = 0;
-	DebugActionsDepthsArray.SetNum(MaxDepthLevel+1);
-}
-
-void UDebugPanelWidgetBase::OnFolderStateChange(bool bIsDeveloped, bool bIsNewFolderClicked, UDebugActionBase* InDebugActionFolder) {
-	Internal_UpdateDebugActionsDepthLevelsArray(InDebugActionFolder);
-	
-	if (bIsNewFolderClicked == false) {
-		SetActiveDebugInputSlotsVisibility(bIsDeveloped ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
-	}
+	if (DeepestLevel < 0) DeepestLevel = 0;
+	DebugActionsDepthsArray.SetNum(DeepestLevel+1);
 }
 
 UDebugActionBase* UDebugPanelWidgetBase::GetDebugActionByDepth(int Depth) const {
@@ -194,5 +153,46 @@ void UDebugPanelWidgetBase::SetActiveDebugInputSlotsVisibility(ESlateVisibility 
 	for (auto DISlot : DebugInputsSlotRegistered) {
 		if (DISlot->IsUsed())
 			DISlot->SetVisibility(InVisibility);
+	}
+}
+
+void UDebugPanelWidgetBase::Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder) {
+	
+	int DADepthLevel = InDebugActionFolder->GetDepthLevel();
+
+	//User clicked on another debug action folder -> hide old debug action folder children's (same depth)
+	if (DebugActionsDepthsArray[DADepthLevel] != InDebugActionFolder) {
+		if (UDebugActionBase* OldOnDepthDebugAction = DebugActionsDepthsArray[DADepthLevel]) {
+			OldOnDepthDebugAction->SetDebugActionWidgetVisibility(true, DADepthLevel);
+			OldOnDepthDebugAction->SetDebugActionState(false);
+		}
+		DebugActionsDepthsArray[DADepthLevel] = InDebugActionFolder;
+	}
+}
+
+void UDebugPanelWidgetBase::Internal_FindAndInitChildDebugActions(UDebugSubsystem* Subsystem, int ParentDebugActionIndex, int32 DepthLevel, TArray<TObjectPtr<UDebugActionBase>>& ChildDebugActions, TObjectPtr<UDebugActionBase> ParentDebugAction) {
+	
+	//At this point, the debug action is a folder
+	int DebugActionIndex = 0;
+	int NextDepthLevel = DepthLevel + 1;
+	if (DeepestLevel < DepthLevel) DeepestLevel = DepthLevel;
+	
+	TArray<TObjectPtr<UDebugActionBase>> OutDebugActionsStored;
+	
+	//For every debugAction check children recursively
+	for (auto ChildDebugAction : ChildDebugActions) {
+
+		if (ChildDebugAction == nullptr) {
+			WIZ_LOG("A ChildDebugAction invalid", Error, LogDebugActionsSystem);
+			continue;
+		}
+
+		AddDebugActionChildWidget(DebugActionIndex, DepthLevel, ChildDebugAction, ParentDebugAction);
+		
+		if (ChildDebugAction->InitializeDebugAction(OutDebugActionsStored, Subsystem) == EDebugActionResult::HierarchyInitialization) {
+			Internal_FindAndInitChildDebugActions(Subsystem, DebugActionIndex, NextDepthLevel, OutDebugActionsStored, ChildDebugAction);
+		}
+
+		DebugActionIndex++;
 	}
 }

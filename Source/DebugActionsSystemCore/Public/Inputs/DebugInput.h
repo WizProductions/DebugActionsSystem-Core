@@ -13,7 +13,7 @@
 /**
 * Debug input class is used to allow user to select a value sent to action.
 */
-UCLASS(Blueprintable, Abstract)
+UCLASS(Blueprintable, Abstract, HideDropdown)
 class DEBUGACTIONSSYSTEMCORE_API UDebugInput : public UObject {
 	GENERATED_BODY()
 
@@ -44,9 +44,12 @@ public:
 	UWidget* GetMyInputDataWidget() { return MyInputDataWidget; }
 	UFUNCTION(BlueprintCallable, Category = "References")
 	UDebugInputSlotWidgetBase* GetMyDebugInputSlotWidget() const { return MyDebugInputSlotWidget; }
-	
-	virtual void OnAddedToSlot(class UDebugInputSlotWidgetBase* InSlot);
-	virtual void OnRemovedFromSlot(class UDebugInputSlotWidgetBase* InSlot);
-	virtual void SetWidgetVisibility(ESlateVisibility InVisibility);
-	virtual void RefreshValues();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
+	void OnAddedToSlot(class UDebugInputSlotWidgetBase* InSlot);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
+	void OnRemovedFromSlot(class UDebugInputSlotWidgetBase* InSlot);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
+	void SetWidgetVisibility(ESlateVisibility InVisibility);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
+	void RefreshValues();
 };

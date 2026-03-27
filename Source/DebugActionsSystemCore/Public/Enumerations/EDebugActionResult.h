@@ -16,5 +16,5 @@ UENUM(Blueprintable)
 enum class EDebugActionResult : uint8 {
 	Fail						= 0      UMETA(DisplayName = "Fail"),
 	Success						= 1 << 0 UMETA(DisplayName = "Success"), // 0b0001
-	HierarchyInitialization		= 1 << 1 UMETA(DisplayName = "Hierarchy Initialization") // 0b0010
+	HierarchyInitialization		= 1 << 1 UMETA(Hidden /*DisplayName = "Hierarchy Initialization"*/) // 0b0010
 };

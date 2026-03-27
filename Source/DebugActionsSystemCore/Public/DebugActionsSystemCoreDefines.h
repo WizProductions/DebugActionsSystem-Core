@@ -12,7 +12,7 @@
 #define DAS_WIZ_RET_LOG_RED(ReturnValue, Message, Verbosity, ...) WIZ_RET_LOG(ReturnValue, Message, Verbosity, LogDebugActionsSystem, true, FColor::Red, 10.f, ##__VA_ARGS__)
 
 #define DAS_EXECUTE_ACTION_SUPER_FIRST_CHECK \
-EDebugActionResult Result = Super::ExecuteDebugAction(); \
+EDebugActionResult Result = Super::ExecuteDebugAction_Implementation(); \
 if (Result == EDebugActionResult::Fail) { \
 DAS_WIZ_RET_LOG_RED(Result, "A problem occured while execute the debug action.", Error); \
 }

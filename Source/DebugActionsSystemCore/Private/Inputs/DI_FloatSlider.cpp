@@ -34,7 +34,7 @@ void UDI_FloatSlider::PostInitProperties() {
 	MySpinBox->SetMaxFractionalDigits(2);
 }
 
-void UDI_FloatSlider::Setup(FText InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue) {
+void UDI_FloatSlider::Setup_Implementation(const FText& InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue) {
 	
 	if (MySpinBox == NULL)
 		WIZ_RET_LOG( , "My SpinBox is invalid", Error, LogDebugActionsSystem);
@@ -59,7 +59,7 @@ void UDI_FloatSlider::Setup(FText InDebugInputTitle, FVector2f BothMinMaxValue, 
 	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
 }
 
-float UDI_FloatSlider::GetValue() const {
+float UDI_FloatSlider::GetValue_Implementation() const {
 	
 	if (MySpinBox == NULL)
 		WIZ_RET_LOG(0.0f, "My SpinBox is invalid", Error, LogDebugActionsSystem);

@@ -5,7 +5,7 @@
 #include "DebugActionsSystemCoreDefines.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDebugInput::OnAddedToSlot(UDebugInputSlotWidgetBase* InSlot) {
+void UDebugInput::OnAddedToSlot_Implementation(UDebugInputSlotWidgetBase* InSlot) {
 
 	MyDebugInputSlotWidget = InSlot;
 	
@@ -22,17 +22,16 @@ void UDebugInput::OnAddedToSlot(UDebugInputSlotWidgetBase* InSlot) {
 	}
 }
 
-void UDebugInput::OnRemovedFromSlot(class UDebugInputSlotWidgetBase* InSlot) {
+void UDebugInput::OnRemovedFromSlot_Implementation(class UDebugInputSlotWidgetBase* InSlot) {
 	MyDebugInputSlotWidget = NULL;
 }
 
-void UDebugInput::SetWidgetVisibility(ESlateVisibility InVisibility) {
-	if (MyInputDataWidget) {
-		MyInputDataWidget->SetVisibility(InVisibility);
-	}
-	else {
+void UDebugInput::SetWidgetVisibility_Implementation(ESlateVisibility InVisibility) {
+	
+	if (MyInputDataWidget == NULL)
 		WIZ_LOG("Widget is invalid, make sure UDebugInput has set MyWidget to created widget.", Error, LogDebugActionsSystem);
-	}
+	
+	MyInputDataWidget->SetVisibility(InVisibility);
 }
 
-void UDebugInput::RefreshValues() {}
+void UDebugInput::RefreshValues_Implementation() {}

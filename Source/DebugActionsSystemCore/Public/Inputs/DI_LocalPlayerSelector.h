@@ -35,5 +35,5 @@ protected:
 
 public:
 	ULocalPlayer* GetValue() const;
-	virtual void RefreshValues() override;
+	virtual void RefreshValues_Implementation() override;
 };

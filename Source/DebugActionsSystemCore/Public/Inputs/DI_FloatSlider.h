@@ -34,6 +34,8 @@ public:
 public:
 	virtual void PostInitProperties() override;
 	
-	void Setup(FText InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue = 0.f);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem|Setup")
+	void Setup(const FText& InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue = 0.f);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
 	float GetValue() const;
 };

@@ -12,7 +12,7 @@
 /**
 * A simple structure for the FreeDebugInputs Map line.
 */
-USTRUCT(BlueprintType)
+USTRUCT()
 struct FFreeDebugInputsLine {
 	GENERATED_BODY()
 
@@ -23,10 +23,4 @@ struct FFreeDebugInputsLine {
 //==== Properties ====\\.
 public:
 	TSet<TObjectPtr<class UDebugInput>> FreeDebugLine;
-	
-//#############################################################################
-//##--------------------------------- METHODS -------------------------------##
-//#############################################################################
-
-
 };

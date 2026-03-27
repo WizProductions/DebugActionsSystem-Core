@@ -21,7 +21,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugAction_FreeCam : public UDebugActionBase 
 //#############################################################################
 
 protected:
-	//==== References ====\\.
+	//==== Properties ====\\.
 	UPROPERTY(BlueprintReadWrite, Category = "References")
 	class UDI_LocalPlayerSelector* MyPlayerSelector = NULL; 
 
@@ -30,7 +30,8 @@ protected:
 //#############################################################################
 	
 public:
-	virtual FText GetDebugActionTitle() const override { return FText::FromString(FString("FreeCam")); }
-	virtual void OnParentFolderIsDeveloped(UDebugActionFolder* ParentFolder) override;
-	virtual EDebugActionResult ExecuteDebugAction() override;
+	virtual FText GetDebugActionTitle_Implementation() const override { return FText::FromString(FString("FreeCam")); }
+	virtual void OnParentFolderIsDeveloped_Implementation(UDebugActionFolder* ParentFolder) override;
+	
+	virtual EDebugActionResult ExecuteDebugAction_Implementation() override;
 };

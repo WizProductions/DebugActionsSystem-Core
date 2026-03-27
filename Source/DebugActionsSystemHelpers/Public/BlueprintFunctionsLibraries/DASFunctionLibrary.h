@@ -33,23 +33,25 @@ class DEBUGACTIONSSYSTEMHELPERS_API UDASFunctionLibrary : public UBlueprintFunct
 
 public:
 	/** Returns all derived classes of ParentClass loaded in the game */
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Utils")
 	static void GetAllDerivedClasses(TSubclassOf<UObject> ParentClass, TArray<UClass*>& OutSubClasses, bool bIncludeAbstract = false);
 	
 	UFUNCTION(BlueprintPure, Category = "Debug", meta = (DefaultToSelf = "ContextObject", HidePin = "ContextObject"))
 	static FString GetBlueprintPMethodPrefix(const UObject* ContextObject, FString MethodName);
 	
+	//@TODO: Remake attribute, CustomThunk?
+	UFUNCTION(BlueprintCallable, Category = "Debug", meta = (BlueprintInternalUseOnly = "true"))
 	static void K2_WizLog(
 		const UObject* ContextObject, 
-		FString MethodName,
-		const FString& Message            = "",
+		FString MethodName				  = "UnknownMethod",
+		const FString& Message            = "DefaultMessage",
 		bool bAddLogMessage				  = false,
 		FColor OnScreenMessageColor       = FColor::White,
 		float OnScreenMessageDuration     = 7.f,
-		uint64 OnScreenMessageKey         = INDEX_NONE
+		int64 OnScreenMessageKey          = -1
 	);
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Utils|UMG")
 	static void SetImageOfButtonStyles(
 		class UButton* ButtonWidget,
 		UPARAM(meta=(
@@ -61,7 +63,7 @@ public:
 		UPARAM(meta=(Bitmask, BitmaskEnum="/Script/DebugActionsSystem.EWidgetStyleMode")) int32 WidgetStyleModesMask = 15
 	);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Utils|UMG")
 	static void SetDrawAsOfButtonStyles(
 		class UButton* ButtonWidget,
 		ESlateBrushDrawType::Type DrawAsType,

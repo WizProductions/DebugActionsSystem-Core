@@ -44,24 +44,14 @@ const FText UDebugInputSlotWidgetBase::GetPaletteCategory() {
 }
 #endif
 
+UCanvasPanelSlot* UDebugInputSlotWidgetBase::GetInputWidgetSlot_Implementation() const { return NamedSlotWidgetSlot; }
 
-UWidget* UDebugInputSlotWidgetBase::GetInputWidget() const { return NS_InputSlot ? NS_InputSlot->GetContent() : NULL; }
+UWidget* UDebugInputSlotWidgetBase::GetInputWidget_Implementation() const { return NS_InputSlot ? NS_InputSlot->GetContent() : NULL; }
 
-void UDebugInputSlotWidgetBase::SetInputWidget(UDebugInput* InDebugInput) {
-
-	//Clear Content
-	if (InDebugInput == NULL) {
-		
-		MyDebugInput->OnRemovedFromSlot(this);
-		
-		NS_InputSlot->ClearChildren();
-		MyDebugInput = NULL;
-		bIsUsed = false;
-		
-		this->SetVisibility(ESlateVisibility::Collapsed);
-		
-		return;
-	}
+void UDebugInputSlotWidgetBase::SetInputWidget_Implementation(UDebugInput* InDebugInput) {
+	
+	if (InDebugInput == NULL)
+		RemoveInputWidget();
 	
 	MyDebugInput = InDebugInput;
 	
@@ -73,4 +63,15 @@ void UDebugInputSlotWidgetBase::SetInputWidget(UDebugInput* InDebugInput) {
 	MyDebugInput->OnAddedToSlot(this);
 }
 
-void UDebugInputSlotWidgetBase::SetTitle(const FText& InTitle) { TB_InputTitle->SetText(InTitle); }
+void UDebugInputSlotWidgetBase::RemoveInputWidget_Implementation() {
+	
+	MyDebugInput->OnRemovedFromSlot(this);
+		
+	NS_InputSlot->ClearChildren();
+	MyDebugInput = NULL;
+	bIsUsed = false;
+		
+	this->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UDebugInputSlotWidgetBase::SetTitle_Implementation(const FText& InTitle) { TB_InputTitle->SetText(InTitle); }

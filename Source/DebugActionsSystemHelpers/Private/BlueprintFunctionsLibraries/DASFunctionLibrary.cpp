@@ -91,7 +91,7 @@ void UDASFunctionLibrary::K2_WizLog(
 	bool bAddLogMessage,
 	FColor OnScreenMessageColor,
 	float OnScreenMessageDuration,
-	uint64 OnScreenMessageKey
+	int64 OnScreenMessageKey
 ) {
-	
+	//@TODO: Make definition
 }

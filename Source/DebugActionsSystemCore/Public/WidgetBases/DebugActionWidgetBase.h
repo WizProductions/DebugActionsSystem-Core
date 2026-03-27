@@ -24,7 +24,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionWidgetBase : public UUserWidget {
 //#############################################################################
 
 protected:
-	UPROPERTY(BlueprintGetter="GetMyDebugAction")
+	UPROPERTY(BlueprintReadOnly, Category = "References")
 	TObjectPtr<class UDebugActionBase> MyDebugAction = NULL;
 
 //#############################################################################
@@ -40,12 +40,9 @@ protected:
 	virtual void NativeConstruct() override;
 
 public:
-	UFUNCTION(Category = "Debug Action", BlueprintPure)
-	UDebugActionBase* GetMyDebugAction() const { return MyDebugAction; }
-	
-	UFUNCTION(Category = "Debug Action", BlueprintCallable, BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
 	bool InitDebugActionWidget(UDebugActionBase* LinkedDebugAction);
 	
-	UFUNCTION(Category = "Debug Action", BlueprintCallable)
-	EDebugActionResult ExecuteMyDebugAction();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
+	EDebugActionResult ExecuteAction();
 };

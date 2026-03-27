@@ -30,15 +30,14 @@ protected:
 	TObjectPtr<class UTextBlock> TB_InputTitle;
 	
 	//==== Properties ====\\.
-private:
+protected:
 	/** Slot in the debug panel canvas */
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, Category = "UserInterface|Interaction|Slot")
 	TObjectPtr<class UCanvasPanelSlot> MySlot;
 	/** Canvas Slot of Named Slot contains InputSlot */
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, Category = "UserInterface|Interaction|Slot")
 	TObjectPtr<class UCanvasPanelSlot> NamedSlotWidgetSlot;
-	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, Category = "References")
 	TObjectPtr<class UDebugInput> MyDebugInput;
 	
 	//==== Flags ====\\.
@@ -56,13 +55,17 @@ public:
 #endif
 
 public:
-	bool IsUsed() { return bIsUsed; }
+	UFUNCTION(BlueprintCallable, Category = "Properties|Flags")
+	FORCEINLINE bool IsUsed() const { return bIsUsed; }
 
+	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem|References")
+	UCanvasPanelSlot* GetInputWidgetSlot() const;
+	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem|References")
 	UWidget* GetInputWidget() const;
-	UCanvasPanelSlot* GetInputWidgetSlot() const { return NamedSlotWidgetSlot; }
-	
+	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
 	void SetInputWidget(class UDebugInput* InDebugInput);
-	void RemoveInputWidget() { SetInputWidget(nullptr); }
-
+	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
+	void RemoveInputWidget();
+	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
 	void SetTitle(const FText& InTitle);	
 };

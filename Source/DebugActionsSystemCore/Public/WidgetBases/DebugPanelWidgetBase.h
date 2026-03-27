@@ -36,11 +36,12 @@ protected:
 	TArray<TObjectPtr<UDebugActionBase>> DebugActionsDepthsArray;
 
 	//==== Properties ====\\.
-	int MaxDepthLevel = -1;
+	UPROPERTY(BlueprintReadOnly, Category = "Properties")
+	int32 DeepestLevel = -1;
 	UPROPERTY(BlueprintGetter = "GetDebugSubSystemChecked", Category = "References")
 	TObjectPtr<class UDebugSubsystem> MyDebugSubsystem = NULL;
 	UPROPERTY(BlueprintReadOnly, Category = "References")
-	TArray<TObjectPtr<UDebugInputSlotWidgetBase>> DebugInputsSlotRegistered = {};
+	TArray<TObjectPtr<UDebugInputSlotWidgetBase>> DebugInputsSlotRegistered;
 
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##
@@ -51,26 +52,21 @@ protected:
 #endif
 
 public:
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category = "References")
 	UDebugSubsystem* GetDebugSubSystemChecked();
-private:
-	void Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder);
 protected:
-	void Internal_FindAndInitChildDebugActions(class UDebugSubsystem* Subsystem, int ParentDebugActionIndex, int DepthLevel, TArray<TObjectPtr<UDebugActionBase>>& ChildDebugActions, TObjectPtr<UDebugActionBase> ParentDebugAction);
-	UFUNCTION(BlueprintNativeEvent, Category="DebugAction")
+	UFUNCTION(BlueprintNativeEvent, Category="DebugActionsSystem")
 	bool AddDebugActionParentWidget(int DebugActionIndex, int DepthLevel, UDebugActionBase* DebugAction);
-	UFUNCTION(BlueprintNativeEvent, Category="DebugAction")
+	UFUNCTION(BlueprintNativeEvent, Category="DebugActionsSystem")
 	bool AddDebugActionChildWidget(int ChildDebugActionIndex, int DepthLevel, UDebugActionBase* ChildDebugAction, UDebugActionBase* ParentDebugAction);
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugAction")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
 	bool CreateDebugActionWidget(UDebugActionBase* LinkedDebugAction, class UDebugActionWidgetBase*& NewWidget, class UCanvasPanelSlot*& NewWidgetCanvasSlot);
-	void GenerateDebugMenu(TArray<TObjectPtr<UDebugActionBase>>& DebugActions);
+	UFUNCTION(BlueprintNativeEvent, Category="DebugActionsSystem")
 	void OnFolderStateChange(bool bIsDeveloped, bool bIsNewFolderClicked, UDebugActionBase* InDebugActionFolder);
+	
+	void GenerateDebugMenu(const TArray<TObjectPtr<UDebugActionBase>>& DebugActions);
 	UDebugActionBase* GetDebugActionByDepth(int Depth) const;
-private:
-	template <typename WidgetT = UWidget> requires std::is_base_of_v<UWidget, WidgetT>
-	WidgetT* Internal_NewWidget(TSubclassOf<UWidget> WidgetClass = WidgetT::StaticClass());
-public:
 	void RegisterDebugInputSlot(class UDebugInputSlotWidgetBase* InDebugInputSlot);
 	/** Request a slot assignment to DI @return True if a slot is free and DI is assigned to his, otherwise False */
 	bool AssignSlotToDebugInput(class UDebugInput* InDebugInput);
@@ -80,6 +76,12 @@ public:
 	/** Set a new visibility to all registered and used debug input slots */
 	void SetActiveDebugInputSlotsVisibility(ESlateVisibility InVisibility);
 
+private:
+	void Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder);
+	void Internal_FindAndInitChildDebugActions(class UDebugSubsystem* Subsystem, int ParentDebugActionIndex, int32 DepthLevel, TArray<TObjectPtr<UDebugActionBase>>& ChildDebugActions, TObjectPtr<UDebugActionBase> ParentDebugAction);
+	
+	template <typename WidgetT = UWidget> requires std::is_base_of_v<UWidget, WidgetT>
+	WidgetT* Internal_NewWidget(TSubclassOf<UWidget> WidgetClass = WidgetT::StaticClass());
 	
 	friend class UDebugSubsystem;
 };

@@ -9,6 +9,7 @@ void UDebugActionBase::PostInitProperties() {
 	Super::PostInitProperties();
 	
 	UpdateEditorDataAssetTitle();
+	OnPostInitProperties();
 }
 
 void UDebugActionBase::UpdateEditorDataAssetTitle() {
@@ -32,11 +33,12 @@ void UDebugActionBase::SetDebugActionWidgetVisibility(bool bNewIsCollapsed) {
 	MyDebugActionWidget->SetVisibility(static_cast<ESlateVisibility>(bNewIsCollapsed));
 }
 
-void UDebugActionBase::OnParentFolderIsDeveloped(class UDebugActionFolder* ParentFolder) {}
-void UDebugActionBase::OnParentFolderIsCollapsed(class UDebugActionFolder* ParentFolder) {}
+void UDebugActionBase::OnParentFolderIsCollapsed_Implementation(class UDebugActionFolder* ParentFolder) {}
+void UDebugActionBase::OnParentFolderIsDeveloped_Implementation(class UDebugActionFolder* ParentFolder) {}
 
-EDebugActionResult UDebugActionBase::ExecuteDebugAction() {
-	
+EDebugActionResult UDebugActionBase::ExecuteDebugAction_Implementation() {
 	bDebugActionState = !bDebugActionState;
 	return EDebugActionResult::Success;
 }
+
+FText UDebugActionBase::GetDebugActionTitle_Implementation() const { return FText::FromString("DefaultAction"); }

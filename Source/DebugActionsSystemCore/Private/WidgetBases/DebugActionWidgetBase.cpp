@@ -34,7 +34,6 @@ void UDebugActionWidgetBase::NativeConstruct() {
 }
 #endif
 
-EDebugActionResult UDebugActionWidgetBase::ExecuteMyDebugAction() {
-
+EDebugActionResult UDebugActionWidgetBase::ExecuteAction_Implementation() {
 	return MyDebugAction->ExecuteDebugAction();
 }
