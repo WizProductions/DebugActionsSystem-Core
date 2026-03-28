@@ -15,6 +15,15 @@ void UDebugActionBase::PostInitProperties() {
 void UDebugActionBase::UpdateEditorDataAssetTitle() {
 	Private_DataAssetActionTitle = GetDebugActionTitle().ToString();
 }
+
+// ReSharper disable once CppUE4BlueprintCallableFunctionMayBeConst
+void UDebugActionBase::RefreshDebugDataAssetView() {
+	
+	//Force refresh the data asset view when the folder title is loaded from the disk
+	if (UObject* Outer = GetOuter()) {
+		Outer->PostEditChange();
+	}
+}
 #endif
 
 EDebugActionResult UDebugActionBase::InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutDebugActionsHierarchy, UDebugSubsystem* Subsystem) {

@@ -1,11 +1,11 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
 
-#include "Inputs/DI_LocalPlayerSelector.h"
+#include "Inputs/DebugInput_LocalPlayerSelector.h"
 #include "Components/ComboBoxString.h"
 #include "SubSystems/DebugSubsystem.h"
 
-void UDI_LocalPlayerSelector::ConfigureDebugInput_Implementation() {
+void UDebugInput_LocalPlayerSelector::ConfigureDebugInput_Implementation() {
 	Super::ConfigureDebugInput_Implementation();
 	
 	DebugInputTitle = FText::FromString("Player");
@@ -21,7 +21,7 @@ void UDI_LocalPlayerSelector::ConfigureDebugInput_Implementation() {
 }
 
 // ReSharper disable once CppUE4BlueprintCallableFunctionMayBeConst
-void UDI_LocalPlayerSelector::RefreshDebugInputConfiguration() {
+void UDebugInput_LocalPlayerSelector::RefreshDebugInputConfiguration() {
 	
 	if (MyComboBox == NULL)
 		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);
@@ -45,7 +45,7 @@ void UDI_LocalPlayerSelector::RefreshDebugInputConfiguration() {
 }
 
 
-ULocalPlayer* UDI_LocalPlayerSelector::GetValue() const {
+ULocalPlayer* UDebugInput_LocalPlayerSelector::GetValue() const {
 	
 	if (MyComboBox == NULL)
 		WIZ_RET_LOG(NULL, "My ComboBox is invalid", Error, LogDebugActionsSystem);

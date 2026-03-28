@@ -1,12 +1,12 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
 
-#include "Inputs/DI_IntSlider.h"
+#include "Inputs/DebugInput_IntSlider.h"
 #include "Components/SpinBox.h"
 #include "SubSystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDI_IntSlider::ConfigureDebugInput_Implementation() {
+void UDebugInput_IntSlider::ConfigureDebugInput_Implementation() {
 	Super::ConfigureDebugInput_Implementation();
 	
 	DebugInputTitle = FText::FromString("Value");
@@ -30,7 +30,7 @@ void UDI_IntSlider::ConfigureDebugInput_Implementation() {
 	MySpinBox->SetMaxFractionalDigits(0);
 }
 
-void UDI_IntSlider::Setup(const FString& InDebugInputTitle, const FIntVector2& BothMinMaxValue, int DefaultValue) {
+void UDebugInput_IntSlider::Setup(const FString& InDebugInputTitle, const FIntVector2& BothMinMaxValue, int DefaultValue) {
 	
 	if (MySpinBox == NULL)
 		WIZ_RET_LOG( , "My SpinBox is invalid", Error, LogDebugActionsSystem);
@@ -55,7 +55,7 @@ void UDI_IntSlider::Setup(const FString& InDebugInputTitle, const FIntVector2& B
 	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
 }
 
-int UDI_IntSlider::GetValue() const {
+int UDebugInput_IntSlider::GetValue() const {
 	
 	if (MySpinBox == NULL)
 		WIZ_RET_LOG(0, "My SpinBox is invalid", Error, LogDebugActionsSystem);

@@ -36,7 +36,7 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="UI|Settings", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
 	FVector2D DebugActionsWidgetsOffset = { 300.f, 50.f };
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="UI|Settings", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
-	TMap<EDebugActionResult, FSlateColor> DebugActionWidgetExecuteColorFromResult;
+	TMap<EDebugActionResult, FLinearColor> DebugActionWidgetExecuteColorFromResult;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="Keybinds", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
 	// ReSharper disable once UnrealHeaderToolError //- BUG, FKey not found but existing
 	TArray<FKey> DASOpenMenuKeys;

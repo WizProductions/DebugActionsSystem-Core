@@ -34,7 +34,7 @@ class DEBUGACTIONSSYSTEMHELPERS_API UDASFunctionLibrary : public UBlueprintFunct
 public:
 	/** Returns all derived classes of ParentClass loaded in the game */
 	UFUNCTION(BlueprintCallable, Category = "Utils")
-	static void GetAllDerivedClasses(TSubclassOf<UObject> ParentClass, TArray<UClass*>& OutSubClasses, bool bIncludeAbstract = false);
+	static void GetAllDerivedClasses(TSubclassOf<UObject> ParentClass, TArray<UClass*>& OutSubClasses, bool bIncludeParentClass = true, bool bIncludeAbstract = false);
 	
 	UFUNCTION(BlueprintPure, Category = "Debug", meta = (DefaultToSelf = "ContextObject", HidePin = "ContextObject"))
 	static FString GetBlueprintPMethodPrefix(const UObject* ContextObject, FString MethodName);

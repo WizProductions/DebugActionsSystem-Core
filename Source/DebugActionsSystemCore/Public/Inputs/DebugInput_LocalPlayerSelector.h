@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DebugInput.h"
-#include "DI_LocalPlayerSelector.generated.h"
+#include "DebugInput_LocalPlayerSelector.generated.h"
 
 //#############################################################################
 //##--------------------------------- CLASS ---------------------------------##
@@ -14,7 +14,7 @@
 * An input that allows you to select a local player connected in local (Alone or Splitscreen). \n
 */
 UCLASS()
-class DEBUGACTIONSSYSTEMCORE_API UDI_LocalPlayerSelector : public UDebugInput {
+class DEBUGACTIONSSYSTEMCORE_API UDebugInput_LocalPlayerSelector : public UDebugInput {
 	GENERATED_BODY()
 
 //##############################################################################

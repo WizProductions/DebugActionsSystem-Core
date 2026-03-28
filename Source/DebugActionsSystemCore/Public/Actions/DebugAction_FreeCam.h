@@ -23,7 +23,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugAction_FreeCam : public UDebugActionBase 
 protected:
 	//==== Properties ====\\.
 	UPROPERTY(BlueprintReadWrite, Category = "References")
-	class UDI_LocalPlayerSelector* MyPlayerSelector = NULL; 
+	class UDebugInput_LocalPlayerSelector* MyPlayerSelector = NULL; 
 
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##

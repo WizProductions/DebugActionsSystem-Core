@@ -4,24 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "DebugInput.h"
-#include "DI_IntSlider.generated.h"
+#include "DebugInput_FloatSlider.generated.h"
 
 //#############################################################################
 //##---------------------------------- CLASS --------------------------------##
 //#############################################################################
 
 /**
-* An input that allows you to select an int value between ranges. \n
+* An input that allows you to select a float value between ranges. \n
 * Setup is optional, it allows you to customize slider.
 */
 UCLASS()
-class DEBUGACTIONSSYSTEMCORE_API UDI_IntSlider : public UDebugInput {
+class DEBUGACTIONSSYSTEMCORE_API UDebugInput_FloatSlider : public UDebugInput {
 	GENERATED_BODY()
 
 //#############################################################################
 //##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
-
+	
 	//==== References ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly)
@@ -35,7 +35,7 @@ public:
 	virtual void ConfigureDebugInput_Implementation() override;
 
 	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
-	void Setup(const FString& InDebugInputTitle, const FIntVector2& BothMinMaxValue, int DefaultValue = 0);
+	void Setup(const FText& InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue = 0.f);
 	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem")
-	int GetValue() const;
+	float GetValue() const;
 };

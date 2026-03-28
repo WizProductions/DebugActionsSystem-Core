@@ -13,9 +13,10 @@ enum class EDebugActionResult : uint8;
 
 /**
  * Base of all debug actions, cannot be instanced. \n
- * You can create a custom DebugActions by inheriting from this base and overload <b>ExecuteDebugAction()</b> method
+ * You can create a custom DebugActions by inheriting from this base and overload ExecuteDebugAction() method
+ * You can hide variables with "Hidden" category.
  */
-UCLASS(Blueprintable, EditInlineNew, Abstract, HideDropdown)
+UCLASS(Blueprintable, EditInlineNew, Abstract, HideDropdown, HideCategories=("Hidden"))
 class DEBUGACTIONSSYSTEMCORE_API UDebugActionBase : public UObject {
 	GENERATED_BODY()
 
@@ -49,6 +50,8 @@ public:
 #if WITH_EDITOR
 	virtual void PostInitProperties() override;
 	virtual void UpdateEditorDataAssetTitle();
+	UFUNCTION(BlueprintCallable, Category = "DataAsset|Refresh")
+	void RefreshDebugDataAssetView();
 #endif
 	
 	/** @param OutDebugActionsHierarchy: Reserved for UDebugActionFolder subclass */

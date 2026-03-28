@@ -1,14 +1,14 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
 
-#include "Inputs/DI_ActorInstanceSelector.h"
+#include "Inputs/DebugInput_ActorInstanceSelector.h"
 
 #include "EngineUtils.h"
 #include "Components/ComboBoxString.h"
 #include "SubSystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDI_ActorInstanceSelector::ConfigureDebugInput_Implementation() {
+void UDebugInput_ActorInstanceSelector::ConfigureDebugInput_Implementation() {
 	Super::ConfigureDebugInput_Implementation();
 	
 	DebugInputTitle = FText::FromString("Default AIS Title");
@@ -22,7 +22,7 @@ void UDI_ActorInstanceSelector::ConfigureDebugInput_Implementation() {
 	MyInputDataWidget = MyComboBox;
 }
 
-void UDI_ActorInstanceSelector::Setup(TSubclassOf<AActor> ActorClass, const FString& InDebugInputTitle) {
+void UDebugInput_ActorInstanceSelector::Setup(TSubclassOf<AActor> ActorClass, const FString& InDebugInputTitle) {
 	
 	UWorld* World = GetWorld();
 	if (World == NULL) {
@@ -55,6 +55,6 @@ void UDI_ActorInstanceSelector::Setup(TSubclassOf<AActor> ActorClass, const FStr
 }
 
 // ReSharper disable once CppUE4BlueprintCallableFunctionMayBeConst
-void UDI_ActorInstanceSelector::GetValue(TSubclassOf<AActor> ActorClass, UObject*& OutObject) {
+void UDebugInput_ActorInstanceSelector::GetValue(TSubclassOf<AActor> ActorClass, UObject*& OutObject) {
 	OutObject = GetValue<AActor>();
 }

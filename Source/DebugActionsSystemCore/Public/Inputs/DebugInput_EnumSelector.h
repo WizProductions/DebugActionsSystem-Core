@@ -8,7 +8,7 @@
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 #include <type_traits>
 #include "DebugActionsSystemCoreDefines.h"
-#include "DI_EnumSelector.generated.h"
+#include "DebugInput_EnumSelector.generated.h"
 
 template <typename T>
 concept Enum = std::is_enum_v<T>;
@@ -22,7 +22,7 @@ concept Enum = std::is_enum_v<T>;
 * NEEDS A SETUP.
 */
 UCLASS()
-class DEBUGACTIONSSYSTEMCORE_API UDI_EnumSelectorCB : public UDebugInput {
+class DEBUGACTIONSSYSTEMCORE_API UDebugInput_EnumSelectorCB : public UDebugInput {
 	GENERATED_BODY()
 
 //##############################################################################
@@ -65,11 +65,11 @@ public:
 //#############################################################################
 
 template <Enum E>
-void UDI_EnumSelectorCB::Setup(const FText& InDebugInputTitle) {
+void UDebugInput_EnumSelectorCB::Setup(const FText& InDebugInputTitle) {
 	Setup(StaticEnum<E>(), InDebugInputTitle);
 }
 
 template <Enum E>
-E UDI_EnumSelectorCB::GetValue() const {
+E UDebugInput_EnumSelectorCB::GetValue() const {
 	return static_cast<E>(K2_GetValue());
 }

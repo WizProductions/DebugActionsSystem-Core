@@ -1,13 +1,13 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
 
-#include "Inputs/DI_ClassSelector.h"
+#include "Inputs/DebugInput_ClassSelector.h"
 #include "BlueprintFunctionsLibraries/DASFunctionLibrary.h"
 #include "Components/ComboBoxString.h"
 #include "SubSystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDI_ClassSelector::ConfigureDebugInput_Implementation() {
+void UDebugInput_ClassSelector::ConfigureDebugInput_Implementation() {
 	Super::ConfigureDebugInput_Implementation();
 	
 	DebugInputTitle = FText::FromString("Default CF title");
@@ -18,7 +18,7 @@ void UDI_ClassSelector::ConfigureDebugInput_Implementation() {
 	MyInputDataWidget = MyClassFilterComboBox;
 }
 
-TSubclassOf<class UObject> UDI_ClassSelector::GetValue() const {
+TSubclassOf<class UObject> UDebugInput_ClassSelector::GetValue() const {
 
 	if (MyClassFilterComboBox == NULL)
 		WIZ_RET_LOG(NULL, "My ComboBox is invalid", Error, LogDebugActionsSystem);
@@ -30,7 +30,7 @@ TSubclassOf<class UObject> UDI_ClassSelector::GetValue() const {
 	return NULL;
 }
 
-void UDI_ClassSelector::Setup(const FText& InDebugInputTitle, TSubclassOf<UObject> InClassFilter) {
+void UDebugInput_ClassSelector::Setup(const FText& InDebugInputTitle, TSubclassOf<UObject> InClassFilter, bool bIncludeParentClass, bool bIncludeAbstractClass, bool bAlphabeticSort) {
 	
 	if (ClassFilter == InClassFilter)
 		return;
@@ -41,8 +41,16 @@ void UDI_ClassSelector::Setup(const FText& InDebugInputTitle, TSubclassOf<UObjec
 	ClassFilter = InClassFilter;
 	
 	//Fill comboBox with derived classes.
-	UDASFunctionLibrary::GetAllDerivedClasses(ClassFilter, AllDerivedClasses);
+	UDASFunctionLibrary::GetAllDerivedClasses(ClassFilter, AllDerivedClasses, bIncludeParentClass, bIncludeAbstractClass);
 
+	if (bAlphabeticSort) {
+		AllDerivedClasses.Sort([](const UClass& A, const UClass& B)
+			{
+				return A.GetName().ToUpper() < B.GetName().ToUpper();
+			});
+	}
+	
+	
 	if (MyClassFilterComboBox->GetOptionCount() != 0)
 		MyClassFilterComboBox->ClearOptions();
 	

@@ -4,7 +4,7 @@
 #include "DataAssets/DebugActionsSystemDataAsset.h"
 #include "DebugActionsSystemCoreDefines.h"
 #include "Actions/DebugActionFolder.h"
-#include "Inputs/DI_FloatSlider.h"
+#include "Inputs/DebugInput_FloatSlider.h"
 #include "WidgetBases/DebugPanelWidgetBase.h"
 #include "Settings/DASSettings.h"
 

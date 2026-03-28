@@ -8,27 +8,27 @@
 #include "GameFramework/Actor.h"
 #include <type_traits>
 #include "DebugActionsSystemCoreDefines.h"
-#include "DI_ActorInstanceSelector.generated.h"
+#include "DebugInput_ActorComponentInstanceSelector.generated.h"
 
-template <typename A>
-concept ActorType = std::is_base_of_v<AActor, A>;
+template <typename C>
+concept ActorComponentType = std::is_base_of_v<UActorComponent, C>;
 
 //#############################################################################
 //##--------------------------------- CLASS ---------------------------------##
 //#############################################################################
 
 /**
-* An input that retrieves all <b>Actor</b> currently present in the world and allows you to select one. \n
+* An input that retrieves all ActorComponent currently present in the world and allows you to select one \n
 * NEEDS A SETUP.
 */
 UCLASS()
-class DEBUGACTIONSSYSTEMCORE_API UDI_ActorInstanceSelector : public UDebugInput {
+class DEBUGACTIONSSYSTEMCORE_API UDebugInput_ActorComponentInstanceSelector : public UDebugInput {
 	GENERATED_BODY()
 
 //##############################################################################
 //##--------------------------------- FIELDS ---------------------------------##
 //##############################################################################
-
+	
 	//==== References ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly)
@@ -39,9 +39,9 @@ protected:
 	UPROPERTY()
 	TSubclassOf<UObject> ClassFilter = UObject::StaticClass();
 	UPROPERTY()
-	TArray<TObjectPtr<AActor>> ActorsCache;
+	TArray<TObjectPtr<UActorComponent>> ActorComponentsCache;
 	UPROPERTY()
-	TObjectPtr<UClass> CacheActorClass = NULL;
+	TObjectPtr<UClass> CacheActorComponentClass = NULL;
 
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##
@@ -50,38 +50,41 @@ protected:
 public:
 	virtual void ConfigureDebugInput_Implementation() override;
 
-	template <ActorType A>
+	template <ActorComponentType C>
 	void Setup(const FString& InDebugInputTitle);
-	template <ActorType A>
-	A* GetValue() const;
+	template <ActorComponentType C>
+	C* GetValue() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
-	void Setup(TSubclassOf<AActor> ActorClass, const FString& InDebugInputTitle);
-	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem", meta = (DeterminesOutputType = "ActorClass", DynamicOutputParam = "OutObject"))
-	void GetValue(TSubclassOf<AActor> ActorClass, UObject*& OutObject);
+	void Setup(TSubclassOf<UActorComponent> ActorComponentClass, const FString& InDebugInputTitle);
+	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem", meta = (DeterminesOutputType = "ActorComponentClass", DynamicOutputParam = "OutObject"))
+	void GetValue(TSubclassOf<UActorComponent> ActorComponentClass, UObject*& OutObject);
 };
 
 //#############################################################################
 //##-------------------------- INLINE TEMPLATES -----------------------------##
 //#############################################################################
 
-template <ActorType A>
-void UDI_ActorInstanceSelector::Setup(const FString& InDebugInputTitle) {
-	this->Setup(A::StaticClass(), InDebugInputTitle);
+template <ActorComponentType C>
+void UDebugInput_ActorComponentInstanceSelector::Setup(const FString& InDebugInputTitle) {
+	this->Setup(C::StaticClass(), InDebugInputTitle);
 }
 
-template <ActorType A>
-A* UDI_ActorInstanceSelector::GetValue() const {
+template <ActorComponentType C>
+C* UDebugInput_ActorComponentInstanceSelector::GetValue() const {
 	
 	if (MyComboBox == NULL)
 		WIZ_RET_LOG(NULL, "My ComboBox is invalid", Error, LogDebugActionsSystem);
 	
-	if (CacheActorClass == NULL)
+	if (CacheActorComponentClass == NULL) {
 		WIZ_RET_LOG(NULL, "Component selector not set up, do you call SetupSelector() after request debug input?", Error, LogDebugActionsSystem);
+	}
 	
 	auto Index = MyComboBox.Get()->GetSelectedIndex();
-	if (ActorsCache.IsValidIndex(Index)) {
-		return static_cast<A*>(ActorsCache[Index]);	
+	if (Index == INDEX_NONE) return NULL;
+	
+	if (ActorComponentsCache.IsValidIndex(Index)) {
+		return static_cast<C*>(ActorComponentsCache[Index]);	
 	}
 	
 	WIZ_RET_LOG(NULL, "Index of component invalid, probably delete between Setup() and ExecuteDebugAction()", Warning, LogDebugActionsSystem);

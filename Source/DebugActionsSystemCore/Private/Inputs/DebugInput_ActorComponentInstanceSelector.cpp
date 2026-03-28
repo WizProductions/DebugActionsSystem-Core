@@ -1,14 +1,14 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
 
-#include "Inputs/DI_ActorComponentInstanceSelector.h"
+#include "Inputs/DebugInput_ActorComponentInstanceSelector.h"
 
 #include "EngineUtils.h"
 #include "Components/ComboBoxString.h"
 #include "SubSystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDI_ActorComponentInstanceSelector::ConfigureDebugInput_Implementation() {
+void UDebugInput_ActorComponentInstanceSelector::ConfigureDebugInput_Implementation() {
 	Super::ConfigureDebugInput_Implementation();
 	
 	DebugInputTitle = FText::FromString("Default CIS Title");
@@ -19,7 +19,7 @@ void UDI_ActorComponentInstanceSelector::ConfigureDebugInput_Implementation() {
 	MyInputDataWidget = MyComboBox;
 }
 
-void UDI_ActorComponentInstanceSelector::Setup(TSubclassOf<UActorComponent> ActorComponentClass, const FString& InDebugInputTitle) {
+void UDebugInput_ActorComponentInstanceSelector::Setup(TSubclassOf<UActorComponent> ActorComponentClass, const FString& InDebugInputTitle) {
 	
 	UWorld* World = GetWorld();
 	if (World == NULL)
@@ -59,6 +59,6 @@ void UDI_ActorComponentInstanceSelector::Setup(TSubclassOf<UActorComponent> Acto
 	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
 }
 
-void UDI_ActorComponentInstanceSelector::GetValue(TSubclassOf<UActorComponent> ActorComponentClass, UObject*& OutObject) {
+void UDebugInput_ActorComponentInstanceSelector::GetValue(TSubclassOf<UActorComponent> ActorComponentClass, UObject*& OutObject) {
 	OutObject = GetValue<UActorComponent>();
 }

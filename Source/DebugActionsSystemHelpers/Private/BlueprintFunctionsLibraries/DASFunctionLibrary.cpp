@@ -3,16 +3,27 @@
 #include "BlueprintFunctionsLibraries/DASFunctionLibrary.h"
 #include "Components/Button.h"
 
-void UDASFunctionLibrary::GetAllDerivedClasses(TSubclassOf<UObject> ParentClass, TArray<UClass*>& OutSubClasses, bool bIncludeAbstract) {
+void UDASFunctionLibrary::GetAllDerivedClasses(TSubclassOf<UObject> ParentClass, TArray<UClass*>& OutSubClasses, bool bIncludeParentClass, bool bIncludeAbstract) {
 
 	OutSubClasses.Empty();
-	if (!ParentClass) return;
+	
+	if (!ParentClass) 
+		return;
+	
+	if (bIncludeParentClass) 
+		OutSubClasses.Add(ParentClass);
 
 	for (TObjectIterator<UClass> It; It; ++It) {
 		UClass* Cls = *It;
-		if (!Cls) continue;
-		if (!bIncludeAbstract && Cls->HasAnyClassFlags(CLASS_Abstract)) continue;
-		if (Cls == ParentClass) continue;
+		
+		if (!Cls) 
+			continue;
+		
+		if (!bIncludeAbstract && Cls->HasAnyClassFlags(CLASS_Abstract)) 
+			continue;
+		
+		if (Cls == ParentClass)
+			continue;
 
 		// Remove hot-reload artifacts
 		FString Name = Cls->GetName();

@@ -1,11 +1,11 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
 
-#include "Inputs/DI_EnumSelector.h"
+#include "Inputs/DebugInput_EnumSelector.h"
 #include "Components/ComboBoxString.h"
 #include "SubSystems/DebugSubsystem.h"
 
-void UDI_EnumSelectorCB::ConfigureDebugInput_Implementation() {
+void UDebugInput_EnumSelectorCB::ConfigureDebugInput_Implementation() {
 	Super::ConfigureDebugInput_Implementation();
 	
 	DebugInputTitle = FText::FromString("Default Enum Selector");
@@ -16,7 +16,7 @@ void UDI_EnumSelectorCB::ConfigureDebugInput_Implementation() {
 	MyInputDataWidget = MyComboBox;
 }
 
-void UDI_EnumSelectorCB::Setup(UEnum* Enum, const FText& InDebugInputTitle) {
+void UDebugInput_EnumSelectorCB::Setup(UEnum* Enum, const FText& InDebugInputTitle) {
 	
 	if (MyComboBox == NULL)
 		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);
@@ -44,7 +44,7 @@ void UDI_EnumSelectorCB::Setup(UEnum* Enum, const FText& InDebugInputTitle) {
 	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
 }
 
-uint8 UDI_EnumSelectorCB::K2_GetValue() const {
+uint8 UDebugInput_EnumSelectorCB::K2_GetValue() const {
 	
 	if (MyComboBox == NULL)
 		WIZ_RET_LOG(0, "My ComboBox is invalid", Error, LogDebugActionsSystem);

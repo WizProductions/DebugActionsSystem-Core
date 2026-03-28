@@ -4,13 +4,13 @@
 #include "DebugActionsSystemCoreDefines.h"
 #include "Engine/DebugCameraController.h"
 #include "Enumerations/EDebugActionResult.h"
-#include "Inputs/DI_LocalPlayerSelector.h"
+#include "Inputs/DebugInput_LocalPlayerSelector.h"
 #include "SubSystems/DebugSubsystem.h"
 
 void UDebugAction_FreeCam::OnParentFolderIsDeveloped_Implementation(UDebugActionFolder* ParentFolder) {
 	Super::OnParentFolderIsDeveloped_Implementation(ParentFolder);
 	
-	MyPlayerSelector = MyDebugSubsystem->RequestDebugInput<UDI_LocalPlayerSelector>();
+	MyPlayerSelector = MyDebugSubsystem->RequestDebugInput<UDebugInput_LocalPlayerSelector>();
 }
 
 EDebugActionResult UDebugAction_FreeCam::ExecuteDebugAction_Implementation() {

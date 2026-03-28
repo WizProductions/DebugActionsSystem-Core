@@ -14,10 +14,8 @@ void UDebugActionFolder::UpdateEditorDataAssetTitle() {
 void UDebugActionFolder::PostLoad() {
 	Super::PostLoad();
 	
-	//Force refresh the data asset view when the folder title is loaded from the disk
-	if (UObject* Outer = GetOuter()) {
-		Outer->PostEditChange();
-	}
+	//Refresh view in data asset is loaded from disk (not for new DataAsset object)
+	RefreshDebugDataAssetView();
 }
 
 void UDebugActionFolder::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -39,14 +37,9 @@ void UDebugActionFolder::PostEditChangeProperty(FPropertyChangedEvent& PropertyC
 		}
 	}
 	
-	//Update folder title by new value
+	//Update folder title in DataAsset by new value from user
 	UpdateEditorDataAssetTitle();
-	
-	//Force refresh the data asset view
-	if (UObject* Outer = GetOuter())
-	{
-		Outer->PostEditChange();
-	}
+	RefreshDebugDataAssetView();
 }
 #endif
 
