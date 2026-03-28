@@ -1,0 +1,39 @@
+﻿// Copyright Wiz Corporation. All Rights Reserved.
+
+#include "WidgetBases/DebugActionWidgetBase.h"
+#include "Actions/DebugActionBase.h"
+#include "Enumerations/EDebugActionResult.h"
+
+#define LOCTEXT_NAMESPACE "UMG"
+
+bool UDebugActionWidgetBase::InitDebugActionWidget_Implementation(UDebugActionBase* LinkedDebugAction) {
+	
+	MyDebugAction = LinkedDebugAction;
+	MyDebugAction->SetMyDebugActionWidget(this);
+
+	if (MyDebugAction) {
+		if (MyDebugAction->GetDepthLevel() != 0) {
+			MyDebugAction->SetDebugActionWidgetVisibility(true);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+#if WITH_EDITOR
+const FText UDebugActionWidgetBase::GetPaletteCategory() {
+	return LOCTEXT("Debug Actions System", "Debug Actions System");
+}
+
+void UDebugActionWidgetBase::NativeConstruct() {
+	Super::NativeConstruct();
+	
+	
+}
+#endif
+
+EDebugActionResult UDebugActionWidgetBase::ExecuteAction_Implementation() {
+	return MyDebugAction->ExecuteDebugAction();
+}
