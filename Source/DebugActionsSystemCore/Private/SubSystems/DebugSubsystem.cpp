@@ -144,6 +144,9 @@ bool UDebugSubsystem::RequestDebugInput(TSubclassOf<UDebugInput> DebugInputClass
 	//DI is still nullptr, no DI free -> create new one
 	if (OutDebugInput == NULL) {
 		OutDebugInput = NewObject<UDebugInput>(this, DebugInputClass);
+		OutDebugInput->MyDebugSubsystem = this;
+		OutDebugInput->ConfigureDebugInput();
+		
 		Internal_SetUsedDI(OutDebugInput, SharedKeyTag);
 		
 		WIZ_LOG(FString::Printf(TEXT("%s created"), *DebugInputClass->GetName()), Log, LogDebugActionsSystem);

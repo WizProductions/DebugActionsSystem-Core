@@ -5,13 +5,9 @@
 #include "Components/ComboBoxString.h"
 #include "SubSystems/DebugSubsystem.h"
 
-void UDI_LocalPlayerSelector::PostInitProperties() {
-	Super::PostInitProperties();
-
-	//In game only
-	if (GetWorld() == NULL)
-		return;
-
+void UDI_LocalPlayerSelector::ConfigureDebugInput_Implementation() {
+	Super::ConfigureDebugInput_Implementation();
+	
 	DebugInputTitle = FText::FromString("Player");
 	DebugInputSize = FVector2D(140, 28);
 
@@ -21,8 +17,33 @@ void UDI_LocalPlayerSelector::PostInitProperties() {
 	if (MyComboBox == NULL)
 		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);
 	
-	RefreshValues();
+	RefreshDebugInputConfiguration();
 }
+
+// ReSharper disable once CppUE4BlueprintCallableFunctionMayBeConst
+void UDI_LocalPlayerSelector::RefreshDebugInputConfiguration() {
+	
+	if (MyComboBox == NULL)
+		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);
+	
+	MyComboBox->ClearOptions();
+	
+	UWorld* World = GetWorld();
+	if (World == NULL)
+		WIZ_RET_LOG( , "World invalid", Error, LogDebugActionsSystem);
+	
+	UGameInstance* GameInstance = World->GetGameInstance();
+	if (GameInstance == NULL)
+		WIZ_RET_LOG( , "GameInstance invalid", Error, LogDebugActionsSystem);
+	
+	const TArray<ULocalPlayer*>& LocalPlayers = GameInstance->GetLocalPlayers();
+	for (int i = 0; i < LocalPlayers.Num(); ++i) {
+		MyComboBox->AddOption(FString::Printf(TEXT("Player_%d"), i)); 
+	}
+	
+	MyComboBox->SetSelectedIndex(0);
+}
+
 
 ULocalPlayer* UDI_LocalPlayerSelector::GetValue() const {
 	
@@ -44,28 +65,4 @@ ULocalPlayer* UDI_LocalPlayerSelector::GetValue() const {
 		WIZ_RET_LOG(NULL, FString::Printf(TEXT("Index %d out of bounds"), SelectedIndex), Error, LogDebugActionsSystem);
 	
 	return LocalPlayers[SelectedIndex];
-}
-
-void UDI_LocalPlayerSelector::RefreshValues_Implementation() {
-	Super::RefreshValues_Implementation();
-	
-	if (MyComboBox == NULL)
-		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);
-	
-	MyComboBox->ClearOptions();
-	
-	UWorld* World = GetWorld();
-	if (World == NULL)
-		WIZ_RET_LOG( , "World invalid", Error, LogDebugActionsSystem);
-	
-	UGameInstance* GameInstance = World->GetGameInstance();
-	if (GameInstance == NULL)
-		WIZ_RET_LOG( , "GameInstance invalid", Error, LogDebugActionsSystem);
-	
-	const TArray<ULocalPlayer*>& LocalPlayers = GameInstance->GetLocalPlayers();
-	for (int i = 0; i < LocalPlayers.Num(); ++i) {
-		MyComboBox->AddOption(FString::Printf(TEXT("Player_%d"), i)); 
-	}
-	
-	MyComboBox->SetSelectedIndex(0);
 }

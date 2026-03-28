@@ -12,7 +12,7 @@
 
 /**
 * An input that allows you to select an int value between ranges. \n
-* <b>Setup is recommended but optional</b>
+* Setup is optional, it allows you to customize slider.
 */
 UCLASS()
 class DEBUGACTIONSSYSTEMCORE_API UDI_IntSlider : public UDebugInput {
@@ -22,7 +22,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_IntSlider : public UDebugInput {
 //##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
 
-	//==== Exposed Properties ====\\.
+	//==== References ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<class USpinBox> MySpinBox = NULL;
@@ -32,8 +32,10 @@ public:
 //#############################################################################
 
 public:
-	virtual void PostInitProperties() override;
-	
-	void Setup(FString InDebugInputTitle, FIntVector2 BothMinMaxValue, int DefaultValue = 0);
+	virtual void ConfigureDebugInput_Implementation() override;
+
+	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
+	void Setup(const FString& InDebugInputTitle, const FIntVector2& BothMinMaxValue, int DefaultValue = 0);
+	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem")
 	int GetValue() const;
 };

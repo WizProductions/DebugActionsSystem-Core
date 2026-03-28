@@ -13,7 +13,7 @@
 
 /**
 * An input that retrieves all <b>Class</b> currently loaded by engine allows you to select one to apply an action in all object of this class type. \n
-* <b>Needs a Setup</b>.
+* NEEDS A SETUP.
 */
 UCLASS()
 class DEBUGACTIONSSYSTEMCORE_API UDI_ClassSelector : public UDebugInput {
@@ -39,10 +39,11 @@ protected:
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 
-protected:
-	virtual void PostInitProperties() override;
-	
 public:
-	void Setup(FText InDebugInputTitle, TSubclassOf<UObject> InClassFilter);
+	virtual void ConfigureDebugInput_Implementation() override;
+
+	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
+	void Setup(const FText& InDebugInputTitle, TSubclassOf<UObject> InClassFilter);
+	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem")
 	TSubclassOf<class UObject> GetValue() const;
 };

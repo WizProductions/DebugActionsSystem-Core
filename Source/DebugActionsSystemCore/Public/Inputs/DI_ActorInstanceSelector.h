@@ -7,9 +7,7 @@
 #include "Components/ComboBoxString.h"
 #include "GameFramework/Actor.h"
 #include <type_traits>
-#include "EngineUtils.h"
 #include "DebugActionsSystemCoreDefines.h"
-#include "WidgetBases/DebugInputSlotWidgetBase.h"
 #include "DI_ActorInstanceSelector.generated.h"
 
 template <typename A>
@@ -21,7 +19,7 @@ concept ActorType = std::is_base_of_v<AActor, A>;
 
 /**
 * An input that retrieves all <b>Actor</b> currently present in the world and allows you to select one. \n
-* <b>Needs a Setup</b>.
+* NEEDS A SETUP.
 */
 UCLASS()
 class DEBUGACTIONSSYSTEMCORE_API UDI_ActorInstanceSelector : public UDebugInput {
@@ -31,7 +29,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_ActorInstanceSelector : public UDebugInput 
 //##--------------------------------- FIELDS ---------------------------------##
 //##############################################################################
 
-	//==== Exposed Properties ====\\.
+	//==== References ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
@@ -49,14 +47,18 @@ protected:
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 
-protected:
-	virtual void PostInitProperties() override;
-	
 public:
+	virtual void ConfigureDebugInput_Implementation() override;
+
 	template <ActorType A>
-	void Setup(FString InDebugInputTitle);
+	void Setup(const FString& InDebugInputTitle);
 	template <ActorType A>
 	A* GetValue() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
+	void Setup(TSubclassOf<AActor> ActorClass, const FString& InDebugInputTitle);
+	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem", meta = (DeterminesOutputType = "ActorClass", DynamicOutputParam = "OutObject"))
+	void GetValue(TSubclassOf<AActor> ActorClass, UObject*& OutObject);
 };
 
 //#############################################################################
@@ -64,36 +66,8 @@ public:
 //#############################################################################
 
 template <ActorType A>
-void UDI_ActorInstanceSelector::Setup(FString InDebugInputTitle) {
-	
-	UWorld* World = GetWorld();
-	if (World == NULL) {
-		WIZ_RET_LOG( , "World is invalid.", Error, LogDebugActionsSystem);
-	}
-	
-	if (MyComboBox == NULL)
-		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);
-	
-	if (MyComboBox.Get()->GetOptionCount() != 0) {
-		MyComboBox->ClearOptions();
-	}
-	
-	CacheActorClass = A::StaticClass();
-	
-	TActorIterator<A> ActorIt(World, CacheActorClass);
-	for (; ActorIt; ++ActorIt) {
-		
-		if (IsValid(*ActorIt) == false) 
-			continue;
-		
-		ActorsCache.Add(*ActorIt);
-		
-		FString OptionText = FString::Printf(TEXT("%s - %s"), *ActorIt->GetName(), *ActorIt->GetActorLocation().ToString());
-		MyComboBox->AddOption(OptionText);
-	}
-	
-	DebugInputTitle = FText::FromString(InDebugInputTitle);
-	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
+void UDI_ActorInstanceSelector::Setup(const FString& InDebugInputTitle) {
+	this->Setup(A::StaticClass(), InDebugInputTitle);
 }
 
 template <ActorType A>

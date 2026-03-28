@@ -91,13 +91,13 @@ public:
 
 	/**
 	 * Create a widget T type and directly added to Debug Panel Tree.\n
-	 * <b>WARNING:</b> Do not use this method during initialization of the debug panel widget because if the tree is not fully initialized, the game crashes.
+	 * WARNING: Do not use this method during initialization of the debug panel widget because if the tree is not fully initialized, the game crashes.
 	 */
 	template <typename T> requires std::is_base_of_v<UWidget, T>
 	T* GetNewWidgetInDebugPanel();
 	/**
 	 * Create a widget T type and directly added to Debug Panel Tree.\n
-	 * <b>WARNING:</b> Do not use this method during initialization of the debug panel widget because if the tree is not fully initialized, the game crashes.
+	 * WARNING: Do not use this method during initialization of the debug panel widget because if the tree is not fully initialized, the game crashes.
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "WidgetClass", DynamicOutputParam = "OutWidget"))
 	void GetNewWidgetInDebugPanel(TSubclassOf<UWidget> WidgetClass, UWidget*& OutWidget);

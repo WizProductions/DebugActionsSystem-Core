@@ -19,7 +19,7 @@ concept Enum = std::is_enum_v<T>;
 
 /**
 * An input that allows you to select a value from a specific enum. \n
-* <b>Needs a Setup</b>.
+* NEEDS A SETUP.
 */
 UCLASS()
 class DEBUGACTIONSSYSTEMCORE_API UDI_EnumSelectorCB : public UDebugInput {
@@ -29,7 +29,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_EnumSelectorCB : public UDebugInput {
 //##--------------------------------- FIELDS ---------------------------------##
 //##############################################################################
 	
-	//==== Exposed Properties ====\\.
+	//==== References ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
@@ -45,14 +45,19 @@ protected:
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 
-protected:
-	virtual void PostInitProperties() override;
-	
 public:
+	virtual void ConfigureDebugInput_Implementation() override;
+	
 	template <Enum E>
-	void Setup(FText InDebugInputTitle);
+	void Setup(const FText& InDebugInputTitle);
 	template <Enum E>
 	E GetValue() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
+	void Setup(UEnum* Enum, const FText& InDebugInputTitle);
+	
+	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem", meta = (DisplayName = "Get Value"))
+	UPARAM(DisplayName = "Enum Value") uint8 K2_GetValue() const;
 };
 
 //#############################################################################
@@ -60,41 +65,11 @@ public:
 //#############################################################################
 
 template <Enum E>
-void UDI_EnumSelectorCB::Setup(FText InDebugInputTitle) {
-	
-	if (MyComboBox == NULL)
-		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);
-	
-	if (InDebugInputTitle.IsEmpty())
-		WIZ_LOG("Title is empty", Warning, LogDebugActionsSystem);
-	
-	MyEnumPtr = StaticEnum<E>();
-	if (!MyEnumPtr) return;
-	
-	if (MyComboBox->GetOptionCount() != 0) {
-		MyComboBox->ClearOptions();
-	}
-	
-	for (int32 i = 0; i < MyEnumPtr->NumEnums() - 1; ++i) {        
-
-		FString Name = MyEnumPtr->GetNameStringByIndex(i);
-		
-		MyComboBox.Get()->AddOption(Name);
-	}
-	
-	DebugInputTitle = InDebugInputTitle;
-	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
+void UDI_EnumSelectorCB::Setup(const FText& InDebugInputTitle) {
+	Setup(StaticEnum<E>(), InDebugInputTitle);
 }
 
 template <Enum E>
 E UDI_EnumSelectorCB::GetValue() const {
-	
-	if (MyComboBox == NULL)
-		WIZ_RET_LOG(static_cast<E>(0), "My ComboBox is invalid", Error, LogDebugActionsSystem);
-	
-	if (MyEnumPtr == NULL) {
-		WIZ_RET_LOG(static_cast<E>(0), "Enum are not initialized, did you call SetupEnumSelector method before?", Error, LogDebugActionsSystem);
-	}
-
-	return static_cast<E>(MyComboBox->GetSelectedIndex());
+	return static_cast<E>(K2_GetValue());
 }

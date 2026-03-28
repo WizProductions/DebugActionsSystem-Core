@@ -32,10 +32,8 @@ protected:
 	//==== Properties ====\\.
 	UPROPERTY(BlueprintGetter="GetMyDebugActionWidget", BlueprintSetter="SetMyDebugActionWidget")
 	TObjectPtr<class UDebugActionWidgetBase> MyDebugActionWidget;
-
 	UPROPERTY(BlueprintReadOnly, Category = "References")
 	class UDebugSubsystem* MyDebugSubsystem = NULL;
-	
 	UPROPERTY(BlueprintReadOnly, Category = "Properties")
 	int32 DepthLevel = -1;
 	

@@ -6,13 +6,9 @@
 #include "SubSystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDI_FloatSlider::PostInitProperties() {
-	Super::PostInitProperties();
-
-	//In game only
-	if (GetWorld() == NULL)
-		return;
-
+void UDI_FloatSlider::ConfigureDebugInput_Implementation() {
+	Super::ConfigureDebugInput_Implementation();
+	
 	DebugInputTitle = FText::FromString("Value");
 	DebugInputSize = FVector2D(80, 28);
 	
@@ -34,7 +30,7 @@ void UDI_FloatSlider::PostInitProperties() {
 	MySpinBox->SetMaxFractionalDigits(2);
 }
 
-void UDI_FloatSlider::Setup_Implementation(const FText& InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue) {
+void UDI_FloatSlider::Setup(const FText& InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue) {
 	
 	if (MySpinBox == NULL)
 		WIZ_RET_LOG( , "My SpinBox is invalid", Error, LogDebugActionsSystem);
@@ -59,7 +55,7 @@ void UDI_FloatSlider::Setup_Implementation(const FText& InDebugInputTitle, FVect
 	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
 }
 
-float UDI_FloatSlider::GetValue_Implementation() const {
+float UDI_FloatSlider::GetValue() const {
 	
 	if (MySpinBox == NULL)
 		WIZ_RET_LOG(0.0f, "My SpinBox is invalid", Error, LogDebugActionsSystem);

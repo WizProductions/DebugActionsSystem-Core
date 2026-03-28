@@ -22,7 +22,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_LocalPlayerSelector : public UDebugInput {
 //##############################################################################
 
 public:
-	//==== Exposed Properties ====\\.
+	//==== References ====\\.
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
 
@@ -30,10 +30,12 @@ public:
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 
-protected:
-	virtual void PostInitProperties() override;
-
 public:
+	virtual void ConfigureDebugInput_Implementation() override;
+	
+	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem")
+	void RefreshDebugInputConfiguration();
+
+	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem")
 	ULocalPlayer* GetValue() const;
-	virtual void RefreshValues_Implementation() override;
 };

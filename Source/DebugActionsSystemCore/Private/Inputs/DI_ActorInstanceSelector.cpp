@@ -2,16 +2,15 @@
 
 
 #include "Inputs/DI_ActorInstanceSelector.h"
+
+#include "EngineUtils.h"
 #include "Components/ComboBoxString.h"
 #include "SubSystems/DebugSubsystem.h"
+#include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDI_ActorInstanceSelector::PostInitProperties() {
-	Super::PostInitProperties();
-
-	//In game only
-	if (GetWorld() == NULL)
-		return;
-
+void UDI_ActorInstanceSelector::ConfigureDebugInput_Implementation() {
+	Super::ConfigureDebugInput_Implementation();
+	
 	DebugInputTitle = FText::FromString("Default AIS Title");
 	DebugInputSize = FVector2D(120, 28);
 
@@ -21,4 +20,41 @@ void UDI_ActorInstanceSelector::PostInitProperties() {
 		WIZ_RET_LOG( , "Widget is invalid", Error, LogDebugActionsSystem);
 	
 	MyInputDataWidget = MyComboBox;
+}
+
+void UDI_ActorInstanceSelector::Setup(TSubclassOf<AActor> ActorClass, const FString& InDebugInputTitle) {
+	
+	UWorld* World = GetWorld();
+	if (World == NULL) {
+		WIZ_RET_LOG( , "World is invalid.", Error, LogDebugActionsSystem);
+	}
+	
+	if (MyComboBox == NULL)
+		WIZ_RET_LOG( , "My ComboBox is invalid", Error, LogDebugActionsSystem);
+	
+	if (MyComboBox.Get()->GetOptionCount() != 0) {
+		MyComboBox->ClearOptions();
+	}
+	
+	CacheActorClass = ActorClass;
+	
+	TActorIterator<AActor> ActorIt(World, CacheActorClass);
+	for (; ActorIt; ++ActorIt) {
+		
+		if (IsValid(*ActorIt) == false) 
+			continue;
+		
+		ActorsCache.Add(*ActorIt);
+		
+		FString OptionText = FString::Printf(TEXT("%s - %s"), *ActorIt->GetName(), *ActorIt->GetActorLocation().ToString());
+		MyComboBox->AddOption(OptionText);
+	}
+	
+	DebugInputTitle = FText::FromString(InDebugInputTitle);
+	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
+}
+
+// ReSharper disable once CppUE4BlueprintCallableFunctionMayBeConst
+void UDI_ActorInstanceSelector::GetValue(TSubclassOf<AActor> ActorClass, UObject*& OutObject) {
+	OutObject = GetValue<AActor>();
 }

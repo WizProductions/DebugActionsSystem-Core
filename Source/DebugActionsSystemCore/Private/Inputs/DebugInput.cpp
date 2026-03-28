@@ -26,12 +26,4 @@ void UDebugInput::OnRemovedFromSlot_Implementation(class UDebugInputSlotWidgetBa
 	MyDebugInputSlotWidget = NULL;
 }
 
-void UDebugInput::SetWidgetVisibility_Implementation(ESlateVisibility InVisibility) {
-	
-	if (MyInputDataWidget == NULL)
-		WIZ_LOG("Widget is invalid, make sure UDebugInput has set MyWidget to created widget.", Error, LogDebugActionsSystem);
-	
-	MyInputDataWidget->SetVisibility(InVisibility);
-}
-
-void UDebugInput::RefreshValues_Implementation() {}
+void UDebugInput::ConfigureDebugInput_Implementation() {}

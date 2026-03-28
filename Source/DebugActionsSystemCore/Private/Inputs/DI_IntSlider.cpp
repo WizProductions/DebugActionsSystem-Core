@@ -6,13 +6,9 @@
 #include "SubSystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDI_IntSlider::PostInitProperties() {
-	Super::PostInitProperties();
-
-	//In game only
-	if (GetWorld() == NULL)
-		return;
-
+void UDI_IntSlider::ConfigureDebugInput_Implementation() {
+	Super::ConfigureDebugInput_Implementation();
+	
 	DebugInputTitle = FText::FromString("Value");
 	DebugInputSize = FVector2D(80, 28);
 	
@@ -24,17 +20,17 @@ void UDI_IntSlider::PostInitProperties() {
 
 	MySpinBox->SetForegroundColor(FLinearColor(0, 0, 0, 1));
 
-	FSpinBoxStyle nSpinBoxStyle = MySpinBox->GetWidgetStyle();
-	nSpinBoxStyle.BackgroundBrush.TintColor = FLinearColor(0.75, 0.75, 0.75, 1);
+	FSpinBoxStyle NewSpinBoxStyle = MySpinBox->GetWidgetStyle();
+	NewSpinBoxStyle.BackgroundBrush.TintColor = FLinearColor(0.75, 0.75, 0.75, 1);
 
-	MySpinBox->SetWidgetStyle(nSpinBoxStyle);
+	MySpinBox->SetWidgetStyle(NewSpinBoxStyle);
 	MySpinBox->SetDelta(1.0f);
 	MySpinBox->SetSliderExponent(1.f);
 	MySpinBox->SetMinFractionalDigits(0);
 	MySpinBox->SetMaxFractionalDigits(0);
 }
 
-void UDI_IntSlider::Setup(FString InDebugInputTitle, FIntVector2 BothMinMaxValue, int DefaultValue) {
+void UDI_IntSlider::Setup(const FString& InDebugInputTitle, const FIntVector2& BothMinMaxValue, int DefaultValue) {
 	
 	if (MySpinBox == NULL)
 		WIZ_RET_LOG( , "My SpinBox is invalid", Error, LogDebugActionsSystem);

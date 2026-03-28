@@ -7,13 +7,9 @@
 #include "SubSystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDI_ClassSelector::PostInitProperties() {
-	Super::PostInitProperties();
-
-	//In game only
-	if (GetWorld() == NULL)
-		return;
-
+void UDI_ClassSelector::ConfigureDebugInput_Implementation() {
+	Super::ConfigureDebugInput_Implementation();
+	
 	DebugInputTitle = FText::FromString("Default CF title");
 	DebugInputSize = FVector2D(120, 28);
 
@@ -34,7 +30,7 @@ TSubclassOf<class UObject> UDI_ClassSelector::GetValue() const {
 	return NULL;
 }
 
-void UDI_ClassSelector::Setup(FText InDebugInputTitle, TSubclassOf<UObject> InClassFilter) {
+void UDI_ClassSelector::Setup(const FText& InDebugInputTitle, TSubclassOf<UObject> InClassFilter) {
 	
 	if (ClassFilter == InClassFilter)
 		return;

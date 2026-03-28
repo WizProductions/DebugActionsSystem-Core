@@ -12,7 +12,7 @@
 
 /**
 * An input that allows you to select a float value between ranges. \n
-* <b>Setup is recommended but optional</b>
+* Setup is optional, it allows you to customize slider.
 */
 UCLASS()
 class DEBUGACTIONSSYSTEMCORE_API UDI_FloatSlider : public UDebugInput {
@@ -22,7 +22,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDI_FloatSlider : public UDebugInput {
 //##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
 	
-	//==== Exposed Properties ====\\.
+	//==== References ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<class USpinBox> MySpinBox = NULL;
@@ -32,10 +32,10 @@ public:
 //#############################################################################
 
 public:
-	virtual void PostInitProperties() override;
-	
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem|Setup")
+	virtual void ConfigureDebugInput_Implementation() override;
+
+	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
 	void Setup(const FText& InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue = 0.f);
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
+	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem")
 	float GetValue() const;
 };
