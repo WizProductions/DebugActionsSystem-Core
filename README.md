@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://cloud.wizurth.ovh/s/ZY9nNWFAKsXmtCY/preview" alt="PGG_HEADER" width="368" height="368">
+  <img src="https://cloud.wizurth.ovh/s/ZY9nNWFAKsXmtCY/preview" alt="PGG_HEADER" width="256" height="256">
 </p>
 <br>
 <h1 align="center">Debug Actions System - Core</h1>
@@ -16,26 +16,25 @@
 
 # 📖 Table of Contents
 * [How To Start](#-how-to-start)
-* [Generation Algorithms](#-generation-method-algorithms)
+* [Create Custom Classes](#-create-custom-class)
    * [Simple Room Placement](#how-simple-room-placement-works)
    * [BSP](#how-bsp-works)
    * [Cellular Automata](#how-cellular-automata-works)
    * [FastNoiseLite / NoiseLibrary](#how-noiselibrary-works)
-* [Credits](#-credits)
 <br>
 
 <details>
-<summary># 🚀 How To Start</summary>
+<summary><h2> 🚀 How To Start</h2></summary>
 
 ### Step 1
-Download the plugin from [master](https://github.com/WizProductions/DebugActionsSystem-Core) branch and place it at "$YourProjectFolder/Plugins$", if the "plugins" folder does not exist, you must create it.
+Download the plugin from [master](https://github.com/WizProductions/DebugActionsSystem-Core) branch and place it at _YourProjectFolder/Plugins_, if the "_plugins_" folder does not exist, you must create it.
 
 ### Step 2
-Launch your project and enable plugin in the "$Plugins$" Window ($Edit/Plguins$).<br>
+Launch your project and enable plugin in the "_Plugins_" Window (_Edit/Plugins_).<br>
 <img src="https://cloud.wizurth.ovh/s/BXMFqbFoSWPNB2K/preview" alt="DAS_Plugins_Window" width="650" height="150">
 
 ### Step 3
-Create your data asset inherit from $Debug Actions System Data Asset$.<br>
+Create your data asset inherit from _Debug Actions System Data Asset_.<br>
 <img src="https://cloud.wizurth.ovh/s/nriZAXKywnqTg84/preview" alt="DAS_Plugins_Window" width="500" height="150">
 
 ### Step 4
@@ -43,14 +42,10 @@ Configure your new DataAsset object like the screenshot or with your own subclas
 <img src="https://cloud.wizurth.ovh/s/GeAEQxtJqdt3K4e/preview" alt="DAS_Plugins_Window" width="1100" height="500">
 
 ### Step 5
-Set the data asset object in the "$Project Settings/Plugins/DebugActionsSystem - Core$".<br>
+Set the data asset object in the "_Project Settings/Plugins/DebugActionsSystem - Core_".<br>
 <img src="https://cloud.wizurth.ovh/s/M93eLWMpHHJaBPr/preview" alt="DAS_Plugins_Window" width="500" height="300">
 
 </details>
 
 
 # 🧩 Create custom Debug Action
-
-
-# ✏️ Credits
-<a href="https://github.com/Auburn/FastNoiseLite"><img src="https://opengraph.githubassets.com/6afe455114447b1491ef8a727548619d1514ed73574a8f729f2fd8553f355ac4/Auburn/FastNoiseLite" alt="PGG_CREDITS_FAST_NOISE_LITE" width=400 height=200>
