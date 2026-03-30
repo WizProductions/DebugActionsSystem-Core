@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DebugInput.generated.h"
+#include "DebugInputBase.generated.h"
 
 //#############################################################################
 //##---------------------------------- CLASS --------------------------------##
@@ -15,7 +15,7 @@
 * You need to add manually GetValue method, and Setup if needed.
 */
 UCLASS(Blueprintable, Abstract, HideDropdown)
-class DEBUGACTIONSSYSTEMCORE_API UDebugInput : public UObject {
+class DEBUGACTIONSSYSTEMCORE_API UDebugInputBase : public UObject {
 	GENERATED_BODY()
 
 //#############################################################################

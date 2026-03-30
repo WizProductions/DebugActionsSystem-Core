@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DebugInput.h"
+#include "DebugInputBase.h"
 #include "DebugInput_LocalPlayerSelector.generated.h"
 
 //#############################################################################
@@ -14,7 +14,7 @@
 * An input that allows you to select a local player connected in local (Alone or Splitscreen). \n
 */
 UCLASS()
-class DEBUGACTIONSSYSTEMCORE_API UDebugInput_LocalPlayerSelector : public UDebugInput {
+class DEBUGACTIONSSYSTEMCORE_API UDebugInput_LocalPlayerSelector : public UDebugInputBase {
 	GENERATED_BODY()
 
 //##############################################################################

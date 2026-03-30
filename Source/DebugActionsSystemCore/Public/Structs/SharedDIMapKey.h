@@ -25,7 +25,7 @@ struct FSharedDIMapKey {
 	FGameplayTag KeyTag;
 	
 	UPROPERTY()
-	TSubclassOf<class UDebugInput> InputClass;
+	TSubclassOf<class UDebugInputBase> InputClass;
 	
 //#############################################################################
 //##--------------------------------- METHODS -------------------------------##

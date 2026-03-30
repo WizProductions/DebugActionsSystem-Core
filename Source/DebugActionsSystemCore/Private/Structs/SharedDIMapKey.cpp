@@ -2,7 +2,7 @@
 
 
 #include "Structs/SharedDIMapKey.h"
-#include "Inputs/DebugInput.h"
+#include "Inputs/DebugInputBase.h"
 
 bool FSharedDIMapKey::operator==(const FSharedDIMapKey& Rhs) const {
 	return KeyTag == Rhs.KeyTag && InputClass == Rhs.InputClass;

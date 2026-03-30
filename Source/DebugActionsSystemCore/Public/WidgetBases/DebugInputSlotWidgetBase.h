@@ -38,7 +38,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "UserInterface|Interaction|Slot")
 	TObjectPtr<class UCanvasPanelSlot> NamedSlotWidgetSlot;
 	UPROPERTY(BlueprintReadOnly, Category = "References")
-	TObjectPtr<class UDebugInput> MyDebugInput;
+	TObjectPtr<class UDebugInputBase> MyDebugInput;
 	
 	//==== Flags ====\\.
 	bool bIsUsed : 1 = false;
@@ -63,7 +63,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem|References")
 	UWidget* GetInputWidget() const;
 	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
-	void SetInputWidget(class UDebugInput* InDebugInput);
+	void SetInputWidget(class UDebugInputBase* InDebugInput);
 	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
 	void RemoveInputWidget();
 	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")

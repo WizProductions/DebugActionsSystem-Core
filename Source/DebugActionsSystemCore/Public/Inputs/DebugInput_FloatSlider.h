@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DebugInput.h"
+#include "DebugInputBase.h"
 #include "DebugInput_FloatSlider.generated.h"
 
 //#############################################################################
@@ -15,7 +15,7 @@
 * Setup is optional, it allows you to customize slider.
 */
 UCLASS()
-class DEBUGACTIONSSYSTEMCORE_API UDebugInput_FloatSlider : public UDebugInput {
+class DEBUGACTIONSSYSTEMCORE_API UDebugInput_FloatSlider : public UDebugInputBase {
 	GENERATED_BODY()
 
 //#############################################################################

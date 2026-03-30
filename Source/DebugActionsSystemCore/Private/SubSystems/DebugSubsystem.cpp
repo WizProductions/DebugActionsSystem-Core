@@ -105,17 +105,17 @@ void UDebugSubsystem::OnFolderStateChange_Implementation(bool bIsDeveloped, UDeb
 	DAF->RefreshChildren();
 }
 
-bool UDebugSubsystem::RequestDebugInput(TSubclassOf<UDebugInput> DebugInputClass, UDebugInput*& OutDebugInput, const FGameplayTag& SharedKeyTag) {
+bool UDebugSubsystem::RequestDebugInput(TSubclassOf<UDebugInputBase> DebugInputClass, UDebugInputBase*& OutDebugInput, const FGameplayTag& SharedKeyTag) {
 	
 	//Check if DI is already registered on the Shared DI map
 	if (SharedKeyTag.IsValid() && SharedKeyTag.MatchesTagExact(DAS_SharedDIKey_UnShared) == false) {
 		
 		//Construct the key
-		TSubclassOf<UDebugInput> DIClass = DebugInputClass;
+		TSubclassOf<UDebugInputBase> DIClass = DebugInputClass;
 		FSharedDIMapKey SharedDIKey(SharedKeyTag, DIClass);
 		
 		//Is found a map associated of tag?
-		if (TObjectPtr<UDebugInput>* DIFound = SharedDebugInputs.Find(SharedDIKey)) {
+		if (TObjectPtr<UDebugInputBase>* DIFound = SharedDebugInputs.Find(SharedDIKey)) {
 			 
 			//Is the pointer wrapper valid?
 			if (DIFound && *DIFound) {
@@ -128,7 +128,7 @@ bool UDebugSubsystem::RequestDebugInput(TSubclassOf<UDebugInput> DebugInputClass
 	//Check if DI is free
 	if (auto Line = FreeDebugsInputs.Find(DebugInputClass)) {	//Find return a pointer to value (not a ref)
 		for (auto It = Line->FreeDebugLine.CreateIterator(); It; ++It) {
-			if (UDebugInput* ExistingDI = *It) {
+			if (UDebugInputBase* ExistingDI = *It) {
 
 				//Remove from the free DI array
 				Line->FreeDebugLine.Remove(It.GetId());
@@ -144,7 +144,7 @@ bool UDebugSubsystem::RequestDebugInput(TSubclassOf<UDebugInput> DebugInputClass
 
 	//DI is still nullptr, no DI free -> create new one
 	if (OutDebugInput == NULL) {
-		OutDebugInput = NewObject<UDebugInput>(this, DebugInputClass);
+		OutDebugInput = NewObject<UDebugInputBase>(this, DebugInputClass);
 		OutDebugInput->MyDebugSubsystem = this;
 		OutDebugInput->ConfigureDebugInput();
 		
@@ -203,7 +203,7 @@ void UDebugSubsystem::Internal_SetupDebugActionsSystem(bool bForceSetup) {
 				GameplayTagsSettings->GameplayTagTableList.Add(TablePath);				
 				GameplayTagsSettings->SaveConfig();
 				
-				WIZ_LOG(FString::Printf(TEXT("DebugKeyTagTable %s added to the Project GameplayTagsTableList."), *MyDebugDataAsset->DebugInputKeyTagDataTable->GetName()), Log, LogDebugActionsSystem);
+				WIZ_LOG(FString::Printf(TEXT("DebugKeyTagTable %s added to the Project GameplayTagsTableList."), *MyDebugDataAsset->DebugInputKeyTagDataTable.ToSoftObjectPath().ToString()), Log, LogDebugActionsSystem);
 			}
 		}
 	}
@@ -283,7 +283,7 @@ bool UDebugSubsystem::Internal_ValidatePrerequisites() {
 	return bValidated;
 }
 
-bool UDebugSubsystem::Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag) {
+bool UDebugSubsystem::Internal_SetFreeDI(UDebugInputBase* DI, const FGameplayTag& SharedKeyTag) {
 	
 	//UnShared
 	if (SharedKeyTag.MatchesTagExact(DAS_SharedDIKey_UnShared)) {
@@ -299,10 +299,10 @@ bool UDebugSubsystem::Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& Sh
 	}
 	else {
 		//Construct key
-		TSubclassOf<UDebugInput> DIClass = DI->GetClass();
+		TSubclassOf<UDebugInputBase> DIClass = DI->GetClass();
 		FSharedDIMapKey SharedDIKey(SharedKeyTag, DIClass);
 		
-		TObjectPtr<UDebugInput>* DIFound = SharedDebugInputs.Find(SharedDIKey);
+		TObjectPtr<UDebugInputBase>* DIFound = SharedDebugInputs.Find(SharedDIKey);
 		if (DIFound == NULL)
 			WIZ_RET_LOG(false, "Shared DI not found", Warning, LogDebugActionsSystem);
 		
@@ -317,7 +317,7 @@ bool UDebugSubsystem::Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& Sh
 	}
 }
 
-bool UDebugSubsystem::Internal_SetUsedDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag) {
+bool UDebugSubsystem::Internal_SetUsedDI(UDebugInputBase* DI, const FGameplayTag& SharedKeyTag) {
 
 	//UnShared
 	if (SharedKeyTag.MatchesTagExact(DAS_SharedDIKey_UnShared)) {
@@ -328,7 +328,7 @@ bool UDebugSubsystem::Internal_SetUsedDI(UDebugInput* DI, const FGameplayTag& Sh
 	}
 	else {
 		//Construct key
-		TSubclassOf<UDebugInput> DIClass = DI->GetClass();
+		TSubclassOf<UDebugInputBase> DIClass = DI->GetClass();
 		FSharedDIMapKey SharedDIKey(SharedKeyTag, DIClass);
 
 		int32 PreSize = SharedDebugInputs.Num();

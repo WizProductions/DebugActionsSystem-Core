@@ -5,10 +5,10 @@
 #include "DebugSubsystem.h"
 #include "WidgetBases/DebugPanelWidgetBase.h"
 
-template <typename DI> requires std::is_base_of_v<UDebugInput, DI>
+template <typename DI> requires std::is_base_of_v<UDebugInputBase, DI>
 DI* UDebugSubsystem::RequestDebugInput(const FGameplayTag& SharedKeyTag) {
 	
-	UDebugInput* NewDI = NULL;
+	UDebugInputBase* NewDI = NULL;
 	if (RequestDebugInput(DI::StaticClass(), NewDI, SharedKeyTag) == false)
 		return NULL;
 	

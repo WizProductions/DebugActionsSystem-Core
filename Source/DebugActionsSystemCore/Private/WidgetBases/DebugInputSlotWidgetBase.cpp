@@ -48,7 +48,7 @@ UCanvasPanelSlot* UDebugInputSlotWidgetBase::GetInputWidgetSlot_Implementation()
 
 UWidget* UDebugInputSlotWidgetBase::GetInputWidget_Implementation() const { return NS_InputSlot ? NS_InputSlot->GetContent() : NULL; }
 
-void UDebugInputSlotWidgetBase::SetInputWidget_Implementation(UDebugInput* InDebugInput) {
+void UDebugInputSlotWidgetBase::SetInputWidget_Implementation(UDebugInputBase* InDebugInput) {
 	
 	if (InDebugInput == NULL)
 		RemoveInputWidget();

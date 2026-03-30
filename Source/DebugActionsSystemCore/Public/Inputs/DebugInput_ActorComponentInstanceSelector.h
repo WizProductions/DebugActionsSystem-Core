@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DebugInput.h"
+#include "DebugInputBase.h"
 #include "Components/ComboBoxString.h"
 #include "GameFramework/Actor.h"
 #include <type_traits>
@@ -22,7 +22,7 @@ concept ActorComponentType = std::is_base_of_v<UActorComponent, C>;
 * NEEDS A SETUP.
 */
 UCLASS()
-class DEBUGACTIONSSYSTEMCORE_API UDebugInput_ActorComponentInstanceSelector : public UDebugInput {
+class DEBUGACTIONSSYSTEMCORE_API UDebugInput_ActorComponentInstanceSelector : public UDebugInputBase {
 	GENERATED_BODY()
 
 //##############################################################################
