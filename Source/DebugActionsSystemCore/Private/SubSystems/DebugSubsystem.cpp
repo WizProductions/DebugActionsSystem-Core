@@ -3,6 +3,7 @@
 #include "SubSystems/DebugSubsystem.h"
 #include "DataAssets/DebugActionsSystemDataAsset.h"
 #include "DebugActionsSystemCoreDefines.h"
+#include "GameplayTagsSettings.h"
 #include "Actions/DebugActionFolder.h"
 #include "Inputs/DebugInput_FloatSlider.h"
 #include "WidgetBases/DebugPanelWidgetBase.h"
@@ -184,13 +185,28 @@ void UDebugSubsystem::Internal_SetupDebugActionsSystem(bool bForceSetup) {
 		WIZ_RET_LOG( , "Debug Actions System Settings not found, a critical problem occured, please contact developper.", Error, LogDebugActionsSystem);
 	
 	if (DASSettings->DebugActionsSystemDataAsset.IsNull() == false)
-		MyDebugDataAsset = DASSettings->DebugActionsSystemDataAsset.LoadSynchronous();
+		MyDebugDataAsset = Cast<UDebugActionsSystemDataAsset>(DASSettings->DebugActionsSystemDataAsset.TryLoad());
 	if (MyDebugDataAsset == NULL) {
 		WIZ_RET_LOG( , "failed to load DebugActionsSystemDataAsset (invalid inherited class).", Error, LogDebugActionsSystem);
 	}
 	
 	if (MyDebugDataAsset->bEnableDebugActionsSystem == false)
 		WIZ_RET_LOG( , "Initialization séquence aborted, system is disabled", Log, LogDebugActionsSystem);
+
+	if (UGameplayTagsSettings* GameplayTagsSettings = GetMutableDefault<UGameplayTagsSettings>()) {
+		if (MyDebugDataAsset->DebugInputKeyTagDataTable.IsNull() == false) {
+			
+			FSoftObjectPath TablePath = MyDebugDataAsset->DebugInputKeyTagDataTable.ToSoftObjectPath();
+			
+			if (GameplayTagsSettings->GameplayTagTableList.Contains(TablePath) == false) {
+				
+				GameplayTagsSettings->GameplayTagTableList.Add(TablePath);				
+				GameplayTagsSettings->SaveConfig();
+				
+				WIZ_LOG(FString::Printf(TEXT("DebugKeyTagTable %s added to the Project GameplayTagsTableList."), *MyDebugDataAsset->DebugInputKeyTagDataTable->GetName()), Log, LogDebugActionsSystem);
+			}
+		}
+	}
 	
 	Internal_RegisterCallbacks();
 	

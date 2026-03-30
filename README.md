@@ -6,240 +6,51 @@
 <h3>
     A modular Unreal Engine 5 plugin that makes it easy to perform debugging tasks.
 </h3>
-<br>
 <h4>
-    d
+    The DebugActionsSystem makes it easier to use actions such as: <br>
+    - Godmode <br>
+    - Freecam <br>
+    - Add an item to an inventory <br>
+    - ... <br>
 </h4>
-<br>
 
 # 📖 Table of Contents
 * [How To Start](#-how-to-start)
-* [Configuration](#-configuration)
 * [Generation Algorithms](#-generation-method-algorithms)
    * [Simple Room Placement](#how-simple-room-placement-works)
    * [BSP](#how-bsp-works)
    * [Cellular Automata](#how-cellular-automata-works)
    * [FastNoiseLite / NoiseLibrary](#how-noiselibrary-works)
-* [Debug Settings](#%EF%B8%8F-debugs-settings)
-* [Limitations & Warnings](#%EF%B8%8F-warnings)
 * [Credits](#-credits)
 <br>
 
-# 🚀 How to start
+<details>
+<summary># 🚀 How To Start</summary>
 
 ### Step 1
-Load a scene, i recommend you to use the GenerationScene in <i>Assets/Scene</i><br>
-<img src="https://cloud.wizurth.ovh/s/C6adMm3C3LXAyJB/preview" alt="PGG_FOLDER_SCENES" width="600" height="400">
+Download the plugin from [master](https://github.com/WizProductions/DebugActionsSystem-Core) branch and place it at "$YourProjectFolder/Plugins$", if the "plugins" folder does not exist, you must create it.
 
 ### Step 2
-In the GenerationScene, you have a ProceduralGridGenerator object,<br>
-this is the main of this project, inside you have grid parameters and generation method settings.<br>
-Let's try with SimpleRoom Placement algorithm, set the generation method to Simple Room placement and play the game.<br>
-<img src="https://cloud.wizurth.ovh/s/TgMftDPBNNZkHGx/preview" alt="PGG_SRP_SEL" width="750" height="500">
+Launch your project and enable plugin in the "$Plugins$" Window ($Edit/Plguins$).<br>
+<img src="https://cloud.wizurth.ovh/s/BXMFqbFoSWPNB2K/preview" alt="DAS_Plugins_Window" width="650" height="150">
 
-<i>With the seed is "1234" and Room parameters set to "4", here is the result:</i><br>
-<img src="https://cloud.wizurth.ovh/s/kQr7qsP33SZMd9x/preview" alt="PGG_SRP_RESULT" width="750" height="500">
-<br>
+### Step 3
+Create your data asset inherit from $Debug Actions System Data Asset$.<br>
+<img src="https://cloud.wizurth.ovh/s/nriZAXKywnqTg84/preview" alt="DAS_Plugins_Window" width="500" height="150">
 
-# 🧩 Generation Examples
-<br>
-Simple Room Placement | Seed: 69 | Grid: 32x32 | Max Rooms: 5 | Max Steps: 1000
-<img src="https://cloud.wizurth.ovh/s/cTmwMwJGrTpR7sC/preview" alt="PGG_EXAMPLE_SIMPLE_ROOM_PLACEMENT_69" width="368" height="368">
-<br>
-BSP_Correction | Seed: 69 | Grid: 64x64 | Max Steps: 1000 | Horizontal Split Chance: 0.5 | Split Ratio: (0.3, 0.7) | Leafs Min Size: (8, 8) | Room Min Size: (5, 5) | Room Max Size: (7, 7)
-<img src="https://cloud.wizurth.ovh/s/oRyn22YnR3bWotF/preview" alt="PGG_EXAMPLE_BSP_69" width="368" height="368">
-<br>
-Cellular Automata | Seed: 69 | Grid: 64x64 | Max Steps: 8 | Noise Density: 62 | Min Cells For Propagation: 5 | Propagation Type: Grass | Fallback Type: Water | Border Cells Can Change: true | Probability To Border Change: 100
-<img src="https://cloud.wizurth.ovh/s/NYWPy7W9a7BMoyC/preview" alt="PGG_EXAMPLE_CELLULAR_AUTOMATA_69" width="368" height="368">
-<br>
-Mountain | Seed: 69 | Grid: 64x64 | Max Steps: 1 | Default of Mountain
-<img src="https://cloud.wizurth.ovh/s/yysznA8faWR75En/preview" alt="PGG_EXAMPLE_NOISE_LIBRARY_TEST_69" width="368" height="368">
-<br>
-Desert | Seed: 69 | Grid: 64x64 | Max Steps: 1 | Default of Desert
-<img src="https://cloud.wizurth.ovh/s/5RF6B8bRiRf9s4F/preview" alt="PGG_EXAMPLE_NOISE_LIBRARY_TEST_69_2" width="368" height="368">
-<br>
-MapCool | Seed: 69 | Grid: 64x64 | Max Steps: 1 | Default of MapCool
-<img src="https://cloud.wizurth.ovh/s/L3FP4imYL4syPbp/preview" alt="PGG_EXAMPLE_NOISE_LIBRARY_TEST_69_3" width="368" height="368">
+### Step 4
+Configure your new DataAsset object like the screenshot or with your own subclass.<br>
+<img src="https://cloud.wizurth.ovh/s/GeAEQxtJqdt3K4e/preview" alt="DAS_Plugins_Window" width="1100" height="500">
 
-<br><br>
-# 🧐 Generation method algorithms
-## How Simple Room Placement works?
+### Step 5
+Set the data asset object in the "$Project Settings/Plugins/DebugActionsSystem - Core$".<br>
+<img src="https://cloud.wizurth.ovh/s/M93eLWMpHHJaBPr/preview" alt="DAS_Plugins_Window" width="500" height="300">
 
-Simple Room Placement is the first generation method i created.<br>
-<br>
-1- The grid is generated.<br>
-2- The algorithm attempts to add rooms inside the grid at random locations.<br>
-```csharp
-private bool TryToPlaceARoom(out Room room)
-        {
-            room = new Room(
-                RandomService.Range(0, Grid.Width),
-                RandomService.Range(0, Grid.Lenght),
-                RandomService.Range(3, 8),
-                RandomService.Range(3, 8
-                ));
-            
-            if (!CanPlaceRoom(room, 1)) return false;
-            
-            ...
-        }
-```
-<br>
-3- The corridors will be created and linked to rooms.<br>
-    
-```csharp
-// CORRIDOR CREATIONS
-for (int i = 0; i < Rooms.Count - 1; i++)
-{
-    Vector2Int start = Rooms[i].GetCenter();
-    Vector2Int end = Rooms[i + 1].GetCenter();
-    
-    CreateDogLegCorridor(start, end);
-}
-```
-<br>
-4- The ground is placed.<br>
-<br>
+</details>
 
-## How BSP works?
-BSP is the second algoritm i created and it is more complicated.<br>
-<br>
-1- The grid is generated.<br>
-2- The grid area is recursively divided into two parts at random position and creates one node for each new area.<br>
-If the new area cannot be divided, a room is created inside it at random location.<br>
-3- All rooms are connected with corridors from the root to the furthest leaf (node with room).<br>
-```csharp
-private Node GetLastChild()
-{
-    if (_child1 != null)
-    {
-        return _child1.GetLastChild();
-    }
 
-    return this;
-}
+# 🧩 Create custom Debug Action
 
-public void ConnectSisters()
-    {
-        // It's a leaf, nothing to do here.
-        if (_child1 == null || _child2 == null) 
-            return;
-        
-        // Connect sisters
-        ConnectNodes(_child1, _child2);
-            
-        // Connect child of sisters
-        _child1.ConnectSisters();
-        _child2.ConnectSisters();
-    }
 
-    private void ConnectNodes(Node node1, Node node2)
-    {
-        var center1 = node1.GetLastChild()._room.GetCenter();
-        var center2 = node2.GetLastChild()._room.GetCenter();
-        
-        CreateDogLegCorridor(center1, center2);
-    }
-```
-<br>
-4- The ground is placed.<br>
-<br>
-
-## How Cellular Automata works?
-Cellular automata is the third algorithm and it is more easy than the BSP.<br>
-<br>
-1- Generates a grid with simple noise, 0 or 1. If the value in the cell is 0, it is ground; if it is 1, it is water.<br>
-```csharp
-//Step 1 -> Fill the grid by noiseDensity
-for (int x = (int)Grid.OriginPosition.x; x < Grid.Width; ++x) //Only for a positive grid
-{
-    for (int y = (int)Grid.OriginPosition.y; y < Grid.Lenght; ++y) //Only for a positive grid
-    {
-        bool bIsGrass = RandomService.Chance(noiseDensityToProb);
-        //Cell is added successfully
-        if (AddCell(x, y, bIsGrass, out Cell cellAdded))
-        {
-            CellsGrid[x, y] = cellAdded;
-        }
-    }
-}
-```
-<br>
-2- For all cells, check the eight neighbors around the current cell. By default, if 5 cells are grass, add grass to the transition grid for the current cell, otherwise add water.<br>
-3- Transfer the transition grid to the used grid<br>
-4- Repeat step 2 and step 3 x(default:3) times.<br>
-<br>
-
-## How NoiseLibrary works?
-NoiseLibrary is an helper to use FastNoiseLite library, with this object you can configure a list of noise settings.<br>
-<br>
-1- Get a noise density values from library by noise settings and convert it to a double array<br>
-```csharp
-NoiseGrid = new float[Grid.Lenght, Grid.Width];
-            
-            //Step 1 -> Noise configuration
-            FastNoiseLite FNL = new();
-            FNL.SetSeed(RandomService.Seed);
-            FNL.SetNoiseType(_NoiseType);
-            FNL.SetFrequency(_Frequency);
-            FNL.SetFractalType(_FractalType);
-            FNL.SetFractalOctaves(_FractalOctaves);
-            FNL.SetFractalLacunarity(_FractalLacunarity);
-            FNL.SetFractalGain(_FractalGain);
-            FNL.SetFractalWeightedStrength(_FractalWeightedStrength);
-            FNL.SetFractalPingPongStrength(_FractalPingPongStrength);
-            FNL.SetCellularDistanceFunction(_CellularDistanceFunction);
-            FNL.SetCellularReturnType(_CellularReturnType);
-            FNL.SetCellularJitter(_CellularJitter);
-            FNL.SetDomainWarpType(_DomainWarpType);
-            FNL.SetDomainWarpAmp(_DomainWarpAmp);
-            FNL.SetRotationType3D(_RotationType3D);
-            
-
-            //Fill noiseGrid
-            for (int x = 0; x < Grid.Lenght; ++x)
-            {
-                for (int y = 0; y < Grid.Lenght; ++y)
-                {
-                    NoiseGrid[x, y] = GetNoiseData(FNL, x, y);
-                }
-            }
-```
-<br>
-
-2- Fill the grid of cells by noise density<br>
-```csharp
-//Step 2 -> Fill the grid by noise
-            for (int i = 0; i < _maxSteps; i++)
-            {
-                // Check for cancellation
-                cancellationToken.ThrowIfCancellationRequested();
-                
-                for (int x = 0; x < Grid.Lenght; ++x)
-                {
-                    for (int y = 0; y < Grid.Lenght; ++y)
-                    {
-                        FillCellByNoise(x, y); //Take cell and apply a sprite by noise value range
-                    }
-                }
-                
-                await UniTask.Delay(GridGenerator.StepDelay, cancellationToken: cancellationToken);
-            }
-```
-<br>
-3- Enjoy!<br>
-<br>
-
-# 🛠️ Debugs settings
-You can enable draw grid boolean on PGG object to show all tiles of the grid<br>
-<img src="https://cloud.wizurth.ovh/s/BM8Jr7c7FFneQck/preview" alt="PGG_DRAW_GRID" width="300" height="300">
-
-# ⚠️ Warnings
-<i>
-• BSP methods have problems; the only one that is 100% functional is BSP_Correction.<br>
-• If you want to move the grid, you must also change “Start Position" in the grid parameters<br>
-and You cannot rotate the grid, as all algorithms use WorldSpace coordinates and are dependent on rotation.
-</i>
-
-# ✍🏻 Credits
+# ✏️ Credits
 <a href="https://github.com/Auburn/FastNoiseLite"><img src="https://opengraph.githubassets.com/6afe455114447b1491ef8a727548619d1514ed73574a8f729f2fd8553f355ac4/Auburn/FastNoiseLite" alt="PGG_CREDITS_FAST_NOISE_LITE" width=400 height=200>
