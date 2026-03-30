@@ -14,6 +14,10 @@ The **Debug Actions System** makes it easier to use actions such as:
 
 ---
 
+<img src="https://github.com/user-attachments/assets/ab40b35c-099c-4a6c-84f6-dffdcd438ee1" alt="DAS_Plugins_Window" width="750" height="600">
+
+---
+
 ## 📖 Table of Contents
 * [🚀 How To Start](#-how-to-start)
 * [🧩 Custom Classes](#-custom-classes---blueprint--c)
