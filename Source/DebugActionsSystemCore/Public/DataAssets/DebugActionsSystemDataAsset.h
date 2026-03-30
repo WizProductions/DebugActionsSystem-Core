@@ -11,7 +11,7 @@
 //#############################################################################
 
 /**
-  * The plugin's primary data source, <b>essential</b> for its proper functioning, it allows the user to configure the Debug Actions System.
+  * The plugin's primary data source, it is required for its proper functioning, it allows the user to configure the Debug Actions System.
 */
 UCLASS(BlueprintType)
 class DEBUGACTIONSSYSTEMCORE_API UDebugActionsSystemDataAsset : public UPrimaryDataAsset {
@@ -23,6 +23,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionsSystemDataAsset : public UPrimaryD
 	
 public:
 	//==== Settings ====\\.
+	/** Do you want to enable the entire debug actions system? */
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Setup")
 	bool bEnableDebugActionsSystem = false;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Setup|Classes", meta = (AllowedClasses = "/Script/DebugActionsSystemCore.DebugPanelWidgetBase", EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
@@ -31,6 +32,13 @@ public:
 	TSoftClassPtr<UUserWidget> DebugActionWidgetClass;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Setup|Classes", meta = (AllowedClasses = "/Script/DebugActionsSystemCore.DebugInputSlotWidgetBase", EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
 	TSoftClassPtr<UUserWidget> DebugInputSlotWidgetClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setup|Tags", 
+		meta = (
+			RequiredAssetDataTags = "RowStructure=/Script/GameplayTags.GameplayTagTableRow",
+			EditCondition = "bEnableDebugActionsSystem", 
+			EditConditionHides
+		))
+	TSoftObjectPtr<UDataTable> DebugInputKeyTagDataTable;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="UI|Settings", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
 	FVector2D FirstDebugActionWidgetPos = { 100.f, 100.f };
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="UI|Settings", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
@@ -39,6 +47,7 @@ public:
 	TMap<EDebugActionResult, FLinearColor> DebugActionWidgetExecuteColorFromResult;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="Keybinds", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
 	// ReSharper disable once UnrealHeaderToolError //- BUG, FKey not found but existing
+	/** The keys used to open/close the debug panel. */
 	TArray<FKey> DASOpenMenuKeys;
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Instanced, Category="Setup|ActionsRegistering", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides, TitleProperty = "Private_DataAssetActionTitle"))

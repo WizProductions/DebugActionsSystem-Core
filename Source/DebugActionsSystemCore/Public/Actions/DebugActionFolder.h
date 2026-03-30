@@ -9,9 +9,9 @@
 //##---------------------------------- CLASS --------------------------------##
 //#############################################################################
 
-/*
- * A DebugActionFolder can store any debug actions.
-*/
+/**
+ * Can store any debug actions type.
+**/
 UCLASS(BlueprintType, EditInlineNew, DefaultToInstanced)
 class DEBUGACTIONSSYSTEMCORE_API UDebugActionFolder : public UDebugActionBase {
 	GENERATED_BODY()
