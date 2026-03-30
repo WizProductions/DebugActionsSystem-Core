@@ -16,11 +16,9 @@
 
 # 📖 Table of Contents
 * [How To Start](#-how-to-start)
-* [Create Custom Classes](#-create-custom-class)
-   * [Simple Room Placement](#how-simple-room-placement-works)
-   * [BSP](#how-bsp-works)
-   * [Cellular Automata](#how-cellular-automata-works)
-   * [FastNoiseLite / NoiseLibrary](#how-noiselibrary-works)
+* [Create Custom Classes](#-custom-class)
+   * [Custom Debug Action](#custom-debug-action)
+   * [Custom Debug Input](#custom-debug-input)
 <br>
 
 <details>
