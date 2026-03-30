@@ -22,5 +22,5 @@ struct FFreeDebugInputsLine {
 
 //==== Properties ====\\.
 public:
-	TSet<TObjectPtr<class UDebugInput>> FreeDebugLine;
+	TSet<TObjectPtr<class UDebugInputBase>> FreeDebugLine;
 };

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DebugInput.h"
+#include "DebugInputBase.h"
 #include "GameFramework/Actor.h"
 #include "DebugInput_ClassSelector.generated.h"
 
@@ -16,7 +16,7 @@
 * NEEDS A SETUP.
 */
 UCLASS()
-class DEBUGACTIONSSYSTEMCORE_API UDebugInput_ClassSelector : public UDebugInput {
+class DEBUGACTIONSSYSTEMCORE_API UDebugInput_ClassSelector : public UDebugInputBase {
 	GENERATED_BODY()
 
 //##############################################################################

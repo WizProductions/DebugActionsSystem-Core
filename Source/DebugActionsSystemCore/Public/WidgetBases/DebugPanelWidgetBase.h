@@ -69,9 +69,9 @@ public:
 	UDebugActionBase* GetDebugActionByDepth(int Depth) const;
 	void RegisterDebugInputSlot(class UDebugInputSlotWidgetBase* InDebugInputSlot);
 	/** Request a slot assignment to DI @return True if a slot is free and DI is assigned to his, otherwise False */
-	bool AssignSlotToDebugInput(class UDebugInput* InDebugInput);
+	bool AssignSlotToDebugInput(class UDebugInputBase* InDebugInput);
 	/** Unassign slot to DI @return True is a slot is found and unassigned, otherwise False */
-	bool UnassignSlotToDebugInput(class UDebugInput* InDebugInput);
+	bool UnassignSlotToDebugInput(class UDebugInputBase* InDebugInput);
 	void ClearSlotsAssigment();
 	/** Set a new visibility to all registered and used debug input slots */
 	void SetActiveDebugInputSlotsVisibility(ESlateVisibility InVisibility);

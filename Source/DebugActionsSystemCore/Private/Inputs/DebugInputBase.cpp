@@ -1,11 +1,11 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
-#include "Inputs/DebugInput.h"
+#include "Inputs/DebugInputBase.h"
 #include "Components/CanvasPanelSlot.h"
 #include "DebugActionsSystemCoreDefines.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDebugInput::OnAddedToSlot_Implementation(UDebugInputSlotWidgetBase* InSlot) {
+void UDebugInputBase::OnAddedToSlot_Implementation(UDebugInputSlotWidgetBase* InSlot) {
 
 	MyDebugInputSlotWidget = InSlot;
 	
@@ -22,8 +22,8 @@ void UDebugInput::OnAddedToSlot_Implementation(UDebugInputSlotWidgetBase* InSlot
 	}
 }
 
-void UDebugInput::OnRemovedFromSlot_Implementation(class UDebugInputSlotWidgetBase* InSlot) {
+void UDebugInputBase::OnRemovedFromSlot_Implementation(class UDebugInputSlotWidgetBase* InSlot) {
 	MyDebugInputSlotWidget = NULL;
 }
 
-void UDebugInput::ConfigureDebugInput_Implementation() {}
+void UDebugInputBase::ConfigureDebugInput_Implementation() {}

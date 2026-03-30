@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DebugInput.h"
+#include "DebugInputBase.h"
 #include "Components/ComboBoxString.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 #include <type_traits>
@@ -22,7 +22,7 @@ concept Enum = std::is_enum_v<T>;
 * NEEDS A SETUP.
 */
 UCLASS()
-class DEBUGACTIONSSYSTEMCORE_API UDebugInput_EnumSelectorCB : public UDebugInput {
+class DEBUGACTIONSSYSTEMCORE_API UDebugInput_EnumSelectorCB : public UDebugInputBase {
 	GENERATED_BODY()
 
 //##############################################################################

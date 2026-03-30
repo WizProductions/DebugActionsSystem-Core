@@ -111,7 +111,7 @@ void UDebugPanelWidgetBase::RegisterDebugInputSlot(UDebugInputSlotWidgetBase* In
 	DebugInputsSlotRegistered.Add(InDebugInputSlot);
 }
 
-bool UDebugPanelWidgetBase::AssignSlotToDebugInput(class UDebugInput* InDebugInput) {
+bool UDebugPanelWidgetBase::AssignSlotToDebugInput(class UDebugInputBase* InDebugInput) {
 	
 	if (InDebugInput == NULL)
 		return false;
@@ -128,7 +128,7 @@ bool UDebugPanelWidgetBase::AssignSlotToDebugInput(class UDebugInput* InDebugInp
 	WIZ_RET_LOG(false, "No debug input slot available, please add new one in debug panel.", Error, LogDebugActionsSystem);
 }
 
-bool UDebugPanelWidgetBase::UnassignSlotToDebugInput(class UDebugInput* InDebugInput) {
+bool UDebugPanelWidgetBase::UnassignSlotToDebugInput(class UDebugInputBase* InDebugInput) {
 
 	if (InDebugInput == NULL)
 		return false;

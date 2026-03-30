@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DebugActionsSystemTagsDefines.h"
-#include "Inputs/DebugInput.h"
+#include "Inputs/DebugInputBase.h"
 #include "Structs/FreeDebugInputsLine.h"
 #include "Structs/SharedDIMapKey.h"
 #include "Subsystems/GameInstanceSubsystem.h"
@@ -39,11 +39,11 @@ protected:
 
 public:
 	UPROPERTY()
-	TMap<TSubclassOf<UDebugInput>, FFreeDebugInputsLine> FreeDebugsInputs;
+	TMap<TSubclassOf<UDebugInputBase>, FFreeDebugInputsLine> FreeDebugsInputs;
 	UPROPERTY()
-	TArray<TObjectPtr<UDebugInput>> UsedDebugInputs;
+	TArray<TObjectPtr<UDebugInputBase>> UsedDebugInputs;
 	UPROPERTY()
-	TMap<FSharedDIMapKey, TObjectPtr<UDebugInput>> SharedDebugInputs;
+	TMap<FSharedDIMapKey, TObjectPtr<UDebugInputBase>> SharedDebugInputs;
 	
 private:
 	//==== Flags ====\\.
@@ -78,7 +78,7 @@ public:
 #pragma region Debug Inputs
 public:
 	/** Request a debug input on specified slot. @param SharedKeyTag: is the id used to get the same input of other DA, both action who requested the same input type with the same key get the exactly same input */
-	template <typename T> requires std::is_base_of_v<UDebugInput, T>
+	template <typename T> requires std::is_base_of_v<UDebugInputBase, T>
 	T* RequestDebugInput(const FGameplayTag& SharedKeyTag = DAS_SharedDIKey_Default);
 	/** Request a debug input on specified slot. @param SharedKeyTag: is the id used to get the same input of other DA, both action who requested the same input type with the same key get the exactly same input */
 	UFUNCTION(BlueprintCallable, meta = (
@@ -86,7 +86,7 @@ public:
 			DynamicOutputParam = "OutDebugInput",
 			AutoCreateRefTerm = "SharedKeyTag", 
 			Categories = "DAS.SharedDIKey"))
-	bool RequestDebugInput(TSubclassOf<UDebugInput> DebugInputClass, UDebugInput*& OutDebugInput, const FGameplayTag& SharedKeyTag);
+	bool RequestDebugInput(TSubclassOf<UDebugInputBase> DebugInputClass, UDebugInputBase*& OutDebugInput, const FGameplayTag& SharedKeyTag);
 
 	/**
 	 * Create a widget T type and directly added to Debug Panel Tree.\n
@@ -106,8 +106,8 @@ private:
 	void Internal_RegisterCallbacks();
 	void Internal_UnRegisterCallbacks();
 	bool Internal_ValidatePrerequisites();
-	bool Internal_SetFreeDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag);
-	bool Internal_SetUsedDI(UDebugInput* DI, const FGameplayTag& SharedKeyTag);
+	bool Internal_SetFreeDI(UDebugInputBase* DI, const FGameplayTag& SharedKeyTag);
+	bool Internal_SetUsedDI(UDebugInputBase* DI, const FGameplayTag& SharedKeyTag);
 	void Internal_FreeAllDebugInputs();
 #pragma endregion
 };
