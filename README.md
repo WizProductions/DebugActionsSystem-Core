@@ -32,7 +32,7 @@ The **Debug Actions System** makes it easier to use actions such as:
 ### Step 1 - OLD
 Download the plugin from the [master](https://github.com/WizProductions/DebugActionsSystem-Core) branch and place it in your `YourProjectFolder/Plugins` directory. *(If the "Plugins" folder does not exist, you must create it).*
 
-### Step 1 - *NEW*
+### Step 1 - NEW
 You can place the plugin in the **Engine**'s plugin folder to easily enable it in all projects. In the `UE_5x/Engine/Plugins/Marketplace` directory.
 
 ### Step 2
@@ -79,7 +79,7 @@ In the debug action class, you can override the following methods:
 | **GetDebugActionTitle** | Allows you to customize the title of the debug action displayed in the panel. |
 | **OnParentFolderIsCollapsed** | Called when the parent folder is collapsed and the debug action becomes hidden. |
 | **OnParentFolderIsExpanded** | Called when the parent folder is expanded. This is the ideal location to request and configure inputs. |
-| **OnPostInitProperties** | Similar to *BeginPlay*; called after `UDebugAction::PostInitProperties` in C++. |
+| **OnPostInitProperties** | Similar to *BeginPlay*; called after `UObject::PostInitProperties` in C++. |
 
 </details>
 
