@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "GameFramework/Actor.h"
+
 template <typename C>
 C* DASHelpers::AddComponentInConstruction(AActor* Owner, EComponentMobility::Type MobilityType) {
 	

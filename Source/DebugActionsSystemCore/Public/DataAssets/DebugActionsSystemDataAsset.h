@@ -3,14 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataAsset.h"
 #include "Actions/DebugActionBase.h"
+#include "InputCoreTypes.h"
+#include "UObject/UnrealType.h"
 #include "DebugActionsSystemDataAsset.generated.h"
 
 //#############################################################################
 //##--------------------------------- CLASS ---------------------------------##
 //#############################################################################
 
-/**
+  /**
   * The plugin's primary data source, it is required for its proper functioning, it allows the user to configure the Debug Actions System.
 */
 UCLASS(BlueprintType)
@@ -27,7 +30,7 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Setup")
 	bool bEnableDebugActionsSystem = false;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Setup|Classes", meta = (AllowedClasses = "/Script/DebugActionsSystemCore.DebugPanelWidgetBase", EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
-	TSoftClassPtr<UUserWidget> DebugActionsSystemPanelWidgetClass;
+	TSoftClassPtr<class UUserWidget> DebugActionsSystemPanelWidgetClass;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Setup|Classes", meta = (AllowedClasses = "/Script/DebugActionsSystemCore.DebugActionWidgetBase", EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
 	TSoftClassPtr<UUserWidget> DebugActionWidgetClass;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Setup|Classes", meta = (AllowedClasses = "/Script/DebugActionsSystemCore.DebugInputSlotWidgetBase", EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
@@ -38,7 +41,7 @@ public:
 			EditCondition = "bEnableDebugActionsSystem", 
 			EditConditionHides
 		))
-	TSoftObjectPtr<UDataTable> DebugInputKeyTagDataTable;
+	TSoftObjectPtr<class UDataTable> DebugInputKeyTagDataTable;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="UI|Settings", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
 	FVector2D FirstDebugActionWidgetPos = { 100.f, 100.f };
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="UI|Settings", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
@@ -57,7 +60,7 @@ public:
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 
-#ifdef WITH_EDITOR
+#if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif	
 };

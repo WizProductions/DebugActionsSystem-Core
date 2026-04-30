@@ -24,7 +24,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugInput_FloatSlider : public UDebugInputBas
 	
 	//==== References ====\\.
 public:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "References")
 	TObjectPtr<class USpinBox> MySpinBox = NULL;
 
 //#############################################################################

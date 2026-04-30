@@ -3,6 +3,7 @@
 
 #include "Inputs/DebugInput_LocalPlayerSelector.h"
 #include "Components/ComboBoxString.h"
+#include "Engine/GameInstance.h"
 #include "SubSystems/DebugSubsystem.h"
 
 void UDebugInput_LocalPlayerSelector::ConfigureDebugInput_Implementation() {

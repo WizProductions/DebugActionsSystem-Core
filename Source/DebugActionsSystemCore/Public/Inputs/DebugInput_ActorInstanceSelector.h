@@ -31,7 +31,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugInput_ActorInstanceSelector : public UDeb
 
 	//==== References ====\\.
 public:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "References")
 	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
 	
 	//==== Properties ====\\.

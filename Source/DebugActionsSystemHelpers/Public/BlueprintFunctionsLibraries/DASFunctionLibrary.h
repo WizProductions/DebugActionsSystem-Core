@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
+#include "Styling/SlateBrush.h"
 #include "DASFunctionLibrary.generated.h"
 
 UENUM(BlueprintType, meta=(Bitflags))
@@ -39,7 +41,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Debug", meta = (DefaultToSelf = "ContextObject", HidePin = "ContextObject"))
 	static FString GetBlueprintPMethodPrefix(const UObject* ContextObject, FString MethodName);
 	
-	//@TODO: Remake attribute, CustomThunk?
+	//@TODO: Remake with attribute, CustomThunk?
 	UFUNCTION(BlueprintCallable, Category = "Debug", meta = (BlueprintInternalUseOnly = "true"))
 	static void K2_WizLog(
 		const UObject* ContextObject, 

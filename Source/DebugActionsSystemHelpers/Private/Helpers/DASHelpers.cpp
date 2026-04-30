@@ -3,7 +3,12 @@
 #include "Helpers/DASHelpers.h"
 #include "Components/GridPanel.h"
 #include "Components/RichTextBlock.h"
+#include "GameFramework/Actor.h"
+#include "Engine/Engine.h"
 #include "GameFramework/GameStateBase.h"
+#include "Components/PrimitiveComponent.h"
+#include "Widgets/Layout/SGridPanel.h"
+#include "Widgets/SOverlay.h"
 #include "Kismet/GameplayStatics.h"
 
 bool DASHelpers::IsInLevelEditor() {
