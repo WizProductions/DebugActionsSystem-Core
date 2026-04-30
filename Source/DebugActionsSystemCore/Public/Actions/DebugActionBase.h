@@ -26,15 +26,15 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionBase : public UObject {
 
 protected:
 	//Used for customize title in array (only on editor)
-	UPROPERTY(VisibleAnywhere, Transient, meta = (HideInDetailPanel, EditCondition = "false", EditConditionHides))
+	UPROPERTY(VisibleAnywhere, Transient, meta = (HideInDetailPanel, EditCondition = "false", EditConditionHides), Category = "Hidden")
 	FString Private_DataAssetActionTitle;
 	
 protected:
 	//==== Properties ====\\.
-	UPROPERTY(BlueprintGetter="GetMyDebugActionWidget", BlueprintSetter="SetMyDebugActionWidget")
+	UPROPERTY(BlueprintGetter="GetMyDebugActionWidget", BlueprintSetter="SetMyDebugActionWidget", Category = "References")
 	TObjectPtr<class UDebugActionWidgetBase> MyDebugActionWidget;
 	UPROPERTY(BlueprintReadOnly, Category = "References")
-	class UDebugSubsystem* MyDebugSubsystem = NULL;
+	TObjectPtr<class UDebugSubsystem> MyDebugSubsystem = NULL;
 	UPROPERTY(BlueprintReadOnly, Category = "Properties")
 	int32 DepthLevel = -1;
 	

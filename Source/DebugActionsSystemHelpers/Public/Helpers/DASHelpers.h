@@ -2,30 +2,37 @@
 
 #pragma once
 
+#include "CoreMinimal.h" 
+#include "Engine/EngineTypes.h"
+
 enum class ETriggerEvent : uint8;
-class UGridPanel;
+class AActor;
+class UWorld;
+class UPrimitiveComponent;
 class URichTextBlock;
+class UGridPanel;
 
-namespace DASHelpers {
+namespace DASHelpers
+{
 
-	//#############################################################################
-	//##-------------------------------- HELPERS --------------------------------##
-	//#############################################################################
+//#############################################################################
+//##-------------------------------- HELPERS --------------------------------##
+//#############################################################################
 
-	/** Returns true if called during the level editor, false on PIE, commandlet, and release */
-	DEBUGACTIONSSYSTEMHELPERS_API bool IsInLevelEditor();
-	DEBUGACTIONSSYSTEMHELPERS_API bool IsCurrentPlayer(const UWorld* WorldContext, int32 playerIndex, const AActor* ActorToTest);
-	DEBUGACTIONSSYSTEMHELPERS_API void DisableCollisionOfComponent(UPrimitiveComponent* Component);
-	DEBUGACTIONSSYSTEMHELPERS_API void ForceGridPanelUpdate(UGridPanel* GridPanel);
-	DEBUGACTIONSSYSTEMHELPERS_API bool IsHosting(UWorld* ContextWorld);
-	DEBUGACTIONSSYSTEMHELPERS_API bool IsClientOfHost(UWorld* ContextWorld);
-	DEBUGACTIONSSYSTEMHELPERS_API bool IsStandaloneWorld(UWorld* ContextWorld);
-	DEBUGACTIONSSYSTEMHELPERS_API bool IsStandaloneWorldOrAloneInServer(UWorld* ContextWorld);
-	DEBUGACTIONSSYSTEMHELPERS_API void SetRichText(URichTextBlock* RichTextBlock, const FText& Text, const FText& RichID);
+/** Returns true if called during the level editor, false on PIE, commandlet, and release */
+DEBUGACTIONSSYSTEMHELPERS_API bool IsInLevelEditor();
+DEBUGACTIONSSYSTEMHELPERS_API bool IsCurrentPlayer(const UWorld* WorldContext, int32 playerIndex, const class AActor* ActorToTest);
+DEBUGACTIONSSYSTEMHELPERS_API void DisableCollisionOfComponent(UPrimitiveComponent* Component);
+DEBUGACTIONSSYSTEMHELPERS_API void ForceGridPanelUpdate(UGridPanel* GridPanel);
+DEBUGACTIONSSYSTEMHELPERS_API bool IsHosting(UWorld* ContextWorld);
+DEBUGACTIONSSYSTEMHELPERS_API bool IsClientOfHost(UWorld* ContextWorld);
+DEBUGACTIONSSYSTEMHELPERS_API bool IsStandaloneWorld(UWorld* ContextWorld);
+DEBUGACTIONSSYSTEMHELPERS_API bool IsStandaloneWorldOrAloneInServer(UWorld* ContextWorld);
+DEBUGACTIONSSYSTEMHELPERS_API void SetRichText(URichTextBlock* RichTextBlock, const FText& Text, const FText& RichID);
 
-	template <typename C>
-	C* AddComponentInConstruction(AActor* Owner, EComponentMobility::Type MobilityType);
-	
+template <typename C>
+C* AddComponentInConstruction(AActor* Owner, EComponentMobility::Type MobilityType);
+
 #pragma region Logs
 #if !UE_BUILD_SHIPPING
 
@@ -96,8 +103,7 @@ do { \
 #endif
 
 
-#define CheckedFString(String) String ? String : FString("None") \
-
+#define CheckedFString(String) String ? String : FString("None")
 // Available on all AActor derived class (AI code)
 // True on the Server or the Host (Listen Server). 
 // Use this for logic that should only run on the source of truth (e.g., giving damage, spawning items).
@@ -117,21 +123,21 @@ do { \
 #define IS_AUTONOMOUS (GetLocalRole() == ROLE_AutonomousProxy)
 
 #if !UE_BUILD_SHIPPING
-	/** Don't use this method directly, use WIZ_LOG macro instead */
-	DEBUGACTIONSSYSTEMHELPERS_API void PrivateInternal_WizDebugLog(
-		const ANSICHAR* FunctionSignature = nullptr,
-		int32 FileLine                    = -1,
-		const FString& Message            = "NoLogMessage, use WIZ_LOG macro!",
-		ELogVerbosity::Type DebugLogType  = ELogVerbosity::Type::Log,
-		FLogCategoryBase& LogCategory     = LogTemp,
-		bool bAddOnScreenMessage          = false,
-		FColor OnScreenMessageColor       = FColor::White,
-		float OnScreenMessageDuration     = 7.f,
-		uint64 OnScreenMessageKey         = INDEX_NONE
-	);
-	FString ParseFunctionPrefixFromString(FString FunctionSignature, int32 Line = -1);
-	FString ParseFunctionPrefixFromAnsi(const ANSICHAR* FunctionSignatureAnsi, int32 Line = -1);
-	FString ParseFunctionPrefixFromTChar(const TCHAR* FunctionSignatureTChar, int32 Line = -1);
+/** Don't use this method directly, use WIZ_LOG macro instead */
+DEBUGACTIONSSYSTEMHELPERS_API void PrivateInternal_WizDebugLog(
+	const ANSICHAR* FunctionSignature = nullptr,
+	int32 FileLine                    = -1,
+	const FString& Message            = "NoLogMessage, use WIZ_LOG macro!",
+	ELogVerbosity::Type DebugLogType  = ELogVerbosity::Type::Log,
+	FLogCategoryBase& LogCategory     = LogTemp,
+	bool bAddOnScreenMessage          = false,
+	FColor OnScreenMessageColor       = FColor::White,
+	float OnScreenMessageDuration     = 7.f,
+	uint64 OnScreenMessageKey         = INDEX_NONE
+);
+FString ParseFunctionPrefixFromString(FString FunctionSignature, int32 Line = -1);
+FString ParseFunctionPrefixFromAnsi(const ANSICHAR* FunctionSignatureAnsi, int32 Line = -1);
+FString ParseFunctionPrefixFromTChar(const TCHAR* FunctionSignatureTChar, int32 Line = -1);
 #endif
 #pragma endregion
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "BlueprintFunctionsLibraries/DASFunctionLibrary.h"
+#include "Engine/Engine.h"
 
 #define DH_DEFAULT_DURATION 1.f
 #define DH_SEPARATOR_BOTTOM "-----------------------------------------------"

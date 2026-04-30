@@ -22,10 +22,10 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionFolder : public UDebugActionBase {
 	
 public:
 	//==== Settings ====\\.
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 	FText DebugFolderTitle = FText::FromString("DefaultFolder");
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced, meta = (TitleProperty = "Private_DataAssetActionTitle"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced, meta = (TitleProperty = "Private_DataAssetActionTitle"), Category = "Settings")
 	TArray<TObjectPtr<UDebugActionBase>> DebugActionsStored;
 
 //#############################################################################

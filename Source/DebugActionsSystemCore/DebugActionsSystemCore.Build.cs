@@ -48,19 +48,29 @@ public class DebugActionsSystemCore : ModuleRules
 				//Unused but included (used in header files)
 				"Slate",
 				"SlateCore",
-				"EditorFramework",
-				"EditorStyle",
-				"LevelEditor",
 				"InteractiveToolsFramework",
-				"EditorInteractiveToolsFramework"
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);
 		
 		if (Target.bBuildEditor)
 		{
-			PrivateDependencyModuleNames.Add(new string("UnrealEd"));;
-			PrivateDependencyModuleNames.Add(new string("UMGEditor"));
+			PrivateDependencyModuleNames.AddRange(
+				new string[]
+				{
+					"LevelEditor",
+					"UMGEditor",
+					"EditorStyle",
+					"EditorFramework",
+					"EditorInteractiveToolsFramework"
+				}
+			);
+			
+			PublicDependencyModuleNames.AddRange(
+				new string[]
+				{
+					"UnrealEd"
+				});
 		}
 		
 		DynamicallyLoadedModuleNames.AddRange(

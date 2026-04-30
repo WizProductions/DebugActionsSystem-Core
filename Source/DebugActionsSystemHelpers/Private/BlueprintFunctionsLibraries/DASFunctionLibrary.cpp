@@ -1,6 +1,7 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
 #include "BlueprintFunctionsLibraries/DASFunctionLibrary.h"
+#include "UObject/UObjectIterator.h"
 #include "Components/Button.h"
 
 void UDASFunctionLibrary::GetAllDerivedClasses(TSubclassOf<UObject> ParentClass, TArray<UClass*>& OutSubClasses, bool bIncludeParentClass, bool bIncludeAbstract) {

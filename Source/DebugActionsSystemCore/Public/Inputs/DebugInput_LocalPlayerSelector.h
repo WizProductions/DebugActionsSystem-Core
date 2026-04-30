@@ -23,7 +23,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugInput_LocalPlayerSelector : public UDebug
 
 public:
 	//==== References ====\\.
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "References")
 	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
 
 //#############################################################################

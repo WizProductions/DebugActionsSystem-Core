@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Subsystems/LocalPlayerSubsystem.h"
 #include "DebugActionsSystemTagsDefines.h"
 #include "Inputs/DebugInputBase.h"
 #include "Structs/FreeDebugInputsLine.h"
@@ -85,7 +86,8 @@ public:
 			DeterminesOutputType = "DebugInputClass", 
 			DynamicOutputParam = "OutDebugInput",
 			AutoCreateRefTerm = "SharedKeyTag", 
-			Categories = "DAS.SharedDIKey"))
+			Categories = "DAS.SharedDIKey"), 
+			Category = "DebugInput")
 	bool RequestDebugInput(TSubclassOf<UDebugInputBase> DebugInputClass, UDebugInputBase*& OutDebugInput, const FGameplayTag& SharedKeyTag);
 
 	/**
@@ -98,7 +100,7 @@ public:
 	 * Create a widget T type and directly added to Debug Panel Tree.\n
 	 * WARNING: Do not use this method during initialization of the debug panel widget because if the tree is not fully initialized, the game crashes.
 	 */
-	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "WidgetClass", DynamicOutputParam = "OutWidget"))
+	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "WidgetClass", DynamicOutputParam = "OutWidget"), Category = "UI")
 	void GetNewWidgetInDebugPanel(TSubclassOf<UWidget> WidgetClass, UWidget*& OutWidget);
 	
 private:
