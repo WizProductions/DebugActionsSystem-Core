@@ -33,7 +33,7 @@ The **Debug Actions System** makes it easier to use actions such as:
 Download the plugin from the [master](https://github.com/WizProductions/DebugActionsSystem-Core) branch and place it in your `YourProjectFolder/Plugins` directory. *(If the "Plugins" folder does not exist, you must create it).*
 
 ### Step 1 - NEW
-You can place the plugin in the **Engine**'s plugin folder to easily enable it in all projects. In the `UE_5x/Engine/Plugins/Marketplace` directory.
+Download the plugin from the [Releases](https://github.com/WizProductions/DebugActionsSystem-Core/releases) and place it in the **Engine**'s plugin folder to easily enable it in all projects. In the `UE_5x/Engine/Plugins/Marketplace` directory.
 
 ### Step 2
 Launch your project and enable the plugin in the **Plugins** Window (**Edit > Plugins**).<br>
