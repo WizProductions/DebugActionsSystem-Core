@@ -5,6 +5,7 @@ public class DebugActionsSystemHelpers : ModuleRules
     public DebugActionsSystemHelpers(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		bUsePrecompiled = true;
 
         PublicDependencyModuleNames.AddRange(
             new string[]

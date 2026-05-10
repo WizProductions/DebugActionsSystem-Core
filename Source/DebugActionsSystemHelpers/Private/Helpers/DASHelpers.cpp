@@ -163,27 +163,25 @@ void DASHelpers::PrivateInternal_WizDebugLog(
 			FinalMessage = FString::Printf(TEXT("%s %s"), *Prefix, *Message);
 		}
 	}
-
-	if (!LogCategory.IsSuppressed(DebugLogType)) {
-		switch (DebugLogType) {
-			case ELogVerbosity::NoLogging: break;
-			case ELogVerbosity::Fatal: UE_LOG_REF(LogCategory, Fatal, TEXT("%s"), *FinalMessage);
-				break;
-			case ELogVerbosity::Error: UE_LOG_REF(LogCategory, Error, TEXT("%s"), *FinalMessage);
-				break;
-			case ELogVerbosity::Warning: UE_LOG_REF(LogCategory, Warning, TEXT("%s"), *FinalMessage);
-				break;
-			case ELogVerbosity::Display: UE_LOG_REF(LogCategory, Display, TEXT("%s"), *FinalMessage);
-				break;
-			case ELogVerbosity::Log: UE_LOG_REF(LogCategory, Log, TEXT("%s"), *FinalMessage);
-				break;
-			case ELogVerbosity::Verbose: UE_LOG_REF(LogCategory, Verbose, TEXT("%s"), *FinalMessage);
-				break;
-			case ELogVerbosity::VeryVerbose: UE_LOG_REF(LogCategory, VeryVerbose, TEXT("%s"), *FinalMessage);
-				break;
-			default: UE_LOG_REF(LogCategory, Log, TEXT("%s"), *FinalMessage);
-				break;
-		}
+	
+	switch (DebugLogType) {
+		case ELogVerbosity::NoLogging: break;
+		case ELogVerbosity::Fatal: UE_LOG_REF(LogCategory, Fatal, TEXT("%s"), *FinalMessage);
+			break;
+		case ELogVerbosity::Error: UE_LOG_REF(LogCategory, Error, TEXT("%s"), *FinalMessage);
+			break;
+		case ELogVerbosity::Warning: UE_LOG_REF(LogCategory, Warning, TEXT("%s"), *FinalMessage);
+			break;
+		case ELogVerbosity::Display: UE_LOG_REF(LogCategory, Display, TEXT("%s"), *FinalMessage);
+			break;
+		case ELogVerbosity::Log: UE_LOG_REF(LogCategory, Log, TEXT("%s"), *FinalMessage);
+			break;
+		case ELogVerbosity::Verbose: UE_LOG_REF(LogCategory, Verbose, TEXT("%s"), *FinalMessage);
+			break;
+		case ELogVerbosity::VeryVerbose: UE_LOG_REF(LogCategory, VeryVerbose, TEXT("%s"), *FinalMessage);
+			break;
+		default: UE_LOG_REF(LogCategory, Log, TEXT("%s"), *FinalMessage);
+			break;
 	}
 
 	if (bAddOnScreenMessage && GEngine) {

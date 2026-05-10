@@ -140,6 +140,10 @@ FString ParseFunctionPrefixFromAnsi(const ANSICHAR* FunctionSignatureAnsi, int32
 FString ParseFunctionPrefixFromTChar(const TCHAR* FunctionSignatureTChar, int32 Line = -1);
 #endif
 #pragma endregion
+#pragma region Utils
+#define RETURN_IF_NULL(ptr, ReturnValue) if (!ptr) return ReturnValue;
+#define TASK_FAIL_IF_NULL(ptr) if (!ptr) return EStateTreeRunStatus::Failed;
+#pragma endregion //Utils
 };
 
 #if CPP
