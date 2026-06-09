@@ -72,26 +72,16 @@ DASHelpers::PrivateInternal_WizDebugLog(WIZ_FUNCTION_SIG, __LINE__, Message, ELo
 
 #define WIZ_NET_LOG(Message, Verbosity, ...) \
 do { \
-	const FString LocalRoleStr = UEnum::GetValueAsString(GetLocalRole()); \
-	const FString RemoteRoleStr = UEnum::GetValueAsString(GetRemoteRole()); \
-	const FString ContextPrefix = FString::Printf(TEXT("[%s/%s] "), *LocalRoleStr, *RemoteRoleStr); \
+	FString ContextPrefix; \
+	DASHelpers::GetNetContextPrefix(this, ContextPrefix); \
 	WIZ_LOG(ContextPrefix + Message, Verbosity, ##__VA_ARGS__); \
 } while(0)
 
 #define WIZ_NET_RET_LOG(ReturnValue, Message, Verbosity, ...) \
 do { \
-	const FString LocalRoleStr = UEnum::GetValueAsString(GetLocalRole()); \
-	const FString RemoteRoleStr = UEnum::GetValueAsString(GetRemoteRole()); \
-	const FString ContextPrefix = FString::Printf(TEXT("[%s/%s] "), *LocalRoleStr, *RemoteRoleStr); \
+	FString ContextPrefix; \
+	DASHelpers::GetNetContextPrefix(this, ContextPrefix); \
 	WIZ_RET_LOG(ReturnValue, ContextPrefix + Message, Verbosity, ##__VA_ARGS__); \
-} while(0)
-
-#define WIZ_NET_LOG_C(AuthorityCheckActor, Message, Verbosity, ...) \
-do { \
-	const FString LocalRoleStr = UEnum::GetValueAsString(AuthorityCheckActor->GetLocalRole()); \
-	const FString RemoteRoleStr = UEnum::GetValueAsString(AuthorityCheckActor->GetRemoteRole()); \
-	const FString ContextPrefix = FString::Printf(TEXT("[%s/%s] "), *LocalRoleStr, *RemoteRoleStr); \
-	WIZ_LOG(ContextPrefix + Message, Verbosity, ##__VA_ARGS__); \
 } while(0)
 
 #else //--------------------------- SHIPPING ----------------------//.
@@ -104,7 +94,7 @@ do { \
 
 
 #define CheckedFString(String) String ? String : FString("None")
-// Available on all AActor derived class (AI code)
+// Available on all AActor derived class
 // True on the Server or the Host (Listen Server). 
 // Use this for logic that should only run on the source of truth (e.g., giving damage, spawning items).
 #define SERVER_SIDE (GetLocalRole() == ROLE_Authority)
@@ -135,9 +125,16 @@ DEBUGACTIONSSYSTEMHELPERS_API void PrivateInternal_WizDebugLog(
 	float OnScreenMessageDuration     = 7.f,
 	uint64 OnScreenMessageKey         = INDEX_NONE
 );
+
 FString ParseFunctionPrefixFromString(FString FunctionSignature, int32 Line = -1);
 FString ParseFunctionPrefixFromAnsi(const ANSICHAR* FunctionSignatureAnsi, int32 Line = -1);
 FString ParseFunctionPrefixFromTChar(const TCHAR* FunctionSignatureTChar, int32 Line = -1);
+
+/** Returns a string contain local and remote role of actor. eg: [Authority/SimulatedProxy] */
+DEBUGACTIONSSYSTEMHELPERS_API __forceinline void GetNetContextPrefix(const AActor* Actor, FString& OutString);
+/** Returns a string contain local and remote role of component. eg: [Authority/SimulatedProxy] */
+DEBUGACTIONSSYSTEMHELPERS_API __forceinline void GetNetContextPrefix(const UActorComponent* Component, FString& OutString);
+
 #endif
 #pragma endregion
 #pragma region Utils

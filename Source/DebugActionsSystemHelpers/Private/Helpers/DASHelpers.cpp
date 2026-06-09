@@ -238,5 +238,36 @@ FString DASHelpers::ParseFunctionPrefixFromTChar(const TCHAR* FunctionSignatureT
 	}
 	return ParseFunctionPrefixFromString(FString(FunctionSignatureTChar), Line);
 }
+
+void DASHelpers::GetNetContextPrefix(const AActor* Actor, FString& OutString) {
+	
+	if (Actor == NULL) {
+		OutString = TEXT("[Null: Actor]");
+		return;
+	}
+	
+	const FString LocalRoleStr = UEnum::GetValueAsString(Actor->GetLocalRole());
+	const FString RemoteRoleStr = UEnum::GetValueAsString(Actor->GetRemoteRole());
+	OutString =  FString::Printf(TEXT("[%s/%s] "), *LocalRoleStr, *RemoteRoleStr);
+	
+	return;
+}
+
+void DASHelpers::GetNetContextPrefix(const UActorComponent* Component, FString& OutString) {
+	
+	if (Component == NULL) {
+		OutString = TEXT("[Null: Component]");
+		return;
+	} 
+	
+	AActor* CompOwner = Component->GetOwner();
+	if (CompOwner == NULL) {
+		OutString = TEXT("[Null: Component's Owner ]");
+		return;
+	}
+	
+	return GetNetContextPrefix(CompOwner, OutString);
+}
+
 #endif
 #pragma endregion
