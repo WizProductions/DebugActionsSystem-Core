@@ -8,7 +8,6 @@ public class DebugActionsSystemCore : ModuleRules
 	public DebugActionsSystemCore(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-		bUsePrecompiled = true;
 		
 		PublicIncludePaths.AddRange(
 			new string[]

@@ -15,7 +15,7 @@ void UDebugInput_ActorInstanceSelector::ConfigureDebugInput_Implementation() {
 	DebugInputSize = FVector2D(120, 28);
 
 	//==== Combo Box (Class Filter) ====\\.
-	MyComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<UComboBoxString>();
+	MyComboBox = UDebugSubsystem::Get(this)->GetNewWidgetInDebugPanel<UComboBoxString>();
 	if (MyComboBox == NULL)
 		WIZ_RET_LOG( , "Widget is invalid", Error, LogDebugActionsSystem);
 	

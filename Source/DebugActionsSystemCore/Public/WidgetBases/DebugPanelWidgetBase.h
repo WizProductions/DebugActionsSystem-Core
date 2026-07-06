@@ -75,6 +75,7 @@ public:
 	void ClearSlotsAssigment();
 	/** Set a new visibility to all registered and used debug input slots */
 	void SetActiveDebugInputSlotsVisibility(ESlateVisibility InVisibility);
+	virtual void SetVisibility(ESlateVisibility InVisibility) override;
 
 private:
 	void Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder);
@@ -87,5 +88,5 @@ private:
 };
 
 #if CPP
-#include "DebugPanelWidgetBase.inl"
+#include "WidgetBases/DebugPanelWidgetBase.inl"
 #endif

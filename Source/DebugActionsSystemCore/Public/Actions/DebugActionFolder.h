@@ -39,7 +39,7 @@ public:
 #endif
 	
 	virtual EDebugActionResult InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutActions, UDebugSubsystem* Subsystem) override;
-	virtual void SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int32 DepthRecursivity) override;
+	virtual void SetDebugActionWidgetVisibility(ESlateVisibility NewVisibility, int32 DepthRecursivity) override;
 	
 	void RefreshChildren();
 	

@@ -13,7 +13,7 @@ bool UDebugActionWidgetBase::InitDebugActionWidget_Implementation(UDebugActionBa
 
 	if (MyDebugAction) {
 		if (MyDebugAction->GetDepthLevel() != 0) {
-			MyDebugAction->SetDebugActionWidgetVisibility(true);
+			MyDebugAction->SetDebugActionWidgetVisibility(ESlateVisibility::Collapsed);
 		}
 
 		return true;

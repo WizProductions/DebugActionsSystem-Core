@@ -15,7 +15,7 @@ void UDebugInput_ActorComponentInstanceSelector::ConfigureDebugInput_Implementat
 	DebugInputSize = FVector2D(120, 28);
 
 	//==== Combo Box (Class Filter) ====\\.
-	MyComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<UComboBoxString>();	
+	MyComboBox = UDebugSubsystem::Get(this)->GetNewWidgetInDebugPanel<UComboBoxString>();	
 	MyInputDataWidget = MyComboBox;
 }
 

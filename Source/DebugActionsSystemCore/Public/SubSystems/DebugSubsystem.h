@@ -56,7 +56,13 @@ private:
 //#############################################################################
 	
 public:
+/** Returns the subsystem of the FIRST local player, make a lot of bugs in editor/split screen, is only a FALLBACK version, it is RECOMMENDED to use ANOTHER VERSION */
 	static UDebugSubsystem* Get(const UObject* WorldContextObject);
+	static UDebugSubsystem* Get(const APawn* WorldContextObject);
+	static UDebugSubsystem* Get(const UUserWidget* WorldContextObject);
+	static UDebugSubsystem* Get(const APlayerController* WorldContextObject);
+	static UDebugSubsystem* Get(const ULocalPlayer* WorldContextObject);
+	static UDebugSubsystem* Get(const UDebugInputBase* WorldContextObject);
 	
 	virtual void PlayerControllerChanged(APlayerController* NewPlayerController) override;
 protected:
@@ -105,7 +111,7 @@ public:
 	
 private:
 	void Internal_SetupDebugActionsSystem(bool bForceSetup);
-	void Internal_RegisterCallbacks();
+	void Internal_RegisterCallbacks(bool bClearOldCallbacks = true);
 	void Internal_UnRegisterCallbacks();
 	bool Internal_ValidatePrerequisites();
 	bool Internal_SetFreeDI(UDebugInputBase* DI, const FGameplayTag& SharedKeyTag);

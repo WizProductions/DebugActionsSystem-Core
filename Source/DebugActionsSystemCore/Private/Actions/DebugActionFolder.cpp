@@ -58,24 +58,24 @@ EDebugActionResult UDebugActionFolder::InitializeDebugAction(TArray<TObjectPtr<U
 	return EDebugActionResult::HierarchyInitialization;
 }
 
-void UDebugActionFolder::SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int32 DepthRecursivity) {
+void UDebugActionFolder::SetDebugActionWidgetVisibility(ESlateVisibility NewVisibility, int32 DepthRecursivity) {
 	
 	if (DepthRecursivity <= DepthLevel) { //Change children's visibility by recursivity
-		if (bNewIsCollapsed) { //Hide all children
+		if (NewVisibility == ESlateVisibility::Collapsed) { //Hide all children
 			for (auto DebugAction : DebugActionsStored) {
-				DebugAction->SetDebugActionWidgetVisibility(bNewIsCollapsed, DepthRecursivity);
+				DebugAction->SetDebugActionWidgetVisibility(NewVisibility, DepthRecursivity);
 			}
 			if (DepthRecursivity != DepthLevel) { //If depth recursivity is my depth doesn't hide me
-				Super::SetDebugActionWidgetVisibility(bNewIsCollapsed); //Change his visibility
+				Super::SetDebugActionWidgetVisibility(NewVisibility); //Change his visibility
 				bDebugActionState = false;
 			}
 		}
 		else { //Show first depth children
 			for (auto DebugAction : DebugActionsStored) {
 				if (DebugAction == NULL)
-					WIZ_RET_LOG( , "DebugActionFolder cannot be developped because a debug action is invalid, please check data asset", Error, LogDebugActionsSystem);
+					WIZ_LOG( "DebugActionFolder cannot be developed because a debug action is invalid, please check data asset", Warning, LogDebugActionsSystem);
 				
-				DebugAction->SetDebugActionWidgetVisibility(bNewIsCollapsed);
+				DebugAction->SetDebugActionWidgetVisibility(NewVisibility);
 			}
 		}
 	}
@@ -84,11 +84,11 @@ void UDebugActionFolder::SetDebugActionWidgetVisibility(bool bNewIsCollapsed, in
 EDebugActionResult UDebugActionFolder::ExecuteDebugAction_Implementation() {
 
 	if (Super::ExecuteDebugAction_Implementation() == EDebugActionResult::Success) {
-		//Catch the old debug action folder (is different -> hide old children's)
+		//Catch the old debug action folder (is different -> hide old children)
 		MyDebugSubsystem->OnFolderStateChange(bDebugActionState, this); //@UPGRADE: to event delegates to replace GetDebugPanelWidget()?
 
 		//Change visibility of the debug action folder clicked
-		SetDebugActionWidgetVisibility(!bDebugActionState, this->GetDepthLevel());
+		SetDebugActionWidgetVisibility(bDebugActionState ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed, this->GetDepthLevel());
 
 		for (UDebugActionBase* DebugAction : DebugActionsStored) {
 			if (DebugAction) {

@@ -57,7 +57,7 @@ public:
 	/** Get the widget as you want and customize it. \n
 	 *  DON'T FORGOT to set MyInputDataWidget with your new widget.
 	 */
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
+	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
 	void ConfigureDebugInput();
 	
 	friend class UDebugSubsystem;

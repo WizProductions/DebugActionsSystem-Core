@@ -12,7 +12,7 @@ void UDebugInput_FloatSlider::ConfigureDebugInput_Implementation() {
 	DebugInputTitle = FText::FromString("Value");
 	DebugInputSize = FVector2D(80, 28);
 	
-	MySpinBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<USpinBox>();
+	MySpinBox = UDebugSubsystem::Get(this)->GetNewWidgetInDebugPanel<USpinBox>();
 	MyInputDataWidget = MySpinBox;
 	
 	if (MySpinBox == NULL)

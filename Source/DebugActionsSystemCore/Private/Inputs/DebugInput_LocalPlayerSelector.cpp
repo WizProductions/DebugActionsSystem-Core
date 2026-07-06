@@ -12,7 +12,7 @@ void UDebugInput_LocalPlayerSelector::ConfigureDebugInput_Implementation() {
 	DebugInputTitle = FText::FromString("Player");
 	DebugInputSize = FVector2D(140, 28);
 
-	MyComboBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<UComboBoxString>();
+	MyComboBox = UDebugSubsystem::Get(this)->GetNewWidgetInDebugPanel<UComboBoxString>();
 	MyInputDataWidget = MyComboBox;
 	
 	if (MyComboBox == NULL)

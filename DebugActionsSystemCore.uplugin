@@ -1,7 +1,7 @@
 {
   "FileVersion": 3,
   "Version": 1,
-  "VersionName": "1.1.7",
+  "VersionName": "1.1.8",
   "FriendlyName": "Debug Actions System - Core",
   "Description": "",
   "Category": "Debug",
@@ -12,9 +12,8 @@
   "SupportURL": "",
   "EngineVersion": "5.7.0",
   "CanContainContent": true,
-  "EnabledByDefault": true,
   "IsBetaVersion": true,
-  "Installed": true,
+  "Installed": false,
   "Modules": [
     {
       "Name": "DebugActionsSystemTags",

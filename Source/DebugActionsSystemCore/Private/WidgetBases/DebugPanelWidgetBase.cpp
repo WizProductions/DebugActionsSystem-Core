@@ -18,8 +18,9 @@ const FText UDebugPanelWidgetBase::GetPaletteCategory() {
 }
 
 UDebugSubsystem* UDebugPanelWidgetBase::GetDebugSubSystemChecked() {
+	
 	if (MyDebugSubsystem == NULL)
-		MyDebugSubsystem = UDebugSubsystem::Get(GetWorld());
+		MyDebugSubsystem = UDebugSubsystem::Get(this);
 	
 	return MyDebugSubsystem;
 }
@@ -41,7 +42,7 @@ bool UDebugPanelWidgetBase::AddDebugActionParentWidget_Implementation(int DebugA
 
 bool UDebugPanelWidgetBase::CreateDebugActionWidget_Implementation(UDebugActionBase* LinkedDebugAction, class UDebugActionWidgetBase*& NewWidget, class UCanvasPanelSlot*& NewWidgetCanvasSlot) {
 	
-	if (LinkedDebugAction == NULL)
+	if (IsValid(LinkedDebugAction) == false)
 		WIZ_RET_LOG(false , "Debug action invalid", Error, LogDebugActionsSystem);
 	
 	UDebugActionsSystemDataAsset* DAS_DA = GetDebugSubSystemChecked()->GetDebugDataAsset();
@@ -52,7 +53,7 @@ bool UDebugPanelWidgetBase::CreateDebugActionWidget_Implementation(UDebugActionB
 	if (DAWClass == NULL)
 		WIZ_RET_LOG(false , "Debug Action widget class failed to load.", Error, LogDebugActionsSystem);
 	
-	NewWidget = WidgetTree->ConstructWidget<UDebugActionWidgetBase>(DAWClass);
+	NewWidget = WidgetTree->ConstructWidget<UDebugActionWidgetBase>(DAWClass, FName(*FString::Printf(TEXT("DebugActionWidget_%s"), *LinkedDebugAction->GetDebugActionTitle().ToString())));
 	NewWidgetCanvasSlot = Cast<UCanvasPanelSlot>(CP_Root.Get()->AddChild(NewWidget));
 	
 	if (NewWidget == NULL or NewWidgetCanvasSlot == NULL)
@@ -66,7 +67,7 @@ void UDebugPanelWidgetBase::OnFolderStateChange_Implementation(bool bIsDeveloped
 	Internal_UpdateDebugActionsDepthLevelsArray(InDebugActionFolder);
 	
 	if (bIsNewFolderClicked == false) {
-		SetActiveDebugInputSlotsVisibility(bIsDeveloped ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+		SetActiveDebugInputSlotsVisibility(bIsDeveloped ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
 	}
 }
 
@@ -156,6 +157,31 @@ void UDebugPanelWidgetBase::SetActiveDebugInputSlotsVisibility(ESlateVisibility 
 	}
 }
 
+void UDebugPanelWidgetBase::SetVisibility(ESlateVisibility InVisibility) {
+	Super::SetVisibility(InVisibility);
+	
+	//Focus first action (temp, the best way is to focus the last action focused or first)
+	if (IsVisible() == false)
+		return;
+	
+	UDebugActionsSystemDataAsset* DataAsset = MyDebugSubsystem.Get()->GetDebugDataAsset();
+	if (IsValid(DataAsset) == false)
+		return;
+	
+	if (DataAsset->DebugActionsArray.IsValidIndex(0) == false)
+		return;
+	
+	UDebugActionBase* ActionBase = DataAsset->DebugActionsArray[0];
+	if (ActionBase == NULL)
+		return;
+	
+	UDebugActionWidgetBase* ActionWidgetBase = ActionBase->GetMyDebugActionWidget();
+	if (ActionWidgetBase == NULL)
+		return;
+	
+	ActionWidgetBase->SetFocus();
+}
+
 void UDebugPanelWidgetBase::Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder) {
 	
 	int DADepthLevel = InDebugActionFolder->GetDepthLevel();
@@ -163,7 +189,7 @@ void UDebugPanelWidgetBase::Internal_UpdateDebugActionsDepthLevelsArray(UDebugAc
 	//User clicked on another debug action folder -> hide old debug action folder children's (same depth)
 	if (DebugActionsDepthsArray[DADepthLevel] != InDebugActionFolder) {
 		if (UDebugActionBase* OldOnDepthDebugAction = DebugActionsDepthsArray[DADepthLevel]) {
-			OldOnDepthDebugAction->SetDebugActionWidgetVisibility(true, DADepthLevel);
+			OldOnDepthDebugAction->SetDebugActionWidgetVisibility(ESlateVisibility::Collapsed, DADepthLevel);
 			OldOnDepthDebugAction->SetDebugActionState(false);
 		}
 		DebugActionsDepthsArray[DADepthLevel] = InDebugActionFolder;

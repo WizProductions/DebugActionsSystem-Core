@@ -56,8 +56,8 @@ public:
 	
 	/** @param OutDebugActionsHierarchy: Reserved for UDebugActionFolder subclass */
 	virtual EDebugActionResult InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutDebugActionsHierarchy, class UDebugSubsystem* Subsystem);
-	virtual void SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int DepthRecursivity);
-	virtual void SetDebugActionWidgetVisibility(bool bNewIsCollapsed);
+	virtual void SetDebugActionWidgetVisibility(ESlateVisibility NewVisibility, int DepthRecursivity);
+	virtual void SetDebugActionWidgetVisibility(ESlateVisibility NewVisibility);
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "DebugActionsSystem")
 	void OnPostInitProperties();

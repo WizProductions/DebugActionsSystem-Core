@@ -34,12 +34,12 @@ EDebugActionResult UDebugActionBase::InitializeDebugAction(TArray<TObjectPtr<UDe
 	return EDebugActionResult::Success;
 }
 
-void UDebugActionBase::SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int DepthRecursivity) {
-	SetDebugActionWidgetVisibility(bNewIsCollapsed);
+void UDebugActionBase::SetDebugActionWidgetVisibility(ESlateVisibility NewVisibility, int DepthRecursivity) {
+	SetDebugActionWidgetVisibility(NewVisibility);
 }
 
-void UDebugActionBase::SetDebugActionWidgetVisibility(bool bNewIsCollapsed) {
-	MyDebugActionWidget->SetVisibility(static_cast<ESlateVisibility>(bNewIsCollapsed));
+void UDebugActionBase::SetDebugActionWidgetVisibility(ESlateVisibility NewVisibility) {
+	MyDebugActionWidget->SetVisibility(NewVisibility);
 }
 
 void UDebugActionBase::OnParentFolderIsCollapsed_Implementation(class UDebugActionFolder* ParentFolder) {}

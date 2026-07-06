@@ -22,13 +22,19 @@ void UDebugInputSlotWidgetBase::NativeConstruct() {
 	}
 
 	NamedSlotWidgetSlot = Cast<UCanvasPanelSlot>(NS_InputSlot->Slot);
+	UDebugPanelWidgetBase* DebugPanelWidget = UDebugSubsystem::Get(this)->GetDebugPanelWidget();
 
 	//First outer -> Widget tree -> outer -> Debug Panel
-	UObject* Owner = GetOuter()->GetOuter();
-	UDebugPanelWidgetBase* DebugPanelWidget = UDebugSubsystem::Get(GetWorld())->GetDebugPanelWidget();
-
+	UObject* Outer = GetOuter();
+	if (IsValid(Outer) == false) {
+		WIZ_RET_LOG( , "Outer is invalid.", Error);
+	}
+	while (IsValid(Outer->GetOuter()) && Outer != DebugPanelWidget) {
+		Outer = Outer->GetOuter();
+	}
+	
 	//This widget is a child of existing Debug Tools
-	if (Owner != DebugPanelWidget) {
+	if (Outer != DebugPanelWidget) {
 		WIZ_RET_LOG( , "DebugInputSlot is not a child of UDebugPanelWidget", Error, LogDebugActionsSystem);
 	}
 
