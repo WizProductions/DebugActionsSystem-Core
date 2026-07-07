@@ -26,7 +26,8 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionBase : public UObject {
 
 protected:
 	//Used for customize title in array (only on editor)
-	UPROPERTY(VisibleAnywhere, Transient, meta = (HideInDetailPanel, EditCondition = "false", EditConditionHides), Category = "Hidden")
+	//UPROPERTY(VisibleAnywhere, Transient, meta = (HideInDetailPanel, EditCondition = "false", EditConditionHides), Category = "Hidden")
+	UPROPERTY(EditDefaultsOnly, Transient, meta = (HideInDetailPanel, EditCondition = "false", EditConditionHides))
 	FString Private_DataAssetActionTitle;
 	
 protected:

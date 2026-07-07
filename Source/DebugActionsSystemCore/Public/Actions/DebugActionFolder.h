@@ -25,7 +25,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 	FText DebugFolderTitle = FText::FromString("DefaultFolder");
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced, meta = (TitleProperty = "Private_DataAssetActionTitle"), Category = "Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta = (TitleProperty = "Private_DataAssetActionTitle"), Category = "Settings")
 	TArray<TObjectPtr<UDebugActionBase>> DebugActionsStored;
 
 //#############################################################################
