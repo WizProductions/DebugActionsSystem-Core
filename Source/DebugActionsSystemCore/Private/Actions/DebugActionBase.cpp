@@ -1,6 +1,7 @@
 ﻿// Copyright Wiz Corporation. All Rights Reserved.
 
 #include "Actions/DebugActionBase.h"
+#include "Components/SlateWrapperTypes.h"
 #include "Enumerations/EDebugActionResult.h"
 #include "WidgetBases/DebugActionWidgetBase.h"
 

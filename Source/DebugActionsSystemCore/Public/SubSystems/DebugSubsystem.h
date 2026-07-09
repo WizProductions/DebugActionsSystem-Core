@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/LocalPlayerSubsystem.h"
 #include "DebugActionsSystemTagsDefines.h"
-#include "Inputs/DebugInputBase.h"
+#include "Components/Widget.h"
 #include "Structs/FreeDebugInputsLine.h"
 #include "Structs/SharedDIMapKey.h"
 #include "Subsystems/GameInstanceSubsystem.h"

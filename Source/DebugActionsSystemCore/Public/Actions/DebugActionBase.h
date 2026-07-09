@@ -6,6 +6,8 @@
 #include "DebugActionBase.generated.h"
 
 enum class EDebugActionResult : uint8;
+enum class ESlateVisibility : uint8;
+
 
 //#############################################################################
 //##---------------------------------- CLASS --------------------------------##
@@ -26,8 +28,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionBase : public UObject {
 
 protected:
 	//Used for customize title in array (only on editor)
-	//UPROPERTY(VisibleAnywhere, Transient, meta = (HideInDetailPanel, EditCondition = "false", EditConditionHides), Category = "Hidden")
-	UPROPERTY(EditDefaultsOnly, Transient, meta = (HideInDetailPanel, EditCondition = "false", EditConditionHides))
+	UPROPERTY(EditDefaultsOnly, Transient, meta = (HideInDetailPanel, EditCondition = "false", EditConditionHides), Category = "Private")
 	FString Private_DataAssetActionTitle;
 	
 protected:

@@ -6,6 +6,7 @@
 #include "GameplayTagsSettings.h"
 #include "Actions/DebugActionFolder.h"
 #include "Inputs/DebugInput_FloatSlider.h"
+#include "GameFramework/Pawn.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/InputComponent.h"
 #include "Engine/World.h"
