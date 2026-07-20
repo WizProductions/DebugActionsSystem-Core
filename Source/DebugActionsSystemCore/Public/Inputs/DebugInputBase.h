@@ -3,12 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Structs/DISlotProperties.h"
 #include "DebugInputBase.generated.h"
+
+class UDebugSubsystem;
 
 //#############################################################################
 //##---------------------------------- CLASS --------------------------------##
 //#############################################################################
-
 
 /**
 * Debug input class is used to allow user to select a value sent to action.
@@ -21,44 +23,46 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugInputBase : public UObject {
 //#############################################################################
 //##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
-
-
+	
 	//==== Settings ====\\.
 protected:
-	UPROPERTY(BlueprintReadWrite, Category = "Settings")
-	FText DebugInputTitle = FText::FromString("Default_Title");
-	UPROPERTY(BlueprintReadWrite, Category = "Settings")
-	FVector2D DebugInputSize = FVector2D(120, 65);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
+	FDISlotProperties MySlotProperties;
 	
-protected:
 	//==== References ====\\.
-	UPROPERTY(BlueprintReadOnly, Category = "References")
-	class UDebugSubsystem* MyDebugSubsystem = NULL;
-	UPROPERTY(BlueprintReadWrite, Category = "References")
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = References)
+	TObjectPtr<class UDebugInputSlotWidgetBase> MyDebugInputSlotWidget = NULL;
+private:
+	UPROPERTY()
 	TObjectPtr<class UWidget> MyInputDataWidget = NULL;
-	UPROPERTY(BlueprintReadOnly, Category = "References")
-	class UDebugInputSlotWidgetBase* MyDebugInputSlotWidget = NULL;
 
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 	
 public:
-	UFUNCTION(BlueprintCallable, Category = "References")
-	UWidget* GetMyInputDataWidget() { return MyInputDataWidget; }
-	UFUNCTION(BlueprintCallable, Category = "References")
-	UDebugInputSlotWidgetBase* GetMyDebugInputSlotWidget() const { return MyDebugInputSlotWidget; }
-	/** When the widget become visible and set to a slot. */
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
-	void OnAddedToSlot(class UDebugInputSlotWidgetBase* InSlot);
-	/** When the widget become hidden and unset from a slot. */
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
-	void OnRemovedFromSlot(class UDebugInputSlotWidgetBase* InSlot);
-	/** Get the widget as you want and customize it. \n
-	 *  DON'T FORGOT to set MyInputDataWidget with your new widget.
-	 */
-	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
+	/** Only called by the Subsystem. */
 	void ConfigureDebugInput();
+	void AddedToSlot(class UDebugInputSlotWidgetBase* InInputSlot);
+	void RemoveFromSlot(class UDebugInputSlotWidgetBase* InInputSlot);
 	
-	friend class UDebugSubsystem;
+	UFUNCTION(BlueprintPure, Category = References)
+	UDebugSubsystem* GetDebugSubsystem() const;
+	UFUNCTION(BlueprintPure, Category = References)
+	UWidget* GetInputDataWidget() const { return MyInputDataWidget; }
+	UFUNCTION(BlueprintPure, Category = References)
+	UDebugInputSlotWidgetBase* GetDebugInputSlotWidget() const { return MyDebugInputSlotWidget; }
+	
+	/** When the widget become visible and set to a slot. */
+	UFUNCTION(BlueprintNativeEvent, Category = DebugActionsSystem)
+	void OnAddedToSlot(class UDebugInputSlotWidgetBase* InInputSlot);
+	
+	/** When the widget become hidden and unset from a slot. */
+	UFUNCTION(BlueprintNativeEvent, Category = DebugActionsSystem)
+	void OnRemovedFromSlot(class UDebugInputSlotWidgetBase* InInputSlot);
+	
+	/** Returns the widget created and configured; Uses GetNewWidgetInDebugPanel() to get a registered widget. */
+	UFUNCTION(BlueprintNativeEvent, Category = DebugActionsSystem)
+	UPARAM(DisplayName = "Configured Widget") UWidget* OnConfigureDebugInput();
 };

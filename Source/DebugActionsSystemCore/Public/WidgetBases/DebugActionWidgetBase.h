@@ -33,11 +33,8 @@ protected:
 
 public:
 #if UE_EDITOR
-	virtual const FText GetPaletteCategory() override;
+	const FText GetPaletteCategory() override;
 #endif
-
-protected:
-	virtual void NativeConstruct() override;
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")

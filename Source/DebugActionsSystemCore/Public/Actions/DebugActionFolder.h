@@ -22,8 +22,8 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionFolder : public UDebugActionBase {
 	
 public:
 	//==== Settings ====\\.
-	UPROPERTY(EditDefaultsOnly, Category = "Settings")
-	FText DebugFolderTitle = FText::FromString("DefaultFolder");
+	UPROPERTY(EditInstanceOnly, Category = "Settings")
+	FText DebugFolderTitle = FText::FromString("NewFolder");
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta = (TitleProperty = "Private_DataAssetActionTitle"), Category = "Settings")
 	TArray<TObjectPtr<UDebugActionBase>> DebugActionsStored;
@@ -31,18 +31,17 @@ public:
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
-
+	
 #if WITH_EDITOR
-	virtual void UpdateEditorDataAssetTitle() override;
-	virtual void PostLoad() override;
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	void PostEditChangeProperty( FPropertyChangedEvent& PropertyChangedEvent ) override;
+	void RecursiveRequestDataAssetTitleUpdate() override;
 #endif
 	
-	virtual EDebugActionResult InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutActions, UDebugSubsystem* Subsystem) override;
-	virtual void SetDebugActionWidgetVisibility(ESlateVisibility NewVisibility, int32 DepthRecursivity) override;
+	EDebugActionResult InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutActions, UDebugSubsystem* Subsystem) override;
+	void SetDebugActionWidgetVisibility(ESlateVisibility NewVisibility, int32 DepthRecursivity) override;
 	
-	void RefreshChildren();
+	void OpenChildren();
 	
-	virtual FText GetDebugActionTitle_Implementation() const override { return FText::FromString("[F] " + DebugFolderTitle.ToString()); }
-	virtual EDebugActionResult ExecuteDebugAction_Implementation() override;
+	FText GetDebugActionTitle_Implementation() const override { return FText::FromString("[F] " + DebugFolderTitle.ToString()); }
+	EDebugActionResult OnExecuteDebugAction_Implementation() override;
 };

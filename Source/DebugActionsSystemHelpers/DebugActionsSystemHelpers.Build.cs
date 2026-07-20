@@ -26,7 +26,7 @@ public class DebugActionsSystemHelpers : ModuleRules
         
         if (Target.bBuildEditor)
         {
-	        PrivateDependencyModuleNames.Add(new string("UnrealEd"));;
+	        PrivateDependencyModuleNames.Add("UnrealEd");
         }
     }
 }

@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "Actions/DebugActionBase.h"
 #include "InputCoreTypes.h"
+#include "Actions/DebugActionFolder.h"
 #include "UObject/UnrealType.h"
 #include "DebugActionsSystemDataAsset.generated.h"
 
@@ -41,7 +42,7 @@ public:
 			EditCondition = "bEnableDebugActionsSystem", 
 			EditConditionHides
 		))
-	TSoftObjectPtr<class UDataTable> DebugInputKeyTagDataTable;
+	TSoftObjectPtr<class UDataTable> DebugInputCustomKeyTagDataTable;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="UI|Settings", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
 	FVector2D FirstDebugActionWidgetPos = { 100.f, 100.f };
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="UI|Settings", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
@@ -49,9 +50,10 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="UI|Settings", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
 	TMap<EDebugActionResult, FLinearColor> DebugActionWidgetExecuteColorFromResult;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="Keybinds", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
-	// ReSharper disable once UnrealHeaderToolError //- BUG, FKey not found but existing
 	/** The keys used to open/close the debug panel. */
 	TArray<FKey> DASOpenMenuKeys;
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="Keybinds", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides))
+	int32 MappingContextPriority = 999;
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Instanced, Category="Setup|ActionsRegistering", meta = (EditCondition = "bEnableDebugActionsSystem", EditConditionHides, TitleProperty = "Private_DataAssetActionTitle"))
 	TArray<TObjectPtr<UDebugActionBase>> DebugActionsArray;
@@ -61,6 +63,7 @@ public:
 //#############################################################################
 
 #if WITH_EDITOR
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-#endif	
+	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	void PostLoad() override;
+#endif
 };

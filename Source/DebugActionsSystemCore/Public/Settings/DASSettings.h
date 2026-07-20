@@ -26,6 +26,6 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category = "Setup", meta = (AllowedClasses = "/Script/DebugActionsSystemCore.DebugActionsSystemDataAsset"))
 	FSoftObjectPath DebugActionsSystemDataAsset;
 	
-	virtual FName GetCategoryName() const override { return FName("Plugins"); }
-	virtual FName GetSectionName() const override { return FName("Debug Actions System - bCore"); }
+	FName GetCategoryName() const override { return FName("Plugins"); }
+	FName GetSectionName() const override { return FName("Debug Actions System - bCore"); }
 };

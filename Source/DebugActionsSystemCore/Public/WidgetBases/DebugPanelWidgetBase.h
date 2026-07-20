@@ -46,9 +46,10 @@ protected:
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
-	
+
 #if UE_EDITOR
-	virtual const FText GetPaletteCategory() override;
+public:
+	const FText GetPaletteCategory() override;
 #endif
 
 public:
@@ -75,7 +76,7 @@ public:
 	void ClearSlotsAssigment();
 	/** Set a new visibility to all registered and used debug input slots */
 	void SetActiveDebugInputSlotsVisibility(ESlateVisibility InVisibility);
-	virtual void SetVisibility(ESlateVisibility InVisibility) override;
+	void SetVisibility(ESlateVisibility InVisibility) override;
 
 private:
 	void Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder);

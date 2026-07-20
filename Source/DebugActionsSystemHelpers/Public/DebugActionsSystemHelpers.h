@@ -4,8 +4,4 @@
 #include "Modules/ModuleManager.h"
 
 class FDebugActionsSystemHelpersModule : public IModuleInterface
-{
-public:
-    virtual void StartupModule() override;
-    virtual void ShutdownModule() override;
-};
+{};

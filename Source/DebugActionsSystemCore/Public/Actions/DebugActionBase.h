@@ -47,22 +47,25 @@ protected:
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
-
+	
 public:
 #if WITH_EDITOR
-	virtual void PostInitProperties() override;
-	virtual void UpdateEditorDataAssetTitle();
-	UFUNCTION(BlueprintCallable, Category = "DataAsset|Refresh")
-	void RefreshDebugDataAssetView();
+	/** Called on action have changed */
+	void PostEditChangeProperty( FPropertyChangedEvent& PropertyChangedEvent ) override;
+	virtual void RecursiveRequestDataAssetTitleUpdate();
+	void UpdateEditorDataAssetTitle();
 #endif
+	void PostInitProperties() override;
 	
 	/** @param OutDebugActionsHierarchy: Reserved for UDebugActionFolder subclass */
 	virtual EDebugActionResult InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutDebugActionsHierarchy, class UDebugSubsystem* Subsystem);
 	virtual void SetDebugActionWidgetVisibility(ESlateVisibility NewVisibility, int DepthRecursivity);
 	virtual void SetDebugActionWidgetVisibility(ESlateVisibility NewVisibility);
+	EDebugActionResult ExecuteDebugAction();
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "DebugActionsSystem")
 	void OnPostInitProperties();
+	/** Called when the parent folder is developed, ParentFolder can be null when the actions in on the root. */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
 	void OnParentFolderIsDeveloped(class UDebugActionFolder* ParentFolder);
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
@@ -83,5 +86,5 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem|Settings")
 	FText GetDebugActionTitle() const;
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
-	EDebugActionResult ExecuteDebugAction();
+	EDebugActionResult OnExecuteDebugAction();
 };

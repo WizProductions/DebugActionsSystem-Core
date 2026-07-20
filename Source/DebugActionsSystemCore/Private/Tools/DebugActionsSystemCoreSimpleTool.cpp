@@ -2,7 +2,6 @@
 
 #include "Tools/DebugActionsSystemCoreSimpleTool.h"
 #include "InteractiveToolManager.h"
-#include "ToolBuilderUtil.h"
 #include "CollisionQueryParams.h"
 #include "Engine/World.h"
 #include "Engine/HitResult.h"
@@ -15,7 +14,7 @@
  * ToolBuilder implementation
  */
 
-UInteractiveTool* UDebugActionsSystemSimpleToolBuilder::BuildTool(const FToolBuilderState& SceneState) const
+UInteractiveTool* UDebugActionsSystemSimpleToolBuilder::BuildTool( const FToolBuilderState& SceneState ) const
 {
 	UDebugActionsSystemSimpleTool* NewTool = NewObject<UDebugActionsSystemSimpleTool>(SceneState.ToolManager);
 	NewTool->SetWorld(SceneState.World);
@@ -39,11 +38,10 @@ UDebugActionsSystemSimpleToolProperties::UDebugActionsSystemSimpleToolProperties
  */
 
 UDebugActionsSystemSimpleTool::UDebugActionsSystemSimpleTool()
-{
-}
+{}
 
 
-void UDebugActionsSystemSimpleTool::SetWorld(UWorld* World)
+void UDebugActionsSystemSimpleTool::SetWorld( UWorld* World )
 {
 	this->TargetWorld = World;
 }
@@ -58,31 +56,27 @@ void UDebugActionsSystemSimpleTool::Setup()
 }
 
 
-void UDebugActionsSystemSimpleTool::OnClicked(const FInputDeviceRay& ClickPos)
+void UDebugActionsSystemSimpleTool::OnClicked( const FInputDeviceRay& ClickPos )
 {
 	// we will create actor at this position
 	FVector NewActorPos = FVector::ZeroVector;
 
 	// cast ray into world to find hit position
 	FVector RayStart = ClickPos.WorldRay.Origin;
-	FVector RayEnd = ClickPos.WorldRay.PointAt(99999999.f);
+	FVector RayEnd   = ClickPos.WorldRay.PointAt(99999999.f);
 	FCollisionObjectQueryParams QueryParams(FCollisionObjectQueryParams::AllObjects);
 	FHitResult Result;
-	if (TargetWorld->LineTraceSingleByObjectType(Result, RayStart, RayEnd, QueryParams))
-	{
-		if (AActor* ClickedActor = Result.GetActor())
-		{
+	if (TargetWorld->LineTraceSingleByObjectType(Result, RayStart, RayEnd, QueryParams)) {
+		if (AActor* ClickedActor = Result.GetActor()) {
 			FText ActorInfoMsg;
 
-			if (Properties->ShowExtendedInfo)
-			{
-				ActorInfoMsg = FText::Format(LOCTEXT("ExtendedActorInfo", "Name: {0}\nClass: {1}"), 
-					FText::FromString(ClickedActor->GetName()), 
-					FText::FromString(ClickedActor->GetClass()->GetName())
+			if (Properties->ShowExtendedInfo) {
+				ActorInfoMsg = FText::Format(LOCTEXT("ExtendedActorInfo", "Name: {0}\nClass: {1}"),
+				FText::FromString(ClickedActor->GetName()),
+				FText::FromString(ClickedActor->GetClass()->GetName())
 				);
 			}
-			else
-			{
+			else {
 				ActorInfoMsg = FText::Format(LOCTEXT("BasicActorInfo", "Name: {0}"), FText::FromString(Result.GetActor()->GetName()));
 			}
 

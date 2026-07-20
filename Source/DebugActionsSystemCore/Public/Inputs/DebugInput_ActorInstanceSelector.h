@@ -32,12 +32,10 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugInput_ActorInstanceSelector : public UDeb
 	//==== References ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "References")
-	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
+	TObjectPtr<UComboBoxString> MyComboBox = NULL;
 	
 	//==== Properties ====\\.
 protected:
-	UPROPERTY()
-	TSubclassOf<UObject> ClassFilter = UObject::StaticClass();
 	UPROPERTY()
 	TArray<TObjectPtr<AActor>> ActorsCache;
 	UPROPERTY()
@@ -48,15 +46,15 @@ protected:
 //#############################################################################
 
 public:
-	virtual void ConfigureDebugInput_Implementation() override;
+	UWidget* OnConfigureDebugInput_Implementation() override;
 
 	template <ActorType A>
-	void Setup(const FString& InDebugInputTitle);
+	void Setup(const FText& InDebugInputTitle);
 	template <ActorType A>
 	A* GetValue() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
-	void Setup(TSubclassOf<AActor> ActorClass, const FString& InDebugInputTitle);
+	void Setup(TSubclassOf<AActor> ActorClass, const FText& InDebugInputTitle);
 	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem", meta = (DeterminesOutputType = "ActorClass", DynamicOutputParam = "OutObject"))
 	void GetValue(TSubclassOf<AActor> ActorClass, UObject*& OutObject);
 };
@@ -66,7 +64,7 @@ public:
 //#############################################################################
 
 template <ActorType A>
-void UDebugInput_ActorInstanceSelector::Setup(const FString& InDebugInputTitle) {
+void UDebugInput_ActorInstanceSelector::Setup(const FText& InDebugInputTitle) {
 	this->Setup(A::StaticClass(), InDebugInputTitle);
 }
 

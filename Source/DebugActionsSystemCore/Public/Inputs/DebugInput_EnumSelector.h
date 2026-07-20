@@ -5,9 +5,7 @@
 #include "CoreMinimal.h"
 #include "DebugInputBase.h"
 #include "Components/ComboBoxString.h"
-#include "WidgetBases/DebugInputSlotWidgetBase.h"
 #include <type_traits>
-#include "DebugActionsSystemCoreDefines.h"
 #include "DebugInput_EnumSelector.generated.h"
 
 template <typename T>
@@ -46,7 +44,7 @@ protected:
 //#############################################################################
 
 public:
-	virtual void ConfigureDebugInput_Implementation() override;
+	UWidget* OnConfigureDebugInput_Implementation() override;
 	
 	template <Enum E>
 	void Setup(const FText& InDebugInputTitle);

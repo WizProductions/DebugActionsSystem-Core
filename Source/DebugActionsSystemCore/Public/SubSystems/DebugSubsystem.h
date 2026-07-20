@@ -5,16 +5,18 @@
 #include "CoreMinimal.h"
 #include "Subsystems/LocalPlayerSubsystem.h"
 #include "DebugActionsSystemTagsDefines.h"
+#include "EnhancedInputComponent.h"
 #include "Components/Widget.h"
 #include "Structs/FreeDebugInputsLine.h"
 #include "Structs/SharedDIMapKey.h"
-#include "Subsystems/GameInstanceSubsystem.h"
+#include "Engine/World.h"
 #include "DebugSubsystem.generated.h"
 
 //#############################################################################
 //##--------------------------------- CLASS ---------------------------------##
 //#############################################################################
 
+class UInputMappingContext;
 /**
  * The DebugSubsystem is the core of Debug Actions System, it manages all actions, inputs and links to widgets.
  */
@@ -34,21 +36,28 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="References")
 	TObjectPtr<class UDebugPanelWidgetBase> MyDebugPanelWidget = NULL;
 	UPROPERTY(BlueprintReadOnly, Category="References")
-	TObjectPtr<class UDebugActionBase> LastFolderClicked = NULL;
+	TObjectPtr<class UDebugActionFolder> LastFolderClicked = NULL;
 	UPROPERTY(BlueprintReadOnly, Category="References")
 	TObjectPtr<class APlayerController> MyPlayerController = NULL;
 
 public:
+	//==== Properties ====\\.
 	UPROPERTY()
 	TMap<TSubclassOf<UDebugInputBase>, FFreeDebugInputsLine> FreeDebugsInputs;
 	UPROPERTY()
 	TArray<TObjectPtr<UDebugInputBase>> UsedDebugInputs;
 	UPROPERTY()
 	TMap<FSharedDIMapKey, TObjectPtr<UDebugInputBase>> SharedDebugInputs;
+	UPROPERTY()
+	TObjectPtr<UInputMappingContext> DebugMappingContext = NULL;
+	UPROPERTY()
+	TObjectPtr<UInputAction> DebugInputAction = NULL;
+	UPROPERTY()
+	int32 DebugInputActionHandle = 0;
 	
 private:
 	//==== Flags ====\\.
-	bool bDebugSystemOpened : 1 = false;
+	bool bDebugSystemPanelOpened : 1 = false;
 	bool bDebugSubsSystemInitialized : 1 = false;
 
 //#############################################################################
@@ -56,7 +65,9 @@ private:
 //#############################################################################
 	
 public:
-/** Returns the subsystem of the FIRST local player, make a lot of bugs in editor/split screen, is only a FALLBACK version, it is RECOMMENDED to use ANOTHER VERSION */
+	void Initialize(FSubsystemCollectionBase& Collection) override;
+
+	/** Returns the subsystem of the FIRST local player, make a lot of bugs in editor/split screen, is only a FALLBACK version, it is RECOMMENDED to use ANOTHER VERSION */
 	static UDebugSubsystem* Get(const UObject* WorldContextObject);
 	static UDebugSubsystem* Get(const APawn* WorldContextObject);
 	static UDebugSubsystem* Get(const UUserWidget* WorldContextObject);
@@ -64,10 +75,12 @@ public:
 	static UDebugSubsystem* Get(const ULocalPlayer* WorldContextObject);
 	static UDebugSubsystem* Get(const UDebugInputBase* WorldContextObject);
 	
-	virtual void PlayerControllerChanged(APlayerController* NewPlayerController) override;
+	void PlayerControllerChanged(APlayerController* NewPlayerController) override;
+	
 protected:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Inputs")
 	void OnDebugMenuKeyPressed();
+	
 public:
 	UFUNCTION(BlueprintCallable, Category="References")
 	FORCEINLINE UDebugPanelWidgetBase* GetDebugPanelWidget() const { return MyDebugPanelWidget; }
@@ -79,7 +92,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
 	void OnDebugPanelWidgetVisibilityChange(bool bVisible);
 	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
-	void OnFolderStateChange(bool bIsDeveloped, class UDebugActionBase* InDebugActionFolder);
+	void OnFolderStateChange(bool bIsDeveloped, class UDebugActionFolder* InDebugActionFolder);
 #pragma endregion
 
 #pragma region Debug Inputs
@@ -108,6 +121,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "WidgetClass", DynamicOutputParam = "OutWidget"), Category = "UI")
 	void GetNewWidgetInDebugPanel(TSubclassOf<UWidget> WidgetClass, UWidget*& OutWidget);
+#pragma endregion
 	
 private:
 	void Internal_SetupDebugActionsSystem(bool bForceSetup);
@@ -117,7 +131,11 @@ private:
 	bool Internal_SetFreeDI(UDebugInputBase* DI, const FGameplayTag& SharedKeyTag);
 	bool Internal_SetUsedDI(UDebugInputBase* DI, const FGameplayTag& SharedKeyTag);
 	void Internal_FreeAllDebugInputs();
-#pragma endregion
+	void Internal_OnWorldChanged(UWorld* World = NULL, const UWorld::InitializationValues InitializationValues = UWorld::InitializationValues());
+	void Internal_RegisterWidget();
+	void Internal_DevelopFirstActions();
+	void Internal_SetInputMode();
+	void Internal_RefreshUI();
 };
 
 #if CPP

@@ -11,9 +11,9 @@
 #include "Widgets/SOverlay.h"
 #include "Kismet/GameplayStatics.h"
 
-bool DASHelpers::IsInLevelEditor() {
+bool DASHelpers::IsInLevelEditor()
+{
 #if UE_EDITOR
-	
 	if (!GIsEditor || IsRunningCommandlet() || !GEditor) {
 		return false;
 	}
@@ -25,20 +25,21 @@ bool DASHelpers::IsInLevelEditor() {
 #endif
 }
 
-bool DASHelpers::IsCurrentPlayer(const UWorld* WorldContext, int32 playerIndex, const AActor* ActorToTest) {
-
+bool DASHelpers::IsCurrentPlayer( const UWorld* WorldContext, int32 playerIndex, const AActor* ActorToTest )
+{
 	AActor* Actor = UGameplayStatics::GetPlayerPawn(WorldContext, playerIndex);
 	//if Actor or ActorToTest is nullptr, both are different -> not player
 	return (ActorToTest && Actor == ActorToTest);
 }
 
-void DASHelpers::DisableCollisionOfComponent(UPrimitiveComponent* Component) {
+void DASHelpers::DisableCollisionOfComponent( UPrimitiveComponent* Component )
+{
 	Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Component->SetGenerateOverlapEvents(false);
 }
 
-void DASHelpers::ForceGridPanelUpdate(UGridPanel* GridPanel) {
-	
+void DASHelpers::ForceGridPanelUpdate( UGridPanel* GridPanel )
+{
 	if (!GridPanel)
 		return;
 
@@ -52,13 +53,12 @@ void DASHelpers::ForceGridPanelUpdate(UGridPanel* GridPanel) {
 	//In design time sGridPanel is stored in SOverlay, it's because GP_Inventory is stored in Overlay? Or default behavior? probably default
 	if (sGridPanel->GetType() != FName("SGridPanel") && GridPanel->IsDesignTime()) {
 		SOverlay* sOverlay = static_cast<SOverlay*>(SlateWidget.Get());
-		sOverlay->GetAllChildren()->ForEachWidget([&sGridPanel] (SWidget& widget)
-				{
-				if (widget.GetType() == FName("SGridPanel")) {
-					sGridPanel = static_cast<SGridPanel*>(&widget);
-				}
-				}
-			);
+		sOverlay->GetAllChildren()->ForEachWidget([&sGridPanel] ( SWidget& widget ){
+			if (widget.GetType() == FName("SGridPanel")) {
+				sGridPanel = static_cast<SGridPanel*>(&widget);
+			}
+		}
+		);
 	}
 	if (!sGridPanel) {
 		WIZ_RET_LOG(, "Can't find SGridPanel", Error);
@@ -76,75 +76,76 @@ void DASHelpers::ForceGridPanelUpdate(UGridPanel* GridPanel) {
 	SlateWidget->Invalidate(EInvalidateWidgetReason::Layout);
 }
 
-bool DASHelpers::IsHosting(UWorld* ContextWorld) {
-	
+bool DASHelpers::IsHosting( UWorld* ContextWorld )
+{
 	if (!ContextWorld) {
 		WIZ_RET_LOG(false, "World invalid to check hosting!", Error);
 	}
-	
+
 	if (ContextWorld->GetNetMode() == NM_ListenServer || ContextWorld->GetNetMode() == NM_DedicatedServer)
 		return true;
-	
+
 	return false;
 }
 
-bool DASHelpers::IsClientOfHost(UWorld* ContextWorld) {
-	
+bool DASHelpers::IsClientOfHost( UWorld* ContextWorld )
+{
 	if (!ContextWorld) {
 		WIZ_RET_LOG(true, "World invalid to check client!", Error);
 	}
-	
+
 	if (ContextWorld->GetNetMode() == NM_Client)
 		return true;
-	
+
 	return false;
 }
 
-bool DASHelpers::IsStandaloneWorld(UWorld* ContextWorld) {
-
+bool DASHelpers::IsStandaloneWorld( UWorld* ContextWorld )
+{
 	if (!ContextWorld) {
 		WIZ_RET_LOG(true, "World invalid to check standalone!", Error);
 	}
-	
+
 	if (ContextWorld->GetNetMode() == NM_Standalone)
 		return true;
-	
+
 	return false;
-	
+
 }
 
-bool DASHelpers::IsStandaloneWorldOrAloneInServer(UWorld* ContextWorld) {
-	
+bool DASHelpers::IsStandaloneWorldOrAloneInServer( UWorld* ContextWorld )
+{
 	if (!ContextWorld) {
 		WIZ_RET_LOG(true, "World invalid to check standalone!", Error);
 	}
-	
+
 	AGameStateBase* GameState = ContextWorld->GetGameState();
 	if (GameState == NULL) {
 		WIZ_RET_LOG(true, "GameState invalid to check alone!", Error);
 	}
-	
+
 	if (DASHelpers::IsClientOfHost(ContextWorld))
 		return false;
-	
+
 	int NumPlayers = GameState->PlayerArray.Num();
 	if (NumPlayers == 0) {
 		WIZ_RET_LOG(true, "0 player connected in the server?", Error);
 	}
-	
+
 	bool bStandalone = IsStandaloneWorld(ContextWorld);
-	bool bAlone = NumPlayers == 1; 
+	bool bAlone      = NumPlayers == 1;
 
 	return (bStandalone or bAlone);
 }
 
-void DASHelpers::SetRichText(URichTextBlock* RichTextBlock, const FText& Text, const FText& RichID) {
+void DASHelpers::SetRichText( URichTextBlock* RichTextBlock, const FText& Text, const FText& RichID )
+{
 	RichTextBlock->SetText(FText::FromString(FString::Printf(TEXT("<%s>%s</>"), *RichID.ToString(), *Text.ToString())));
 }
 
 #pragma region Logs
 #if !UE_BUILD_SHIPPING
-void DASHelpers::PrivateInternal_WizDebugLog(
+void DASHelpers::PrivateInternal_DASDebugLog(
 	const ANSICHAR* FunctionSignature,
 	int32 FileLine,
 	const FString& Message,
@@ -154,8 +155,9 @@ void DASHelpers::PrivateInternal_WizDebugLog(
 	FColor OnScreenMessageColor,
 	float OnScreenMessageDuration,
 	uint64 OnScreenMessageKey
-) {
-	
+)
+{
+
 	FString FinalMessage = Message;
 	if (FunctionSignature) {
 		FString Prefix = DASHelpers::ParseFunctionPrefixFromAnsi(FunctionSignature, FileLine);
@@ -163,7 +165,7 @@ void DASHelpers::PrivateInternal_WizDebugLog(
 			FinalMessage = FString::Printf(TEXT("%s %s"), *Prefix, *Message);
 		}
 	}
-	
+
 	switch (DebugLogType) {
 		case ELogVerbosity::NoLogging: break;
 		case ELogVerbosity::Fatal: UE_LOG_REF(LogCategory, Fatal, TEXT("%s"), *FinalMessage);
@@ -189,7 +191,8 @@ void DASHelpers::PrivateInternal_WizDebugLog(
 	}
 }
 
-FString DASHelpers::ParseFunctionPrefixFromString(FString FunctionSignature, int32 Line) {
+FString DASHelpers::ParseFunctionPrefixFromString( FString FunctionSignature, int32 Line )
+{
 	int32 ParenIdx = INDEX_NONE;
 	if (FunctionSignature.FindChar('(', ParenIdx)) {
 		FunctionSignature = FunctionSignature.Left(ParenIdx);
@@ -221,51 +224,53 @@ FString DASHelpers::ParseFunctionPrefixFromString(FString FunctionSignature, int
 	}
 }
 
-FString DASHelpers::ParseFunctionPrefixFromAnsi(const ANSICHAR* FunctionSignatureAnsi, int32 Line) {
+FString DASHelpers::ParseFunctionPrefixFromAnsi( const ANSICHAR* FunctionSignatureAnsi, int32 Line )
+{
 	if (!FunctionSignatureAnsi) {
 		return Line >= 0
-				   ? FString::Printf(TEXT("?(%d):"), Line)
-				   : FString(TEXT("?:"));
+			       ? FString::Printf(TEXT("?(%d):"), Line)
+			       : FString(TEXT("?:"));
 	}
 	return ParseFunctionPrefixFromString(ANSI_TO_TCHAR(FunctionSignatureAnsi), Line);
 }
 
-FString DASHelpers::ParseFunctionPrefixFromTChar(const TCHAR* FunctionSignatureTChar, int32 Line) {
+FString DASHelpers::ParseFunctionPrefixFromTChar( const TCHAR* FunctionSignatureTChar, int32 Line )
+{
 	if (!FunctionSignatureTChar) {
 		return Line >= 0
-				   ? FString::Printf(TEXT("?(%d):"), Line)
-				   : FString(TEXT("?:"));
+			       ? FString::Printf(TEXT("?(%d):"), Line)
+			       : FString(TEXT("?:"));
 	}
 	return ParseFunctionPrefixFromString(FString(FunctionSignatureTChar), Line);
 }
 
-void DASHelpers::GetNetContextPrefix(const AActor* Actor, FString& OutString) {
-	
+void DASHelpers::GetNetContextPrefix( const AActor* Actor, FString& OutString )
+{
 	if (Actor == NULL) {
 		OutString = TEXT("[Null: Actor]");
 		return;
 	}
-	
-	const FString LocalRoleStr = UEnum::GetValueAsString(Actor->GetLocalRole());
+
+	const FString LocalRoleStr  = UEnum::GetValueAsString(Actor->GetLocalRole());
 	const FString RemoteRoleStr = UEnum::GetValueAsString(Actor->GetRemoteRole());
-	OutString =  FString::Printf(TEXT("[%s/%s] "), *LocalRoleStr, *RemoteRoleStr);
-	
+	OutString                   = FString::Printf(TEXT("[%s/%s] "), *LocalRoleStr, *RemoteRoleStr);
+
 	return;
 }
 
-void DASHelpers::GetNetContextPrefix(const UActorComponent* Component, FString& OutString) {
-	
+void DASHelpers::GetNetContextPrefix( const UActorComponent* Component, FString& OutString )
+{
 	if (Component == NULL) {
 		OutString = TEXT("[Null: Component]");
 		return;
-	} 
-	
+	}
+
 	AActor* CompOwner = Component->GetOwner();
 	if (CompOwner == NULL) {
 		OutString = TEXT("[Null: Component's Owner ]");
 		return;
 	}
-	
+
 	return GetNetContextPrefix(CompOwner, OutString);
 }
 
