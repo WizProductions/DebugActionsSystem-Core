@@ -1,28 +1,33 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
 #include "BlueprintFunctionsLibraries/DASFunctionLibrary.h"
+#include "Containers/Array.h"
+#include "AssetRegistry/IAssetRegistry.h"
+#include "AssetRegistry/AssetRegistryModule.h"
 #include "UObject/UObjectIterator.h"
 #include "Components/Button.h"
+#include "Helpers/DASHelpers.h"
+#include "AssetRegistry/AssetData.h"
 
 void UDASFunctionLibrary::GetAllDerivedClasses(TSubclassOf<UObject> ParentClass, TArray<UClass*>& OutSubClasses, bool bIncludeParentClass, bool bIncludeAbstract) {
 
 	OutSubClasses.Empty();
-	
-	if (!ParentClass) 
+
+	if (!ParentClass)
 		return;
-	
-	if (bIncludeParentClass) 
+
+	if (bIncludeParentClass)
 		OutSubClasses.Add(ParentClass);
 
 	for (TObjectIterator<UClass> It; It; ++It) {
 		UClass* Cls = *It;
-		
-		if (!Cls) 
+
+		if (!Cls)
 			continue;
-		
-		if (!bIncludeAbstract && Cls->HasAnyClassFlags(CLASS_Abstract)) 
+
+		if (!bIncludeAbstract && Cls->HasAnyClassFlags(CLASS_Abstract))
 			continue;
-		
+
 		if (Cls == ParentClass)
 			continue;
 
@@ -38,6 +43,35 @@ void UDASFunctionLibrary::GetAllDerivedClasses(TSubclassOf<UObject> ParentClass,
 	}
 }
 
+void UDASFunctionLibrary::GetAssetsOfClass(
+	const UClass* TargetClass,
+	TArray<FAssetData>& OutAssets,
+	const TArray<FName>& SearchPathFilters,
+	bool bSearchSubclasses,
+	bool bRecursivePaths
+) {
+
+	OutAssets.Empty();
+
+	if (TargetClass == NULL)
+		WIZ_RET_LOG(, "Class invalid.", Error);
+
+	IAssetRegistry& AssetRegistry = FModuleManager::GetModuleChecked<FAssetRegistryModule>("AssetRegistry").Get();
+
+	FTopLevelAssetPath ClassPath = TargetClass->GetClassPathName();
+
+	FARFilter Filter;
+	Filter.ClassPaths.Add(ClassPath);
+	Filter.bRecursiveClasses = bSearchSubclasses;
+	Filter.bRecursivePaths = bRecursivePaths;
+	
+	for (auto Path : SearchPathFilters) {
+		Filter.PackagePaths.Add(Path);
+	}
+
+	AssetRegistry.GetAssets(Filter, OutAssets);
+}
+
 void UDASFunctionLibrary::SetImageOfButtonStyles(class UButton* ButtonWidget, class UObject* Texture, int32 WidgetStyleModesMask) {
 
 	if (ButtonWidget == NULL) {
@@ -47,16 +81,16 @@ void UDASFunctionLibrary::SetImageOfButtonStyles(class UButton* ButtonWidget, cl
 
 	//Use const cast to avoid a copy (why doesn't Epic want to return a non-const reference of the fbStyle?)
 	FButtonStyle& NewStyle = const_cast<FButtonStyle&>(ButtonWidget->GetStyle());
-	
+
 	if (WidgetStyleModesMask & static_cast<int32>(EWidgetStyleMode::Normal))
 		NewStyle.Normal.SetResourceObject(Texture);
-	
+
 	if (WidgetStyleModesMask & static_cast<int32>(EWidgetStyleMode::Hovered))
 		NewStyle.Hovered.SetResourceObject(Texture);
-	
+
 	if (WidgetStyleModesMask & static_cast<int32>(EWidgetStyleMode::Pressed))
 		NewStyle.Pressed.SetResourceObject(Texture);
-	
+
 	if (WidgetStyleModesMask & static_cast<int32>(EWidgetStyleMode::Disabled))
 		NewStyle.Disabled.SetResourceObject(Texture);
 
@@ -64,7 +98,7 @@ void UDASFunctionLibrary::SetImageOfButtonStyles(class UButton* ButtonWidget, cl
 }
 
 void UDASFunctionLibrary::SetDrawAsOfButtonStyles(UButton* ButtonWidget, ESlateBrushDrawType::Type DrawAsType, int32 WidgetStyleModesMask) {
-	
+
 	if (ButtonWidget == NULL) {
 		ensureAlwaysMsgf(false, TEXT("The button is invalid."));
 		return;
@@ -84,11 +118,14 @@ void UDASFunctionLibrary::SetDrawAsOfButtonStyles(UButton* ButtonWidget, ESlateB
 	ButtonWidget->SetStyle(NewStyle);
 }
 
+int64 UDASFunctionLibrary::GetObjectUniqueID(UObject* Object) {
+	return Object->GetUniqueID();
+}
+
 FString UDASFunctionLibrary::GetBlueprintPMethodPrefix(const UObject* ContextObject, FString MethodName) {
-	
+
 	FString BPName = TEXT("Unknown");
-	if (ContextObject)
-	{
+	if (ContextObject) {
 		BPName = ContextObject->GetClass()->GetName();
 		BPName.RemoveFromEnd(TEXT("_C"));
 	}

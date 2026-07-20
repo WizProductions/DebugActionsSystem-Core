@@ -6,6 +6,8 @@
 #include "DebugInputBase.h"
 #include "DebugInput_LocalPlayerSelector.generated.h"
 
+class UComboBoxString;
+
 //#############################################################################
 //##--------------------------------- CLASS ---------------------------------##
 //#############################################################################
@@ -24,18 +26,19 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugInput_LocalPlayerSelector : public UDebug
 public:
 	//==== References ====\\.
 	UPROPERTY(BlueprintReadOnly, Category = "References")
-	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
+	TObjectPtr<UComboBoxString> MyComboBox = NULL;
 
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 
 public:
-	virtual void ConfigureDebugInput_Implementation() override;
+	UWidget* OnConfigureDebugInput_Implementation() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem")
 	void RefreshDebugInputConfiguration();
-
+	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
+	void Setup(const FText& InDebugInputTitle);
 	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem")
 	ULocalPlayer* GetValue() const;
 };

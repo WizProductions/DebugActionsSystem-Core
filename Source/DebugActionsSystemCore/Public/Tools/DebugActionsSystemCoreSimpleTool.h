@@ -16,10 +16,9 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionsSystemSimpleToolBuilder : public U
 	GENERATED_BODY()
 
 public:
-	virtual bool CanBuildTool(const FToolBuilderState& SceneState) const override { return true; }
-	virtual UInteractiveTool* BuildTool(const FToolBuilderState& SceneState) const override;
+	bool CanBuildTool(const FToolBuilderState& SceneState) const override { return true; }
+	UInteractiveTool* BuildTool(const FToolBuilderState& SceneState) const override;
 };
-
 
 
 /**
@@ -38,9 +37,6 @@ public:
 	bool ShowExtendedInfo;
 };
 
-
-
-
 /**
  * UDebugActionsSystemSimpleTool is an example Tool that opens a message box displaying info about an actor that the user
  * clicks left mouse button. All the action is in the ::OnClicked handler.
@@ -55,7 +51,7 @@ public:
 
 	virtual void SetWorld(UWorld* World);
 
-	virtual void Setup() override;
+	void Setup() override;
 
 	virtual void OnClicked(const FInputDeviceRay& ClickPos);
 
@@ -67,5 +63,6 @@ protected:
 
 protected:
 	/** target World we will raycast into to find actors */
-	UWorld* TargetWorld;
+	UPROPERTY()
+	TObjectPtr<UWorld> TargetWorld = NULL;
 };

@@ -7,102 +7,142 @@
 #include "SubSystems/DebugSubsystem.h"
 
 #if WITH_EDITOR
-void UDebugActionFolder::UpdateEditorDataAssetTitle() {
-	Private_DataAssetActionTitle = FString(/*"Folder: " + */GetDebugActionTitle().ToString());
-}
-
-void UDebugActionFolder::PostLoad() {
-	Super::PostLoad();
-	
-	//Refresh view in data asset is loaded from disk (not for new DataAsset object)
-	RefreshDebugDataAssetView();
-}
-
-void UDebugActionFolder::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+void UDebugActionFolder::PostEditChangeProperty( FPropertyChangedEvent& PropertyChangedEvent )
 {
+	//Update the property before check it
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 	
 	//Force a default value to a debug action pointer, catch every nullptr in Data Asset
-	static const FName OptionsName = GET_MEMBER_NAME_CHECKED(UDebugActionFolder, DebugActionsStored);
+	static const FName ArrayPropertyName = GET_MEMBER_NAME_CHECKED(UDebugActionFolder, DebugActionsStored);
 
-	if (PropertyChangedEvent.Property &&
-		PropertyChangedEvent.Property->GetFName() == OptionsName)
+	//On this folder or sub-action name changed or an object inside (ValueSet because it is recreated)
+	if (PropertyChangedEvent.ChangeType == EPropertyChangeType::ValueSet)
 	{
-		for (int32 i = 0; i < DebugActionsStored.Num(); i++)
+		RecursiveRequestDataAssetTitleUpdate();
+		return;
+	}
+	
+	else if (PropertyChangedEvent.ChangeType == EPropertyChangeType::ArrayAdd)
+	{
+		if (PropertyChangedEvent.Property &&
+		    PropertyChangedEvent.Property->GetFName() == ArrayPropertyName)
 		{
-			if (DebugActionsStored[i] == nullptr)
+			for (int32 i = 0; i < DebugActionsStored.Num(); i++)
 			{
-				DebugActionsStored[i] = NewObject<UDebugActionFolder>(this, UDebugActionFolder::StaticClass(), NAME_None, RF_Transactional);
+				if (DebugActionsStored[i] == nullptr)
+				{
+					DebugActionsStored[i] = NewObject<UDebugActionFolder>(this, UDebugActionFolder::StaticClass(), NAME_None, RF_Transactional);
+				}
+			}
+
+			int32 AddedObjectIndex = PropertyChangedEvent.GetArrayIndex(ArrayPropertyName.ToString());
+			if (DebugActionsStored.IsValidIndex(AddedObjectIndex))
+			{
+
+				//Request a name update to the action added
+				DebugActionsStored[AddedObjectIndex]->UpdateEditorDataAssetTitle();
 			}
 		}
 	}
 	
-	//Update folder title in DataAsset by new value from user
-	UpdateEditorDataAssetTitle();
-	RefreshDebugDataAssetView();
+	else if (PropertyChangedEvent.ChangeType == EPropertyChangeType::Duplicate)
+	{
+		//Update DebugAction title in data asset
+		int32 NewObjectIndex = PropertyChangedEvent.GetArrayIndex(ArrayPropertyName.ToString()) + 1;
+		if (DebugActionsStored.IsValidIndex(NewObjectIndex))
+		{
+
+			//Request a name update to the action added
+			DebugActionsStored[NewObjectIndex]->UpdateEditorDataAssetTitle();
+		}
+	}
+}
+
+void UDebugActionFolder::RecursiveRequestDataAssetTitleUpdate()
+{
+	Super::RecursiveRequestDataAssetTitleUpdate();
+
+	for (auto& DA : DebugActionsStored)
+	{
+		DA->RecursiveRequestDataAssetTitleUpdate();
+	}
 }
 #endif
 
-void UDebugActionFolder::RefreshChildren() {
-	for (auto DA : DebugActionsStored) {
+void UDebugActionFolder::OpenChildren()
+{
+	for (auto& DA : DebugActionsStored)
+	{
 		DA->OnParentFolderIsDeveloped(this);
 	}
 }
 
-EDebugActionResult UDebugActionFolder::InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutActions, UDebugSubsystem* Subsystem) {
-
+EDebugActionResult UDebugActionFolder::InitializeDebugAction( TArray<TObjectPtr<UDebugActionBase>>& OutActions, UDebugSubsystem* Subsystem )
+{
 	//Set properties
 	Super::InitializeDebugAction(OutActions, Subsystem);
-	
+
 	OutActions = DebugActionsStored;
 	return EDebugActionResult::HierarchyInitialization;
 }
 
-void UDebugActionFolder::SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int32 DepthRecursivity) {
-	
-	if (DepthRecursivity <= DepthLevel) { //Change children's visibility by recursivity
-		if (bNewIsCollapsed) { //Hide all children
-			for (auto DebugAction : DebugActionsStored) {
-				DebugAction->SetDebugActionWidgetVisibility(bNewIsCollapsed, DepthRecursivity);
+void UDebugActionFolder::SetDebugActionWidgetVisibility( ESlateVisibility NewVisibility, int32 DepthRecursivity )
+{
+	if (DepthRecursivity <= DepthLevel)
+	{
+		//Change children's visibility by recursivity
+		if (NewVisibility == ESlateVisibility::Collapsed)
+		{
+			//Hide all children
+			for (auto DebugAction : DebugActionsStored)
+			{
+				DebugAction->SetDebugActionWidgetVisibility(NewVisibility, DepthRecursivity);
 			}
-			if (DepthRecursivity != DepthLevel) { //If depth recursivity is my depth doesn't hide me
-				Super::SetDebugActionWidgetVisibility(bNewIsCollapsed); //Change his visibility
+			if (DepthRecursivity != DepthLevel)
+			{
+				//If depth recursivity is my depth doesn't hide me
+				Super::SetDebugActionWidgetVisibility(NewVisibility); //Change his visibility
 				bDebugActionState = false;
 			}
 		}
-		else { //Show first depth children
-			for (auto DebugAction : DebugActionsStored) {
+		else
+		{
+			//Show first depth children
+			for (auto DebugAction : DebugActionsStored)
+			{
 				if (DebugAction == NULL)
-					WIZ_RET_LOG( , "DebugActionFolder cannot be developped because a debug action is invalid, please check data asset", Error, LogDebugActionsSystem);
-				
-				DebugAction->SetDebugActionWidgetVisibility(bNewIsCollapsed);
+					WIZ_LOG("DebugActionFolder cannot be developed because a debug action is invalid, please check data asset", Warning, LogDebugActionsSystem);
+
+				DebugAction->SetDebugActionWidgetVisibility(NewVisibility);
 			}
 		}
 	}
 }
 
-EDebugActionResult UDebugActionFolder::ExecuteDebugAction_Implementation() {
+EDebugActionResult UDebugActionFolder::OnExecuteDebugAction_Implementation()
+{
+	//Catch the old debug action folder (is different -> hide old children)
+	MyDebugSubsystem->OnFolderStateChange(bDebugActionState, this);
 
-	if (Super::ExecuteDebugAction_Implementation() == EDebugActionResult::Success) {
-		//Catch the old debug action folder (is different -> hide old children's)
-		MyDebugSubsystem->OnFolderStateChange(bDebugActionState, this); //@UPGRADE: to event delegates to replace GetDebugPanelWidget()?
+	//Change visibility of the debug action folder clicked
+	SetDebugActionWidgetVisibility(bDebugActionState
+		                               ? ESlateVisibility::SelfHitTestInvisible
+		                               : ESlateVisibility::Collapsed, this->GetDepthLevel());
 
-		//Change visibility of the debug action folder clicked
-		SetDebugActionWidgetVisibility(!bDebugActionState, this->GetDepthLevel());
-
-		for (UDebugActionBase* DebugAction : DebugActionsStored) {
-			if (DebugAction) {
-				if (bDebugActionState) {
-					DebugAction->OnParentFolderIsDeveloped(this);
-				}
-				else {
-					DebugAction->OnParentFolderIsCollapsed(this);
-				}
+	for (UDebugActionBase* DebugAction : DebugActionsStored)
+	{
+		if (DebugAction)
+		{
+			if (bDebugActionState)
+			{
+				DebugAction->OnParentFolderIsDeveloped(this);
+			}
+			else
+			{
+				DebugAction->OnParentFolderIsCollapsed(this);
 			}
 		}
-		
-		return EDebugActionResult::Success;
 	}
-	
-	return EDebugActionResult::Fail;
+
+	return EDebugActionResult::Success;
 }

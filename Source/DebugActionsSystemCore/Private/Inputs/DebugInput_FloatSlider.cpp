@@ -6,21 +6,18 @@
 #include "SubSystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
-void UDebugInput_FloatSlider::ConfigureDebugInput_Implementation() {
-	Super::ConfigureDebugInput_Implementation();
-	
-	DebugInputTitle = FText::FromString("Value");
-	DebugInputSize = FVector2D(80, 28);
-	
-	MySpinBox = UDebugSubsystem::Get(GetWorld())->GetNewWidgetInDebugPanel<USpinBox>();
-	MyInputDataWidget = MySpinBox;
-	
+UWidget* UDebugInput_FloatSlider::OnConfigureDebugInput_Implementation()
+{
+	MySlotProperties = FDISlotProperties("Value", FVector2D(80, 28));
+
+	MySpinBox = UDebugSubsystem::Get(this)->GetNewWidgetInDebugPanel<USpinBox>();
+
 	if (MySpinBox == NULL)
-		WIZ_RET_LOG( , "My SpinBox is invalid", Error, LogDebugActionsSystem);
+		WIZ_RET_LOG(NULL, "My SpinBox is invalid", Error, LogDebugActionsSystem);
 
 	MySpinBox->SetForegroundColor(FLinearColor(0, 0, 0, 1));
 
-	FSpinBoxStyle NewSpinBoxStyle = MySpinBox->GetWidgetStyle();
+	FSpinBoxStyle NewSpinBoxStyle             = MySpinBox->GetWidgetStyle();
 	NewSpinBoxStyle.BackgroundBrush.TintColor = FLinearColor(0.75, 0.75, 0.75, 1);
 
 	MySpinBox->SetWidgetStyle(NewSpinBoxStyle);
@@ -28,37 +25,43 @@ void UDebugInput_FloatSlider::ConfigureDebugInput_Implementation() {
 	MySpinBox->SetSliderExponent(1.f);
 	MySpinBox->SetMinFractionalDigits(0);
 	MySpinBox->SetMaxFractionalDigits(2);
+
+	return MySpinBox;
 }
 
-void UDebugInput_FloatSlider::Setup(const FText& InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue) {
-	
+void UDebugInput_FloatSlider::Setup( const FText& InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue )
+{
 	if (MySpinBox == NULL)
-		WIZ_RET_LOG( , "My SpinBox is invalid", Error, LogDebugActionsSystem);
-	
+		WIZ_RET_LOG(, "My SpinBox is invalid", Error, LogDebugActionsSystem);
+
 	if (InDebugInputTitle.IsEmpty())
 		WIZ_LOG("Title is empty", Warning, LogDebugActionsSystem);
-	
-	DebugInputTitle = InDebugInputTitle;
-	MySpinBox->SetValue(MySpinBox->GetValue() > BothMinMaxValue.Y ? BothMinMaxValue.Y : MySpinBox->GetValue() < BothMinMaxValue.X ? BothMinMaxValue.X : MySpinBox->GetValue());
-	
+
+	MySpinBox->SetValue(MySpinBox->GetValue() > BothMinMaxValue.Y
+		                    ? BothMinMaxValue.Y
+		                    : MySpinBox->GetValue() < BothMinMaxValue.X
+			                      ? BothMinMaxValue.X
+			                      : MySpinBox->GetValue());
+
 	if (DefaultValue != 0) {
 		//Temp adjust min value as default value, otherwise the slider may not accept it
 		MySpinBox->SetMinValue(DefaultValue);
 		MySpinBox->SetValue(DefaultValue);
 	}
-	
+
 	MySpinBox->SetMinSliderValue(BothMinMaxValue.X);
 	MySpinBox->SetMinValue(BothMinMaxValue.X);
 	MySpinBox->SetMaxSliderValue(BothMinMaxValue.Y);
 	MySpinBox->SetMaxValue(BothMinMaxValue.Y);
-	
-	MyDebugInputSlotWidget->SetTitle(DebugInputTitle);
+
+	MySlotProperties.DisplayName = InDebugInputTitle;
+	MyDebugInputSlotWidget->SetSlotProperties(MySlotProperties);
 }
 
-float UDebugInput_FloatSlider::GetValue() const {
-	
+float UDebugInput_FloatSlider::GetValue() const
+{
 	if (MySpinBox == NULL)
 		WIZ_RET_LOG(0.0f, "My SpinBox is invalid", Error, LogDebugActionsSystem);
-	
+
 	return MySpinBox->GetValue();
 }

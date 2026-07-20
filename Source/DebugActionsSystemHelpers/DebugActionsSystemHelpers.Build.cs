@@ -5,7 +5,6 @@ public class DebugActionsSystemHelpers : ModuleRules
     public DebugActionsSystemHelpers(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-		bUsePrecompiled = true;
 
         PublicDependencyModuleNames.AddRange(
             new string[]
@@ -27,7 +26,7 @@ public class DebugActionsSystemHelpers : ModuleRules
         
         if (Target.bBuildEditor)
         {
-	        PrivateDependencyModuleNames.Add(new string("UnrealEd"));;
+	        PrivateDependencyModuleNames.Add("UnrealEd");
         }
     }
 }

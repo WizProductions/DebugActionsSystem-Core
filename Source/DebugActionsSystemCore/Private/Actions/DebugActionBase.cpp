@@ -1,53 +1,84 @@
 ﻿// Copyright Wiz Corporation. All Rights Reserved.
 
 #include "Actions/DebugActionBase.h"
+#include "Components/SlateWrapperTypes.h"
 #include "Enumerations/EDebugActionResult.h"
 #include "WidgetBases/DebugActionWidgetBase.h"
 
 #if WITH_EDITOR
-void UDebugActionBase::PostInitProperties() {
-	Super::PostInitProperties();
+void UDebugActionBase::PostEditChangeProperty( FPropertyChangedEvent& PropertyChangedEvent )
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+	//Here - Called by the system when the array is updated or following a manual call during the array update
 	
+	//The folder doesn't need to be updated
+	if (PropertyChangedEvent.ChangeType == EPropertyChangeType::ArrayAdd)
+		return;
+	
+	//Update folder title in DataAsset by new value from user
 	UpdateEditorDataAssetTitle();
-	OnPostInitProperties();
 }
 
-void UDebugActionBase::UpdateEditorDataAssetTitle() {
-	Private_DataAssetActionTitle = GetDebugActionTitle().ToString();
+void UDebugActionBase::RecursiveRequestDataAssetTitleUpdate()
+{
+	UpdateEditorDataAssetTitle();
 }
 
-// ReSharper disable once CppUE4BlueprintCallableFunctionMayBeConst
-void UDebugActionBase::RefreshDebugDataAssetView() {
-	
-	//Force refresh the data asset view when the folder title is loaded from the disk
-	if (UObject* Outer = GetOuter()) {
-		Outer->PostEditChange();
-	}
+void UDebugActionBase::UpdateEditorDataAssetTitle()
+{
+	const FText Title = GetDebugActionTitle();
+	if (Title.IsEmpty() == false)
+		Private_DataAssetActionTitle = Title.ToString();
 }
 #endif
 
-EDebugActionResult UDebugActionBase::InitializeDebugAction(TArray<TObjectPtr<UDebugActionBase>>& OutDebugActionsHierarchy, UDebugSubsystem* Subsystem) {
+void UDebugActionBase::PostInitProperties()
+{
+	Super::PostInitProperties();
 	
+	OnPostInitProperties();
+}
+
+EDebugActionResult UDebugActionBase::InitializeDebugAction( TArray<TObjectPtr<UDebugActionBase>>& OutDebugActionsHierarchy, UDebugSubsystem* Subsystem )
+{
 	bDebugActionState = false;
-	MyDebugSubsystem = Subsystem;
-	
+	MyDebugSubsystem  = Subsystem;
+
 	return EDebugActionResult::Success;
 }
 
-void UDebugActionBase::SetDebugActionWidgetVisibility(bool bNewIsCollapsed, int DepthRecursivity) {
-	SetDebugActionWidgetVisibility(bNewIsCollapsed);
+void UDebugActionBase::SetDebugActionWidgetVisibility( ESlateVisibility NewVisibility, int DepthRecursivity )
+{
+	SetDebugActionWidgetVisibility(NewVisibility);
 }
 
-void UDebugActionBase::SetDebugActionWidgetVisibility(bool bNewIsCollapsed) {
-	MyDebugActionWidget->SetVisibility(static_cast<ESlateVisibility>(bNewIsCollapsed));
+void UDebugActionBase::SetDebugActionWidgetVisibility( ESlateVisibility NewVisibility )
+{
+	MyDebugActionWidget->SetVisibility(NewVisibility);
 }
 
-void UDebugActionBase::OnParentFolderIsCollapsed_Implementation(class UDebugActionFolder* ParentFolder) {}
-void UDebugActionBase::OnParentFolderIsDeveloped_Implementation(class UDebugActionFolder* ParentFolder) {}
-
-EDebugActionResult UDebugActionBase::ExecuteDebugAction_Implementation() {
+EDebugActionResult UDebugActionBase::ExecuteDebugAction()
+{
 	bDebugActionState = !bDebugActionState;
-	return EDebugActionResult::Success;
+	return OnExecuteDebugAction();
 }
 
-FText UDebugActionBase::GetDebugActionTitle_Implementation() const { return FText::FromString("DefaultAction"); }
+EDebugActionResult UDebugActionBase::OnExecuteDebugAction_Implementation()
+{
+	//For derived implementation.
+	return EDebugActionResult::NotImplemented;
+}
+
+void UDebugActionBase::OnParentFolderIsCollapsed_Implementation( class UDebugActionFolder* ParentFolder )
+{
+	//For derived implementation.
+}
+void UDebugActionBase::OnParentFolderIsDeveloped_Implementation( class UDebugActionFolder* ParentFolder )
+{
+	//For derived implementation.
+}
+
+FText UDebugActionBase::GetDebugActionTitle_Implementation() const
+{
+	return FText::FromString("DefaultAction");
+}

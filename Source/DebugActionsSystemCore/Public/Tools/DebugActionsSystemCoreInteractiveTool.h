@@ -16,8 +16,8 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugActionsSystemInteractiveToolBuilder : pub
 	GENERATED_BODY()
 
 public:
-	virtual bool CanBuildTool(const FToolBuilderState& SceneState) const override { return false; }
-	virtual UInteractiveTool* BuildTool(const FToolBuilderState& SceneState) const override;
+	bool CanBuildTool(const FToolBuilderState& SceneState) const override { return false; }
+	UInteractiveTool* BuildTool(const FToolBuilderState& SceneState) const override;
 };
 
 
@@ -61,20 +61,20 @@ public:
 	virtual void SetWorld(UWorld* World);
 
 	/** UInteractiveTool overrides */
-	virtual void Setup() override;
-	virtual void Render(IToolsContextRenderAPI* RenderAPI) override;
-	virtual void OnPropertyModified(UObject* PropertySet, FProperty* Property) override;
+	void Setup() override;
+	void Render(IToolsContextRenderAPI* RenderAPI) override;
+	void OnPropertyModified(UObject* PropertySet, FProperty* Property) override;
 
 	/** IClickDragBehaviorTarget implementation */
-	virtual FInputRayHit CanBeginClickDragSequence(const FInputDeviceRay& PressPos) override;
-	virtual void OnClickPress(const FInputDeviceRay& PressPos) override;
-	virtual void OnClickDrag(const FInputDeviceRay& DragPos) override;
+	FInputRayHit CanBeginClickDragSequence(const FInputDeviceRay& PressPos) override;
+	void OnClickPress(const FInputDeviceRay& PressPos) override;
+	void OnClickDrag(const FInputDeviceRay& DragPos) override;
 	// these are not used in this Tool
-	virtual void OnClickRelease(const FInputDeviceRay& ReleasePos) override {}
-	virtual void OnTerminateDragSequence() override {}
+	void OnClickRelease(const FInputDeviceRay& ReleasePos) override {}
+	void OnTerminateDragSequence() override {}
 
 	/** IModifierToggleBehaviorTarget implementation (inherited via IClickDragBehaviorTarget) */
-	virtual void OnUpdateModifierState(int ModifierID, bool bIsOn) override;
+	void OnUpdateModifierState(int ModifierID, bool bIsOn) override;
 
 
 protected:
@@ -84,9 +84,10 @@ protected:
 
 
 protected:
-	UWorld* TargetWorld = nullptr;		// target World we will raycast into
+	UPROPERTY()
+	TObjectPtr<UWorld> TargetWorld = NULL;		// target World we will raycast into
 
-	static const int MoveSecondPointModifierID = 1;		// identifier we associate with the shift key
+	static constexpr int MoveSecondPointModifierID = 1;		// identifier we associate with the shift key
 	bool bSecondPointModifierDown = false;				// flag we use to keep track of modifier state
 	bool bMoveSecondPoint = false;						// flag we use to keep track of which point we are moving during a press-drag
 

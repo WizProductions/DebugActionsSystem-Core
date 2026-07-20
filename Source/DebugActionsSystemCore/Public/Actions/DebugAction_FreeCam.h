@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "DebugActionBase.h"
+#include "DebugAction_CommandBase.h"
 #include "DebugAction_FreeCam.generated.h"
 
 //#############################################################################
@@ -13,25 +13,20 @@
  * A simple debug action that enables FreeCam mode with a simple click.
  */
 UCLASS(BlueprintType, EditInlineNew, meta=(ToolTip="Toggles freecam mode for selected player"))
-class DEBUGACTIONSSYSTEMCORE_API UDebugAction_FreeCam : public UDebugActionBase {
+class DEBUGACTIONSSYSTEMCORE_API UDebugAction_FreeCam : public UDebugAction_CommandBase {
 	GENERATED_BODY()
 
 //#############################################################################
 //##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
 
-protected:
-	//==== Properties ====\\.
-	UPROPERTY(BlueprintReadWrite, Category = "References")
-	class UDebugInput_LocalPlayerSelector* MyPlayerSelector = NULL; 
-
 //#############################################################################
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 	
 public:
-	virtual FText GetDebugActionTitle_Implementation() const override { return FText::FromString(FString("FreeCam")); }
-	virtual void OnParentFolderIsDeveloped_Implementation(UDebugActionFolder* ParentFolder) override;
-	
-	virtual EDebugActionResult ExecuteDebugAction_Implementation() override;
+	FText GetDebugActionTitle_Implementation() const override { return FText::FromString("FreeCam"); }
+
+	void GetCommand_Implementation(FString& Cmd) override;
+	void GetMessage_Implementation(ULocalPlayer* Executer, FString& Message) override;
 };

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Styling/SlateBrush.h"
+#include "Templates/SubclassOf.h"
 #include "DASFunctionLibrary.generated.h"
 
 UENUM(BlueprintType, meta=(Bitflags))
@@ -17,6 +18,8 @@ enum class EWidgetStyleMode : uint8 {
 };
 
 ENUM_CLASS_FLAGS(EWidgetStyleMode) // Macro to add bitwise operations
+
+struct FAssetData;
 
 //#############################################################################
 //##--------------------------------- CLASS ---------------------------------##
@@ -34,14 +37,18 @@ class DEBUGACTIONSSYSTEMHELPERS_API UDASFunctionLibrary : public UBlueprintFunct
 //#############################################################################
 
 public:
-	/** Returns all derived classes of ParentClass loaded in the game */
+	/** Returns all derived classes of ParentClass loaded in the game. */
 	UFUNCTION(BlueprintCallable, Category = "Utils")
 	static void GetAllDerivedClasses(TSubclassOf<UObject> ParentClass, TArray<UClass*>& OutSubClasses, bool bIncludeParentClass = true, bool bIncludeAbstract = false);
+	
+	/** Returns all object of Class in the engine, SearchPathFilters can be null and method returns all object found. */
+	UFUNCTION(BlueprintCallable, Category = "Search", meta = (AutoCreateRefTerm = "SearchPathFilters"))
+	static void GetAssetsOfClass(const UClass* TargetClass, TArray<FAssetData>& OutAssets, const TArray<FName>& SearchPathFilters, bool bSearchSubclasses = true, bool bRecursivePaths = true);
 	
 	UFUNCTION(BlueprintPure, Category = "Debug", meta = (DefaultToSelf = "ContextObject", HidePin = "ContextObject"))
 	static FString GetBlueprintPMethodPrefix(const UObject* ContextObject, FString MethodName);
 	
-	//@TODO: Remake with attribute, CustomThunk?
+	//@TODO: Remake with attribute, CustomThunk? 1.2?
 	UFUNCTION(BlueprintCallable, Category = "Debug", meta = (BlueprintInternalUseOnly = "true"))
 	static void K2_WizLog(
 		const UObject* ContextObject, 
@@ -72,23 +79,8 @@ public:
 		UPARAM(meta=(Bitmask, BitmaskEnum="/Script/DebugActionsSystem.EWidgetStyleMode")) int32 WidgetStyleModesMask = 15
 	);
 	
-	template <typename T>
-	static void PrintTArray(const TCHAR* Label, const TArray<void*>& Array, const FColor& Color, int32 Key);
-
-	template <typename T>
-	static void PrintTSet(const TCHAR* Label, const TSet<T>& Set, const FColor& Color, int32 Key);
-
-	template <typename K, typename V>
-	static void PrintTMap(const TCHAR* Label, const TMap<K, V>& Map, const FColor& Color, int32 Key);
-
-	template <typename K, typename V>
-	static void PrintTMapOfArrays(const TCHAR* Label, const TMap<K, V>& Map, const FColor& Color, int32 Key);
-
-	template <typename K, typename V>
-	static void PrintTMapOfSets(const TCHAR* Label, const TMap<K, V>& Map, const FColor& Color, int32 Key);
-
-	template <typename T>
-	static constexpr FString GetTemplateTypeName();
+	UFUNCTION(BlueprintPure, Category = "Debug")
+	static int64 GetObjectUniqueID(UObject* Object);
 };
 
 #if CPP

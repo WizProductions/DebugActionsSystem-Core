@@ -1,10 +1,10 @@
 {
   "FileVersion": 3,
   "Version": 1,
-  "VersionName": "1.1.5",
+  "VersionName": "1.1.9",
   "FriendlyName": "Debug Actions System - Core",
   "Description": "",
-  "Category": "Debug",
+  "Category": "Debugging",
   "CreatedBy": "Wiz",
   "CreatedByURL": "https://www.wizurth.ovh",
   "DocsURL": "",
@@ -12,9 +12,8 @@
   "SupportURL": "",
   "EngineVersion": "5.7.0",
   "CanContainContent": true,
-  "EnabledByDefault": true,
   "IsBetaVersion": true,
-  "Installed": true,
+  "Installed": false,
   "Modules": [
     {
       "Name": "DebugActionsSystemTags",
@@ -42,6 +41,12 @@
         "Shipping",
         "Test"
       ]
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "EnhancedInput",
+      "Enabled": true
     }
   ]
 }

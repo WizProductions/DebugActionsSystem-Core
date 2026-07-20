@@ -32,7 +32,7 @@ public:
 //#############################################################################
 
 public:
-	virtual void ConfigureDebugInput_Implementation() override;
+	UWidget* OnConfigureDebugInput_Implementation() override;
 
 	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
 	void Setup(const FText& InDebugInputTitle, FVector2f BothMinMaxValue, float DefaultValue = 0.f);

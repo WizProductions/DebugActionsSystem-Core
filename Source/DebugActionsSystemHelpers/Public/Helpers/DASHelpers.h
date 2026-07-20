@@ -37,12 +37,25 @@ C* AddComponentInConstruction(AActor* Owner, EComponentMobility::Type MobilityTy
 #if !UE_BUILD_SHIPPING
 
 #if defined(_MSC_VER)
-#define WIZ_FUNCTION_SIG __FUNCSIG__
+#define FUNCTION_SIG __FUNCSIG__
 #else
-#define WIZ_FUNCTION_SIG __PRETTY_FUNCTION__
+#define FUNCTION_SIG __PRETTY_FUNCTION__
 #endif
 
-/** 	const FString& Message = "NoLogMessage, use WIZ_LOG macro!"\n
+//==== Logs Alias ====\\.
+/** DEPRECATED, use DAS_LOG instead. */
+#define WIZ_LOG(...) DAS_LOG(__VA_ARGS__)
+/** DEPRECATED, use DAS_LOG instead. */
+#define WIZ_RET_LOG(...) DAS_RET_LOG(__VA_ARGS__)
+/** DEPRECATED, use DAS_LOG instead. */
+#define WIZ_NET_LOG(...) DAS_NET_LOG(__VA_ARGS__)
+/** DEPRECATED, use DAS_LOG instead. */
+#define WIZ_NET_RET_LOG(...) DAS_NET_RET_LOG(__VA_ARGS__)
+
+
+//==== Logs ====\\.
+
+/** 	const FString& Message = "NoLogMessage, use DAS_LOG macro!"\n
 *		ELogVerbosity::Type DebugLogType = ELogVerbosity::Type::Log\n
 *		FLogCategoryBase& LogCategory = LogTemp\n
 *		bool bAddOnScreenMessage = false\n
@@ -50,13 +63,13 @@ C* AddComponentInConstruction(AActor* Owner, EComponentMobility::Type MobilityTy
 *		float OnScreenMessageDuration = 2.f\n
 *		FColor OnScreenMessageColor = FColor::White\n
 */
-#define WIZ_LOG(Message, Verbosity, ...) \
-DASHelpers::PrivateInternal_WizDebugLog(WIZ_FUNCTION_SIG, __LINE__, Message, ELogVerbosity::Type::Verbosity, ##__VA_ARGS__)
+#define DAS_LOG(Message, Verbosity, ...) \
+DASHelpers::PrivateInternal_DASDebugLog(FUNCTION_SIG, __LINE__, Message, ELogVerbosity::Type::Verbosity, ##__VA_ARGS__)
 
-/** A specific version of WIZ_LOG with a return value. \n
-*   eg: WIZ_RET_LOG( , "Access denied", Error) \n
+/** A specific version of DAS_LOG with a return value. \n
+*   eg: DAS_RET_LOG( , "Access denied", Error) \n
 *   \n
-* 	const FString& Message = "NoLogMessage, use WIZ_LOG macro!"\n
+* 	const FString& Message = "NoLogMessage, use DAS_LOG macro!"\n
 *		ELogVerbosity::Type DebugLogType = ELogVerbosity::Type::Log\n
 *		FLogCategoryBase& LogCategory = LogTemp\n
 *		bool bAddOnScreenMessage = false\n
@@ -64,47 +77,37 @@ DASHelpers::PrivateInternal_WizDebugLog(WIZ_FUNCTION_SIG, __LINE__, Message, ELo
 *		float OnScreenMessageDuration = 2.f\n
 *		uint64 OnScreenMessageKey = INDEX_NONE\n
 */
-#define WIZ_RET_LOG(ReturnValue, Message, Verbosity, ...) \
+#define DAS_RET_LOG(ReturnValue, Message, Verbosity, ...) \
 	do { \
-		WIZ_LOG(Message, Verbosity, ##__VA_ARGS__); \
+		DAS_LOG(Message, Verbosity, ##__VA_ARGS__); \
 		return ReturnValue; \
 } while(0)
 
-#define WIZ_NET_LOG(Message, Verbosity, ...) \
+#define DAS_NET_LOG(Message, Verbosity, ...) \
 do { \
-	const FString LocalRoleStr = UEnum::GetValueAsString(GetLocalRole()); \
-	const FString RemoteRoleStr = UEnum::GetValueAsString(GetRemoteRole()); \
-	const FString ContextPrefix = FString::Printf(TEXT("[%s/%s] "), *LocalRoleStr, *RemoteRoleStr); \
-	WIZ_LOG(ContextPrefix + Message, Verbosity, ##__VA_ARGS__); \
+	FString ContextPrefix; \
+	DASHelpers::GetNetContextPrefix(this, ContextPrefix); \
+	DAS_LOG(ContextPrefix + Message, Verbosity, ##__VA_ARGS__); \
 } while(0)
 
-#define WIZ_NET_RET_LOG(ReturnValue, Message, Verbosity, ...) \
+#define DAS_NET_RET_LOG(ReturnValue, Message, Verbosity, ...) \
 do { \
-	const FString LocalRoleStr = UEnum::GetValueAsString(GetLocalRole()); \
-	const FString RemoteRoleStr = UEnum::GetValueAsString(GetRemoteRole()); \
-	const FString ContextPrefix = FString::Printf(TEXT("[%s/%s] "), *LocalRoleStr, *RemoteRoleStr); \
-	WIZ_RET_LOG(ReturnValue, ContextPrefix + Message, Verbosity, ##__VA_ARGS__); \
-} while(0)
-
-#define WIZ_NET_LOG_C(AuthorityCheckActor, Message, Verbosity, ...) \
-do { \
-	const FString LocalRoleStr = UEnum::GetValueAsString(AuthorityCheckActor->GetLocalRole()); \
-	const FString RemoteRoleStr = UEnum::GetValueAsString(AuthorityCheckActor->GetRemoteRole()); \
-	const FString ContextPrefix = FString::Printf(TEXT("[%s/%s] "), *LocalRoleStr, *RemoteRoleStr); \
-	WIZ_LOG(ContextPrefix + Message, Verbosity, ##__VA_ARGS__); \
+	FString ContextPrefix; \
+	DASHelpers::GetNetContextPrefix(this, ContextPrefix); \
+	DAS_RET_LOG(ReturnValue, ContextPrefix + Message, Verbosity, ##__VA_ARGS__); \
 } while(0)
 
 #else //--------------------------- SHIPPING ----------------------//.
-#define WIZ_LOG(...) do { } while (0)
-#define WIZ_RET_LOG(ReturnValue, ...) return ReturnValue;
-#define WIZ_NET_LOG(...) do { } while (0)
-#define WIZ_NET_RET_LOG(ReturnValue, ...) ReturnValue;
-#define WIZ_NET_LOG_C(...) do { } while (0)
+#define DAS_LOG(...) do { } while (0)
+#define DAS_RET_LOG(ReturnValue, ...) return ReturnValue;
+#define DAS_NET_LOG(...) do { } while (0)
+#define DAS_NET_RET_LOG(ReturnValue, ...) ReturnValue;
+#define DAS_NET_LOG_C(...) do { } while (0)
 #endif
 
 
 #define CheckedFString(String) String ? String : FString("None")
-// Available on all AActor derived class (AI code)
+// Available on all AActor derived class
 // True on the Server or the Host (Listen Server). 
 // Use this for logic that should only run on the source of truth (e.g., giving damage, spawning items).
 #define SERVER_SIDE (GetLocalRole() == ROLE_Authority)
@@ -123,11 +126,11 @@ do { \
 #define IS_AUTONOMOUS (GetLocalRole() == ROLE_AutonomousProxy)
 
 #if !UE_BUILD_SHIPPING
-/** Don't use this method directly, use WIZ_LOG macro instead */
-DEBUGACTIONSSYSTEMHELPERS_API void PrivateInternal_WizDebugLog(
+/** This method exist for internal use only, don't use it directly, use instead DAS_LOG macro. */
+DEBUGACTIONSSYSTEMHELPERS_API void PrivateInternal_DASDebugLog(
 	const ANSICHAR* FunctionSignature = nullptr,
 	int32 FileLine                    = -1,
-	const FString& Message            = "NoLogMessage, use WIZ_LOG macro!",
+	const FString& Message            = "NoLogMessage, use DAS_LOG macro!",
 	ELogVerbosity::Type DebugLogType  = ELogVerbosity::Type::Log,
 	FLogCategoryBase& LogCategory     = LogTemp,
 	bool bAddOnScreenMessage          = false,
@@ -135,9 +138,16 @@ DEBUGACTIONSSYSTEMHELPERS_API void PrivateInternal_WizDebugLog(
 	float OnScreenMessageDuration     = 7.f,
 	uint64 OnScreenMessageKey         = INDEX_NONE
 );
+
 FString ParseFunctionPrefixFromString(FString FunctionSignature, int32 Line = -1);
 FString ParseFunctionPrefixFromAnsi(const ANSICHAR* FunctionSignatureAnsi, int32 Line = -1);
 FString ParseFunctionPrefixFromTChar(const TCHAR* FunctionSignatureTChar, int32 Line = -1);
+
+/** Returns a string contain local and remote role of actor. eg: [Authority/SimulatedProxy] */
+DEBUGACTIONSSYSTEMHELPERS_API __forceinline void GetNetContextPrefix(const AActor* Actor, FString& OutString);
+/** Returns a string contain local and remote role of component. eg: [Authority/SimulatedProxy] */
+DEBUGACTIONSSYSTEMHELPERS_API __forceinline void GetNetContextPrefix(const UActorComponent* Component, FString& OutString);
+
 #endif
 #pragma endregion
 #pragma region Utils

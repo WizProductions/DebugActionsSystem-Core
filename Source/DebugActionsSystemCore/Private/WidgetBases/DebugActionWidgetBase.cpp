@@ -6,14 +6,14 @@
 
 #define LOCTEXT_NAMESPACE "UMG"
 
-bool UDebugActionWidgetBase::InitDebugActionWidget_Implementation(UDebugActionBase* LinkedDebugAction) {
-	
+bool UDebugActionWidgetBase::InitDebugActionWidget_Implementation( UDebugActionBase* LinkedDebugAction )
+{
 	MyDebugAction = LinkedDebugAction;
 	MyDebugAction->SetMyDebugActionWidget(this);
 
 	if (MyDebugAction) {
 		if (MyDebugAction->GetDepthLevel() != 0) {
-			MyDebugAction->SetDebugActionWidgetVisibility(true);
+			MyDebugAction->SetDebugActionWidgetVisibility(ESlateVisibility::Collapsed);
 		}
 
 		return true;
@@ -23,17 +23,13 @@ bool UDebugActionWidgetBase::InitDebugActionWidget_Implementation(UDebugActionBa
 }
 
 #if WITH_EDITOR
-const FText UDebugActionWidgetBase::GetPaletteCategory() {
+const FText UDebugActionWidgetBase::GetPaletteCategory()
+{
 	return LOCTEXT("Debug Actions System", "Debug Actions System");
-}
-
-void UDebugActionWidgetBase::NativeConstruct() {
-	Super::NativeConstruct();
-	
-	
 }
 #endif
 
-EDebugActionResult UDebugActionWidgetBase::ExecuteAction_Implementation() {
+EDebugActionResult UDebugActionWidgetBase::ExecuteAction_Implementation()
+{
 	return MyDebugAction->ExecuteDebugAction();
 }

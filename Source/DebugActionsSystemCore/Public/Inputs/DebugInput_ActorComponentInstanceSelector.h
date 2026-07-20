@@ -37,8 +37,6 @@ public:
 	//==== Properties ====\\.
 protected:
 	UPROPERTY()
-	TSubclassOf<UObject> ClassFilter = UObject::StaticClass();
-	UPROPERTY()
 	TArray<TObjectPtr<UActorComponent>> ActorComponentsCache;
 	UPROPERTY()
 	TObjectPtr<UClass> CacheActorComponentClass = NULL;
@@ -48,15 +46,15 @@ protected:
 //#############################################################################
 
 public:
-	virtual void ConfigureDebugInput_Implementation() override;
+	UWidget* OnConfigureDebugInput_Implementation() override;
 
 	template <ActorComponentType C>
-	void Setup(const FString& InDebugInputTitle);
+	void Setup(const FText& InDebugInputTitle);
 	template <ActorComponentType C>
 	C* GetValue() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
-	void Setup(TSubclassOf<UActorComponent> ActorComponentClass, const FString& InDebugInputTitle);
+	void Setup(TSubclassOf<UActorComponent> ActorComponentClass, const FText& InDebugInputTitle);
 	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem", meta = (DeterminesOutputType = "ActorComponentClass", DynamicOutputParam = "OutObject"))
 	void GetValue(TSubclassOf<UActorComponent> ActorComponentClass, UObject*& OutObject);
 };
@@ -66,7 +64,7 @@ public:
 //#############################################################################
 
 template <ActorComponentType C>
-void UDebugInput_ActorComponentInstanceSelector::Setup(const FString& InDebugInputTitle) {
+void UDebugInput_ActorComponentInstanceSelector::Setup(const FText& InDebugInputTitle) {
 	this->Setup(C::StaticClass(), InDebugInputTitle);
 }
 

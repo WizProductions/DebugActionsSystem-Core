@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Structs/DISlotProperties.h"
 #include "DebugInputSlotWidgetBase.generated.h"
 
 //#############################################################################
@@ -32,12 +33,12 @@ protected:
 	//==== Properties ====\\.
 protected:
 	/** Slot in the debug panel canvas */
-	UPROPERTY(BlueprintReadOnly, Category = "UserInterface|Interaction|Slot")
+	UPROPERTY(BlueprintReadOnly, Category = References)
 	TObjectPtr<class UCanvasPanelSlot> MySlot;
 	/** Canvas Slot of Named Slot contains InputSlot */
-	UPROPERTY(BlueprintReadOnly, Category = "UserInterface|Interaction|Slot")
+	UPROPERTY(BlueprintReadOnly, Category = References)
 	TObjectPtr<class UCanvasPanelSlot> NamedSlotWidgetSlot;
-	UPROPERTY(BlueprintReadOnly, Category = "References")
+	UPROPERTY(BlueprintReadOnly, Category = References)
 	TObjectPtr<class UDebugInputBase> MyDebugInput;
 	
 	//==== Flags ====\\.
@@ -47,25 +48,26 @@ protected:
 //##-------------------------------- METHODS --------------------------------##
 //#############################################################################
 
-public:
-	virtual void NativeConstruct() override;
+protected:
+	void NativeConstruct() override;
 
 #if UE_EDITOR
-	virtual const FText GetPaletteCategory() override;
+public:
+	const FText GetPaletteCategory() override;
 #endif
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Properties|Flags")
+	UFUNCTION(BlueprintCallable, Category = Flags)
 	FORCEINLINE bool IsUsed() const { return bIsUsed; }
 
-	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem|References")
+	UFUNCTION(BlueprintNativeEvent, Category = References)
 	UCanvasPanelSlot* GetInputWidgetSlot() const;
-	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem|References")
+	UFUNCTION(BlueprintNativeEvent, Category = References)
 	UWidget* GetInputWidget() const;
-	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
+	UFUNCTION(BlueprintNativeEvent, Category = DebugActionsSystem)
 	void SetInputWidget(class UDebugInputBase* InDebugInput);
-	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
+	UFUNCTION(BlueprintNativeEvent, Category = DebugActionsSystem)
 	void RemoveInputWidget();
-	UFUNCTION(BlueprintNativeEvent, Category = "DebugActionsSystem")
-	void SetTitle(const FText& InTitle);	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = DebugActionsSystem)
+	void SetSlotProperties(const FDISlotProperties& InProperties);	
 };
