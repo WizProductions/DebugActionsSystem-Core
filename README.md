@@ -1,7 +1,9 @@
 <p align="center">
   <img src="https://cloud.wizurth.ovh/s/ZY9nNWFAKsXmtCY/preview" alt="PGG_HEADER" width="256" height="256">
 </p>
-
+<p align="center"> <a href="https://www.codefactor.io/repository/github/wizproductions/debugactionssystem-core/overview/master">
+    <img src="https://www.codefactor.io/repository/github/wizproductions/debugactionssystem-core/badge/master" alt="CodeFactor" />
+</a> </p>
 <h1 align="center">Debug Actions System - Core</h1>
 
 > **A powerful, modular, and highly extensible debugging framework for Unreal Engine 5.**
