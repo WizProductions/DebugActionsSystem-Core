@@ -177,7 +177,6 @@ bool UDebugSubsystem::RequestDebugInput( TSubclassOf<UDebugInputBase> DebugInput
 	//Check if DI is already registered on the Shared DI map
 	if (SharedKeyTag.IsValid() && SharedKeyTag.MatchesTagExact(DAS_SharedDIKey_UnShared) == false)
 	{
-
 		//Construct the key
 		TSubclassOf<UDebugInputBase> DIClass = DebugInputClass;
 		FSharedDIMapKey SharedDIKey(SharedKeyTag, DIClass);
@@ -185,7 +184,6 @@ bool UDebugSubsystem::RequestDebugInput( TSubclassOf<UDebugInputBase> DebugInput
 		//Is found a map associated of tag?
 		if (TObjectPtr<UDebugInputBase>* DIFound = SharedDebugInputs.Find(SharedDIKey))
 		{
-
 			//Is the pointer wrapper valid?
 			if (DIFound && *DIFound)
 			{
@@ -203,7 +201,6 @@ bool UDebugSubsystem::RequestDebugInput( TSubclassOf<UDebugInputBase> DebugInput
 		{
 			if (UDebugInputBase* ExistingDI = *It)
 			{
-
 				//Remove from the free DI array
 				Line->FreeDebugLine.Remove(It.GetId());
 
@@ -277,12 +274,10 @@ void UDebugSubsystem::Internal_SetupDebugActionsSystem( bool bForceSetup )
 	{
 		if (MyDebugDataAsset->DebugInputCustomKeyTagDataTable.IsNull() == false)
 		{
-
 			FSoftObjectPath TablePath = MyDebugDataAsset->DebugInputCustomKeyTagDataTable.ToSoftObjectPath();
 
 			if (GameplayTagsSettings->GameplayTagTableList.Contains(TablePath) == false)
 			{
-
 				GameplayTagsSettings->GameplayTagTableList.Add(TablePath);
 				GameplayTagsSettings->SaveConfig();
 
@@ -328,7 +323,6 @@ void UDebugSubsystem::Internal_RegisterCallbacks( bool bClearOldCallbacks )
 	//Need to create and setup context
 	if (IsValid(DebugMappingContext) == false)
 	{
-
 		DebugMappingContext = NewObject<UInputMappingContext>(this);
 
 		DebugInputAction            = NewObject<UInputAction>();
@@ -344,7 +338,6 @@ void UDebugSubsystem::Internal_RegisterCallbacks( bool bClearOldCallbacks )
 
 	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(MyPlayerController->InputComponent))
 	{
-
 		FModifyContextOptions Options;
 		Options.bIgnoreAllPressedKeysUntilRelease = false;
 		EIS->AddMappingContext(DebugMappingContext, MyDebugDataAsset->MappingContextPriority, Options);
@@ -409,7 +402,6 @@ bool UDebugSubsystem::Internal_SetFreeDI( UDebugInputBase* DI, const FGameplayTa
 	//UnShared
 	if (SharedKeyTag.MatchesTagExact(DAS_SharedDIKey_UnShared))
 	{
-
 		//Remove used
 		int Count = UsedDebugInputs.RemoveSwap(DI, EAllowShrinking::Yes);
 
@@ -467,7 +459,6 @@ void UDebugSubsystem::Internal_FreeAllDebugInputs()
 	//Find in unshared using map
 	for (auto& DI : UsedDebugInputs)
 	{
-
 		//Add in free map
 		auto& FreeDILine = FreeDebugsInputs.FindOrAdd(DI->GetClass());
 		FreeDILine.FreeDebugLine.Add(DI);
@@ -476,7 +467,6 @@ void UDebugSubsystem::Internal_FreeAllDebugInputs()
 	//Find in shared using map
 	for (auto& DI : SharedDebugInputs)
 	{
-
 		if (DI.Value == NULL)
 			continue;
 

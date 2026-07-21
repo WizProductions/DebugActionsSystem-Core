@@ -7,10 +7,10 @@
 #include "Blueprint/WidgetTree.h"
 
 template <typename WidgetT> requires std::is_base_of_v<UWidget, WidgetT>
-WidgetT* UDebugPanelWidgetBase::Internal_NewWidget(TSubclassOf<UWidget> WidgetClass) {
-
+WidgetT* UDebugPanelWidgetBase::Internal_NewWidget( TSubclassOf<UWidget> WidgetClass )
+{
 	if (WidgetTree == NULL)
 		WIZ_RET_LOG(NULL, "WidgetTree is not properly created!", Error, LogDebugActionsSystem);
-	
+
 	return WidgetTree->ConstructWidget<WidgetT>(WidgetClass);
 }

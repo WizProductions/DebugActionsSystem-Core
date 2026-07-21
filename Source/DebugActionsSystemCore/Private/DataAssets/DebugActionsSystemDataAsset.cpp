@@ -8,7 +8,7 @@ void UDebugActionsSystemDataAsset::PostEditChangeProperty( FPropertyChangedEvent
 {
 	//Update the property before check it
 	Super::PostEditChangeProperty(PropertyChangedEvent);
-	
+
 	//Force a default value to a debug action pointer, catch every nullptr in Data Asset
 	static const FName ArrayPropertyName = GET_MEMBER_NAME_CHECKED(UDebugActionsSystemDataAsset, DebugActionsArray);
 
@@ -39,20 +39,18 @@ void UDebugActionsSystemDataAsset::PostEditChangeProperty( FPropertyChangedEvent
 			int32 AddedObjectIndex = PropertyChangedEvent.GetArrayIndex(ArrayPropertyName.ToString());
 			if (DebugActionsArray.IsValidIndex(AddedObjectIndex))
 			{
-
 				//Request a name update to the action added
 				DebugActionsArray[AddedObjectIndex]->UpdateEditorDataAssetTitle();
 			}
 		}
 	}
-	
+
 	else if (PropertyChangedEvent.ChangeType == EPropertyChangeType::Duplicate)
 	{
 		//Update DebugAction title in data asset
 		int32 NewObjectIndex = PropertyChangedEvent.GetArrayIndex(ArrayPropertyName.ToString()) + 1;
 		if (DebugActionsArray.IsValidIndex(NewObjectIndex))
 		{
-
 			//Request a name update to the action added
 			DebugActionsArray[NewObjectIndex]->UpdateEditorDataAssetTitle();
 		}

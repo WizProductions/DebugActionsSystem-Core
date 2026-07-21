@@ -34,7 +34,6 @@ void UDebugInput_EnumSelectorCB::Setup( UEnum* Enum, const FText& InDebugInputTi
 	}
 
 	for (int32 i = 0; i < MyEnumPtr->NumEnums() - 1; ++i) {
-
 		FString Name = MyEnumPtr->GetNameStringByIndex(i);
 
 		MyComboBox.Get()->AddOption(Name);

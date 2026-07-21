@@ -28,12 +28,12 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugInput_ActorComponentInstanceSelector : pu
 //##############################################################################
 //##--------------------------------- FIELDS ---------------------------------##
 //##############################################################################
-	
+
 	//==== References ====\\.
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "References")
 	TObjectPtr<class UComboBoxString> MyComboBox = NULL;
-	
+
 	//==== Properties ====\\.
 protected:
 	UPROPERTY()
@@ -49,14 +49,14 @@ public:
 	UWidget* OnConfigureDebugInput_Implementation() override;
 
 	template <ActorComponentType C>
-	void Setup(const FText& InDebugInputTitle);
+	void Setup( const FText& InDebugInputTitle );
 	template <ActorComponentType C>
 	C* GetValue() const;
-	
+
 	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
-	void Setup(TSubclassOf<UActorComponent> ActorComponentClass, const FText& InDebugInputTitle);
+	void Setup( TSubclassOf<UActorComponent> ActorComponentClass, const FText& InDebugInputTitle );
 	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem", meta = (DeterminesOutputType = "ActorComponentClass", DynamicOutputParam = "OutObject"))
-	void GetValue(TSubclassOf<UActorComponent> ActorComponentClass, UObject*& OutObject);
+	void GetValue( TSubclassOf<UActorComponent> ActorComponentClass, UObject*& OutObject );
 };
 
 //#############################################################################
@@ -64,25 +64,28 @@ public:
 //#############################################################################
 
 template <ActorComponentType C>
-void UDebugInput_ActorComponentInstanceSelector::Setup(const FText& InDebugInputTitle) {
+void UDebugInput_ActorComponentInstanceSelector::Setup( const FText& InDebugInputTitle )
+{
 	this->Setup(C::StaticClass(), InDebugInputTitle);
 }
 
 template <ActorComponentType C>
-C* UDebugInput_ActorComponentInstanceSelector::GetValue() const {
-	
+C* UDebugInput_ActorComponentInstanceSelector::GetValue() const
+{
 	if (MyComboBox == NULL)
 		WIZ_RET_LOG(NULL, "My ComboBox is invalid", Error, LogDebugActionsSystem);
-	
-	if (CacheActorComponentClass == NULL) {
+
+	if (CacheActorComponentClass == NULL)
+	{
 		WIZ_RET_LOG(NULL, "Component selector not set up, do you call SetupSelector() after request debug input?", Error, LogDebugActionsSystem);
 	}
-	
+
 	auto Index = MyComboBox.Get()->GetSelectedIndex();
 	if (Index == INDEX_NONE) return NULL;
-	
-	if (ActorComponentsCache.IsValidIndex(Index)) {
-		return static_cast<C*>(ActorComponentsCache[Index]);	
+
+	if (ActorComponentsCache.IsValidIndex(Index))
+	{
+		return static_cast<C*>(ActorComponentsCache[Index]);
 	}
 	
 	WIZ_RET_LOG(NULL, "Index of component invalid, probably delete between Setup() and ExecuteDebugAction()", Warning, LogDebugActionsSystem);

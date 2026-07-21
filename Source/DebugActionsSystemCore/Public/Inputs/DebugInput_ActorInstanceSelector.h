@@ -33,7 +33,7 @@ class DEBUGACTIONSSYSTEMCORE_API UDebugInput_ActorInstanceSelector : public UDeb
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "References")
 	TObjectPtr<UComboBoxString> MyComboBox = NULL;
-	
+
 	//==== Properties ====\\.
 protected:
 	UPROPERTY()
@@ -49,14 +49,14 @@ public:
 	UWidget* OnConfigureDebugInput_Implementation() override;
 
 	template <ActorType A>
-	void Setup(const FText& InDebugInputTitle);
+	void Setup( const FText& InDebugInputTitle );
 	template <ActorType A>
 	A* GetValue() const;
-	
+
 	UFUNCTION(BlueprintCallable, Category = "DebugActionsSystem|Setup")
-	void Setup(TSubclassOf<AActor> ActorClass, const FText& InDebugInputTitle);
+	void Setup( TSubclassOf<AActor> ActorClass, const FText& InDebugInputTitle );
 	UFUNCTION(BlueprintPure, Category = "DebugActionsSystem", meta = (DeterminesOutputType = "ActorClass", DynamicOutputParam = "OutObject"))
-	void GetValue(TSubclassOf<AActor> ActorClass, UObject*& OutObject);
+	void GetValue( TSubclassOf<AActor> ActorClass, UObject*& OutObject );
 };
 
 //#############################################################################
@@ -64,23 +64,25 @@ public:
 //#############################################################################
 
 template <ActorType A>
-void UDebugInput_ActorInstanceSelector::Setup(const FText& InDebugInputTitle) {
+void UDebugInput_ActorInstanceSelector::Setup( const FText& InDebugInputTitle )
+{
 	this->Setup(A::StaticClass(), InDebugInputTitle);
 }
 
 template <ActorType A>
-A* UDebugInput_ActorInstanceSelector::GetValue() const {
-	
+A* UDebugInput_ActorInstanceSelector::GetValue() const
+{
 	if (MyComboBox == NULL)
 		WIZ_RET_LOG(NULL, "My ComboBox is invalid", Error, LogDebugActionsSystem);
-	
+
 	if (CacheActorClass == NULL)
 		WIZ_RET_LOG(NULL, "Component selector not set up, do you call SetupSelector() after request debug input?", Error, LogDebugActionsSystem);
-	
+
 	auto Index = MyComboBox.Get()->GetSelectedIndex();
-	if (ActorsCache.IsValidIndex(Index)) {
-		return static_cast<A*>(ActorsCache[Index]);	
+	if (ActorsCache.IsValidIndex(Index))
+	{
+		return static_cast<A*>(ActorsCache[Index]);
 	}
-	
+
 	WIZ_RET_LOG(NULL, "Index of component invalid, probably delete between Setup() and ExecuteDebugAction()", Warning, LogDebugActionsSystem);
 }
