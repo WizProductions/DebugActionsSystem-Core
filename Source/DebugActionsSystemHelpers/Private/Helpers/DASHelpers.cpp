@@ -110,7 +110,6 @@ bool DASHelpers::IsStandaloneWorld( UWorld* ContextWorld )
 		return true;
 
 	return false;
-
 }
 
 bool DASHelpers::IsStandaloneWorldOrAloneInServer( UWorld* ContextWorld )
@@ -157,7 +156,6 @@ void DASHelpers::PrivateInternal_DASDebugLog(
 	uint64 OnScreenMessageKey
 )
 {
-
 	FString FinalMessage = Message;
 	if (FunctionSignature) {
 		FString Prefix = DASHelpers::ParseFunctionPrefixFromAnsi(FunctionSignature, FileLine);

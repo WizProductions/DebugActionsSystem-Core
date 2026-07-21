@@ -52,7 +52,6 @@ bool UDebugPanelWidgetBase::CreateDebugActionWidget_Implementation(
 	class UCanvasPanelSlot*& NewWidgetCanvasSlot
 )
 {
-
 	if (IsValid(LinkedDebugAction) == false)
 		WIZ_RET_LOG(false, "Debug action invalid", Error, LogDebugActionsSystem);
 
@@ -72,7 +71,6 @@ bool UDebugPanelWidgetBase::CreateDebugActionWidget_Implementation(
 
 	if (NewWidget == NULL or NewWidgetCanvasSlot == NULL)
 		WIZ_RET_LOG(false, "One of output object reference is invalid", Error, LogDebugActionsSystem);
-
 
 	return NewWidget->InitDebugActionWidget(LinkedDebugAction);
 }
@@ -225,7 +223,6 @@ void UDebugPanelWidgetBase::Internal_FindAndInitChildDebugActions(
 	TObjectPtr<UDebugActionBase> ParentDebugAction
 )
 {
-
 	//At this point, the debug action is a folder
 	int DebugActionIndex = 0;
 	int NextDepthLevel   = DepthLevel + 1;

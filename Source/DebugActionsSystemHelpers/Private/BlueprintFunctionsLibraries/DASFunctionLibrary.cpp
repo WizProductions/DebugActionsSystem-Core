@@ -9,8 +9,8 @@
 #include "Helpers/DASHelpers.h"
 #include "AssetRegistry/AssetData.h"
 
-void UDASFunctionLibrary::GetAllDerivedClasses(TSubclassOf<UObject> ParentClass, TArray<UClass*>& OutSubClasses, bool bIncludeParentClass, bool bIncludeAbstract) {
-
+void UDASFunctionLibrary::GetAllDerivedClasses( TSubclassOf<UObject> ParentClass, TArray<UClass*>& OutSubClasses, bool bIncludeParentClass, bool bIncludeAbstract )
+{
 	OutSubClasses.Empty();
 
 	if (!ParentClass)
@@ -19,7 +19,8 @@ void UDASFunctionLibrary::GetAllDerivedClasses(TSubclassOf<UObject> ParentClass,
 	if (bIncludeParentClass)
 		OutSubClasses.Add(ParentClass);
 
-	for (TObjectIterator<UClass> It; It; ++It) {
+	for (TObjectIterator<UClass> It; It; ++It)
+	{
 		UClass* Cls = *It;
 
 		if (!Cls)
@@ -33,11 +34,13 @@ void UDASFunctionLibrary::GetAllDerivedClasses(TSubclassOf<UObject> ParentClass,
 
 		// Remove hot-reload artifacts
 		FString Name = Cls->GetName();
-		if (Name.StartsWith(TEXT("SKEL_")) || Name.StartsWith(TEXT("REINST_")) || Name.StartsWith(TEXT("HOTRELOAD_"))) {
+		if (Name.StartsWith(TEXT("SKEL_")) || Name.StartsWith(TEXT("REINST_")) || Name.StartsWith(TEXT("HOTRELOAD_")))
+		{
 			continue;
 		}
 
-		if (Cls->IsChildOf(ParentClass)) {
+		if (Cls->IsChildOf(ParentClass))
+		{
 			OutSubClasses.AddUnique(Cls);
 		}
 	}
@@ -49,8 +52,8 @@ void UDASFunctionLibrary::GetAssetsOfClass(
 	const TArray<FName>& SearchPathFilters,
 	bool bSearchSubclasses,
 	bool bRecursivePaths
-) {
-
+)
+{
 	OutAssets.Empty();
 
 	if (TargetClass == NULL)
@@ -63,18 +66,20 @@ void UDASFunctionLibrary::GetAssetsOfClass(
 	FARFilter Filter;
 	Filter.ClassPaths.Add(ClassPath);
 	Filter.bRecursiveClasses = bSearchSubclasses;
-	Filter.bRecursivePaths = bRecursivePaths;
-	
-	for (auto Path : SearchPathFilters) {
+	Filter.bRecursivePaths   = bRecursivePaths;
+
+	for (auto Path : SearchPathFilters)
+	{
 		Filter.PackagePaths.Add(Path);
 	}
 
 	AssetRegistry.GetAssets(Filter, OutAssets);
 }
 
-void UDASFunctionLibrary::SetImageOfButtonStyles(class UButton* ButtonWidget, class UObject* Texture, int32 WidgetStyleModesMask) {
-
-	if (ButtonWidget == NULL) {
+void UDASFunctionLibrary::SetImageOfButtonStyles( class UButton* ButtonWidget, class UObject* Texture, int32 WidgetStyleModesMask )
+{
+	if (ButtonWidget == NULL)
+	{
 		ensureAlwaysMsgf(false, TEXT("The button is invalid."));
 		return;
 	}
@@ -97,9 +102,10 @@ void UDASFunctionLibrary::SetImageOfButtonStyles(class UButton* ButtonWidget, cl
 	ButtonWidget->SetStyle(NewStyle);
 }
 
-void UDASFunctionLibrary::SetDrawAsOfButtonStyles(UButton* ButtonWidget, ESlateBrushDrawType::Type DrawAsType, int32 WidgetStyleModesMask) {
-
-	if (ButtonWidget == NULL) {
+void UDASFunctionLibrary::SetDrawAsOfButtonStyles( UButton* ButtonWidget, ESlateBrushDrawType::Type DrawAsType, int32 WidgetStyleModesMask )
+{
+	if (ButtonWidget == NULL)
+	{
 		ensureAlwaysMsgf(false, TEXT("The button is invalid."));
 		return;
 	}
@@ -118,14 +124,16 @@ void UDASFunctionLibrary::SetDrawAsOfButtonStyles(UButton* ButtonWidget, ESlateB
 	ButtonWidget->SetStyle(NewStyle);
 }
 
-int64 UDASFunctionLibrary::GetObjectUniqueID(UObject* Object) {
+int64 UDASFunctionLibrary::GetObjectUniqueID( UObject* Object )
+{
 	return Object->GetUniqueID();
 }
 
-FString UDASFunctionLibrary::GetBlueprintPMethodPrefix(const UObject* ContextObject, FString MethodName) {
-
+FString UDASFunctionLibrary::GetBlueprintPMethodPrefix( const UObject* ContextObject, FString MethodName )
+{
 	FString BPName = TEXT("Unknown");
-	if (ContextObject) {
+	if (ContextObject)
+	{
 		BPName = ContextObject->GetClass()->GetName();
 		BPName.RemoveFromEnd(TEXT("_C"));
 	}
@@ -141,6 +149,7 @@ void UDASFunctionLibrary::K2_WizLog(
 	FColor OnScreenMessageColor,
 	float OnScreenMessageDuration,
 	int64 OnScreenMessageKey
-) {
+)
+{
 	//@TODO: Make definition
 }

@@ -32,5 +32,4 @@ public:
 	bool CanExecuteCommand_Implementation(UWorld* ContextWorld) const override;
 	void GetCommand_Implementation(FString& Cmd) override;
 	void GetMessage_Implementation(ULocalPlayer* Executer, FString& Message) override;
-	
 };

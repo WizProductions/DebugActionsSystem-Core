@@ -15,15 +15,13 @@ public class DebugActionsSystemCore : ModuleRules
 		// 	}
 		// );
 
-
 		// PrivateIncludePaths.AddRange(
 		// 	new string[]
 		// 	{
 		// 		// ... add other private include paths required here ...
 		// 	}
 		// );
-
-
+		
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
@@ -34,8 +32,7 @@ public class DebugActionsSystemCore : ModuleRules
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);
-
-
+		
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{

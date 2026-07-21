@@ -38,7 +38,6 @@ void UDebugActionFolder::PostEditChangeProperty( FPropertyChangedEvent& Property
 			int32 AddedObjectIndex = PropertyChangedEvent.GetArrayIndex(ArrayPropertyName.ToString());
 			if (DebugActionsStored.IsValidIndex(AddedObjectIndex))
 			{
-
 				//Request a name update to the action added
 				DebugActionsStored[AddedObjectIndex]->UpdateEditorDataAssetTitle();
 			}
@@ -51,7 +50,6 @@ void UDebugActionFolder::PostEditChangeProperty( FPropertyChangedEvent& Property
 		int32 NewObjectIndex = PropertyChangedEvent.GetArrayIndex(ArrayPropertyName.ToString()) + 1;
 		if (DebugActionsStored.IsValidIndex(NewObjectIndex))
 		{
-
 			//Request a name update to the action added
 			DebugActionsStored[NewObjectIndex]->UpdateEditorDataAssetTitle();
 		}

@@ -41,7 +41,6 @@ void UDebugInput_ObjectSelector::Setup( TSubclassOf<UObject> ObjectClass, const 
 	UDASFunctionLibrary::GetAssetsOfClass(ObjectClass, Assets, SearchPathFilters);
 
 	for (auto Asset : Assets) {
-
 		if (Asset.IsValid() == false)
 			continue;
 

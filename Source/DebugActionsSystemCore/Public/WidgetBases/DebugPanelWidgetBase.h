@@ -20,7 +20,7 @@ class UDebugInputSlotWidgetBase;
 UCLASS(Abstract)
 class DEBUGACTIONSSYSTEMCORE_API UDebugPanelWidgetBase : public UUserWidget {
 	GENERATED_BODY()
-	
+
 //#############################################################################
 //##--------------------------------- FIELDS --------------------------------##
 //#############################################################################
@@ -29,7 +29,7 @@ protected:
 	//==== Widgets Binding ====\\.
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget), Category = "UserInterface|Interaction")
 	TObjectPtr<class UCanvasPanel> CP_Root = NULL;
-	
+
 	//==== Settings ====\\.
 	/** Used to store one folder per depth to store the current full path */
 	UPROPERTY(BlueprintReadOnly, Category = "Properties")
@@ -48,6 +48,7 @@ protected:
 //#############################################################################
 
 #if UE_EDITOR
+	
 public:
 	const FText GetPaletteCategory() override;
 #endif
@@ -55,36 +56,44 @@ public:
 public:
 	UFUNCTION(BlueprintPure, Category = "References")
 	UDebugSubsystem* GetDebugSubSystemChecked();
+	
 protected:
 	UFUNCTION(BlueprintNativeEvent, Category="DebugActionsSystem")
-	bool AddDebugActionParentWidget(int DebugActionIndex, int DepthLevel, UDebugActionBase* DebugAction);
+	bool AddDebugActionParentWidget( int DebugActionIndex, int DepthLevel, UDebugActionBase* DebugAction );
 	UFUNCTION(BlueprintNativeEvent, Category="DebugActionsSystem")
-	bool AddDebugActionChildWidget(int ChildDebugActionIndex, int DepthLevel, UDebugActionBase* ChildDebugAction, UDebugActionBase* ParentDebugAction);
+	bool AddDebugActionChildWidget( int ChildDebugActionIndex, int DepthLevel, UDebugActionBase* ChildDebugAction, UDebugActionBase* ParentDebugAction );
+
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DebugActionsSystem")
-	bool CreateDebugActionWidget(UDebugActionBase* LinkedDebugAction, class UDebugActionWidgetBase*& NewWidget, class UCanvasPanelSlot*& NewWidgetCanvasSlot);
+	bool CreateDebugActionWidget( UDebugActionBase* LinkedDebugAction, class UDebugActionWidgetBase*& NewWidget, class UCanvasPanelSlot*& NewWidgetCanvasSlot );
 	UFUNCTION(BlueprintNativeEvent, Category="DebugActionsSystem")
-	void OnFolderStateChange(bool bIsDeveloped, bool bIsNewFolderClicked, UDebugActionBase* InDebugActionFolder);
-	
-	void GenerateDebugMenu(const TArray<TObjectPtr<UDebugActionBase>>& DebugActions);
-	UDebugActionBase* GetDebugActionByDepth(int Depth) const;
-	void RegisterDebugInputSlot(class UDebugInputSlotWidgetBase* InDebugInputSlot);
+	void OnFolderStateChange( bool bIsDeveloped, bool bIsNewFolderClicked, UDebugActionBase* InDebugActionFolder );
+
+	void GenerateDebugMenu( const TArray<TObjectPtr<UDebugActionBase>>& DebugActions );
+	UDebugActionBase* GetDebugActionByDepth( int Depth ) const;
+	void RegisterDebugInputSlot( class UDebugInputSlotWidgetBase* InDebugInputSlot );
 	/** Request a slot assignment to DI @return True if a slot is free and DI is assigned to his, otherwise False */
-	bool AssignSlotToDebugInput(class UDebugInputBase* InDebugInput);
+	bool AssignSlotToDebugInput( class UDebugInputBase* InDebugInput );
 	/** Unassign slot to DI @return True is a slot is found and unassigned, otherwise False */
-	bool UnassignSlotToDebugInput(class UDebugInputBase* InDebugInput);
+	bool UnassignSlotToDebugInput( class UDebugInputBase* InDebugInput );
 	void ClearSlotsAssigment();
 	/** Set a new visibility to all registered and used debug input slots */
-	void SetActiveDebugInputSlotsVisibility(ESlateVisibility InVisibility);
-	void SetVisibility(ESlateVisibility InVisibility) override;
+	void SetActiveDebugInputSlotsVisibility( ESlateVisibility InVisibility );
+	void SetVisibility( ESlateVisibility InVisibility ) override;
 
 private:
-	void Internal_UpdateDebugActionsDepthLevelsArray(UDebugActionBase* InDebugActionFolder);
-	void Internal_FindAndInitChildDebugActions(class UDebugSubsystem* Subsystem, int ParentDebugActionIndex, int32 DepthLevel, TArray<TObjectPtr<UDebugActionBase>>& ChildDebugActions, TObjectPtr<UDebugActionBase> ParentDebugAction);
-	
+	void Internal_UpdateDebugActionsDepthLevelsArray( UDebugActionBase* InDebugActionFolder );
+	void Internal_FindAndInitChildDebugActions(
+		class UDebugSubsystem* Subsystem,
+		int ParentDebugActionIndex,
+		int32 DepthLevel,
+		TArray<TObjectPtr<UDebugActionBase>>& ChildDebugActions,
+		TObjectPtr<UDebugActionBase> ParentDebugAction
+	);
+
 	template <typename WidgetT = UWidget> requires std::is_base_of_v<UWidget, WidgetT>
-	WidgetT* Internal_NewWidget(TSubclassOf<UWidget> WidgetClass = WidgetT::StaticClass());
-	
+	WidgetT* Internal_NewWidget( TSubclassOf<UWidget> WidgetClass = WidgetT::StaticClass() );
+
 	friend class UDebugSubsystem;
 };
 

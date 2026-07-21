@@ -37,7 +37,6 @@ void UDebugInput_ActorComponentInstanceSelector::Setup( TSubclassOf<UActorCompon
 
 	TActorIterator<AActor> ActorIt(World);
 	for (; ActorIt; ++ActorIt) {
-
 		if (IsValid(*ActorIt) == false)
 			continue;
 
@@ -45,7 +44,6 @@ void UDebugInput_ActorComponentInstanceSelector::Setup( TSubclassOf<UActorCompon
 		ActorIt->GetComponents(CacheActorComponentClass, Components);
 
 		for (int i(0); i < Components.Num(); ++i) {
-
 			if (IsValid(Components[i]) == false)
 				continue;
 

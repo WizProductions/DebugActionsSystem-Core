@@ -40,7 +40,6 @@ void UDebugInput_ActorInstanceSelector::Setup( TSubclassOf<AActor> ActorClass, c
 
 	TActorIterator<AActor> ActorIt(World, CacheActorClass);
 	for (; ActorIt; ++ActorIt) {
-
 		if (IsValid(*ActorIt) == false)
 			continue;
 
