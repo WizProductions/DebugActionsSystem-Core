@@ -101,7 +101,6 @@ void UDebugInputSlotWidgetBase::RemoveInputWidget_Implementation()
 void UDebugInputSlotWidgetBase::SetSlotProperties_Implementation( const FDISlotProperties& InProperties )
 {
 	if (InProperties.DisplayName.IsEmpty() == false) {
-
 		if (IsValid(TB_InputTitle) == false)
 			WIZ_RET_LOG(, "Textbox is invalid.", Error);
 
@@ -109,7 +108,6 @@ void UDebugInputSlotWidgetBase::SetSlotProperties_Implementation( const FDISlotP
 	}
 
 	if (InProperties.Size.IsZero() == false) {
-
 		if (IsValid(NS_InputSlot) == false)
 			WIZ_RET_LOG(, "Slot is invalid.", Error);
 

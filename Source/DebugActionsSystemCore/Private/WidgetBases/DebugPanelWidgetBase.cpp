@@ -93,7 +93,6 @@ void UDebugPanelWidgetBase::GenerateDebugMenu( const TArray<TObjectPtr<UDebugAct
 
 	UDebugSubsystem* DebugSubSystem = GetDebugSubSystemChecked();
 	for (auto ChildDebugAction : DebugActions) {
-
 		if (ChildDebugAction == NULL) {
 			WIZ_LOG("A ChildDebugAction is NULL", Error, LogDebugActionsSystem);
 			continue;
@@ -135,7 +134,6 @@ bool UDebugPanelWidgetBase::AssignSlotToDebugInput( class UDebugInputBase* InDeb
 
 	for (auto DISlot : DebugInputsSlotRegistered) {
 		if (DISlot->IsUsed() == false) {
-
 			DISlot->SetInputWidget(InDebugInput);
 			DISlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			return true;
@@ -232,7 +230,6 @@ void UDebugPanelWidgetBase::Internal_FindAndInitChildDebugActions(
 
 	//For every debugAction check children recursively
 	for (auto ChildDebugAction : ChildDebugActions) {
-
 		if (ChildDebugAction == nullptr) {
 			WIZ_LOG("A ChildDebugAction invalid", Error, LogDebugActionsSystem);
 			continue;

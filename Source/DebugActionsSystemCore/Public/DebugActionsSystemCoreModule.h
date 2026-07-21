@@ -10,7 +10,6 @@
  */
 class FDebugActionsSystemCoreModule : public IModuleInterface
 {
-	
 public:
 	/** IModuleInterface implementation */
 	void StartupModule() override;
