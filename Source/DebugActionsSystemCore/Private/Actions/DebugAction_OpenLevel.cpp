@@ -6,7 +6,7 @@
 #include "Helpers/DASHelpers.h"
 #include "Inputs/DebugInput_ObjectSelector.h"
 #include "Inputs/DebugInput_StringETB.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 #include "Engine/Level.h"
 
 UDebugAction_OpenLevel::UDebugAction_OpenLevel()

@@ -4,7 +4,7 @@
 #include "Inputs/DebugInput_ObjectSelector.h"
 #include "BlueprintFunctionsLibraries/DASFunctionLibrary.h"
 #include "Components/ComboBoxString.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
 UWidget* UDebugInput_ObjectSelector::OnConfigureDebugInput_Implementation()

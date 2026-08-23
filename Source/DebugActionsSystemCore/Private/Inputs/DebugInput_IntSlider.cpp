@@ -3,7 +3,7 @@
 
 #include "Inputs/DebugInput_IntSlider.h"
 #include "Components/SpinBox.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
 UWidget* UDebugInput_IntSlider::OnConfigureDebugInput_Implementation()

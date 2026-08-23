@@ -3,7 +3,7 @@
 
 #include "Inputs/DebugInput_StringETB.h"
 #include "Components/EditableTextBox.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
 UWidget* UDebugInput_StringETB::OnConfigureDebugInput_Implementation()

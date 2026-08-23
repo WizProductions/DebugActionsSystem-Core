@@ -3,7 +3,7 @@
 #include "Actions/DebugAction_CommandInput.h"
 #include "Inputs/DebugInput_StringETB.h"
 #include "DebugActionsSystemTagsDefines.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 
 void UDebugAction_CommandInput::OnParentFolderIsDeveloped_Implementation( UDebugActionFolder* ParentFolder )
 {

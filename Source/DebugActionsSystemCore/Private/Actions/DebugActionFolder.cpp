@@ -4,7 +4,7 @@
 #include "DebugActionsSystemCoreDefines.h"
 #include "DataAssets/DebugActionsSystemDataAsset.h"
 #include "Enumerations/EDebugActionResult.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 
 #if WITH_EDITOR
 void UDebugActionFolder::PostEditChangeProperty( FPropertyChangedEvent& PropertyChangedEvent )

@@ -7,7 +7,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Enumerations/EDebugActionResult.h"
 #include "Inputs/DebugInputBase.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 #include "WidgetBases/DebugActionWidgetBase.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 

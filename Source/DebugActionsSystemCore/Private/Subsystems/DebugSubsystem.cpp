@@ -1,6 +1,6 @@
 // Copyright Wiz Corporation. All Rights Reserved.
 
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 #include "DataAssets/DebugActionsSystemDataAsset.h"
 #include "DebugActionsSystemCoreDefines.h"
 #include "EnhancedInputSubsystems.h"

@@ -5,7 +5,7 @@
 
 #include "EngineUtils.h"
 #include "Components/ComboBoxString.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
 UWidget* UDebugInput_ActorComponentInstanceSelector::OnConfigureDebugInput_Implementation()
