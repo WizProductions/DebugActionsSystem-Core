@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://cloud.wizurth.ovh/s/ZY9nNWFAKsXmtCY/preview" alt="PGG_HEADER" width="256" height="256">
+  <img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/WizProductions_Icon_256x256.png" alt="HEADER" width="256" height="256">
 </p>
 <p align="center"> <a href="https://www.codefactor.io/repository/github/wizproductions/debugactionssystem-core/overview/master">
     <img src="https://www.codefactor.io/repository/github/wizproductions/debugactionssystem-core/badge/master" alt="CodeFactor" />
@@ -14,7 +14,7 @@ Instead of memorizing obscure console commands or hardcoding temporary cheat UI 
 
 ---
 
-<img src="https://github.com/user-attachments/assets/ab40b35c-099c-4a6c-84f6-dffdcd438ee1" alt="DAS_Plugins_Window" width="750" height="600">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/DAS_Show.gif" alt="DAS_Show" width="750" height="600">
 
 ## 📖 Table of Contents
 * [🚀 Key Features](#-key-features)
@@ -98,22 +98,22 @@ Download the plugin from the [Releases](https://github.com/WizProductions/DebugA
 ### Step 2 - Activation
 Launch your project and enable the plugin in the **Plugins** Window (**Edit > Plugins**).<br>
 
-<img src="https://cloud.wizurth.ovh/s/BXMFqbFoSWPNB2K/preview" alt="DAS_Plugins_Window" width="650" height="150">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/DAS_Plugins_Window.png" alt="DAS_Plugins_Window" width="650" height="150">
 
 ### Step 3 - Data Asset
-Create your Data Asset by inheriting from the `Debug Actions System Data Asset` class.<br>
+Create new Data Asset and inherite from the `Debug Actions System Data Asset` class.<br>
 
-<img src="https://cloud.wizurth.ovh/s/nriZAXKywnqTg84/preview" alt="DAS_DataAsset_Creation" width="500" height="150">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/DAS_PickParentClass.png" alt="DAS_DataAsset_Content" width="500" height="150">
 
 ### Step 4 - Configuration
 Configure your new Data Asset object as shown in the screenshot below, or with your own subclasses.<br>
 
-<img src="https://cloud.wizurth.ovh/s/GeAEQxtJqdt3K4e/preview" alt="DAS_DataAsset_Config" width="1100" height="500">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/DAS_DataAsset_Content.png" alt="DAS_DataAsset_Content" width="1100" height="500">
 
 ### Step 5 - Project Settings
 Set the Data Asset object in your Project Settings (**Project Settings > Plugins > DebugActionsSystem - Core**).<br>
 
-<img src="https://cloud.wizurth.ovh/s/M93eLWMpHHJaBPr/preview" alt="DAS_Project_Settings" width="500" height="300">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/DAS_ProjectSettings.png" alt="DAS_Project_Settings" width="500" height="300">
 
 ---
 
@@ -127,10 +127,10 @@ I highly recommend reviewing the included examples to easily create your own cus
 ### <u>How to create a custom DebugAction</u>:
 
 Creating a custom debug action is relatively simple: just create a class that inherits from `UDebugActionBase`.
-<img src="https://cloud.wizurth.ovh/s/FKE5HFsT7sWWy5B/preview" alt="DAS_BP_Action_1" width="600" height="175">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/DAS_DebugAction_PickParentClass.png" alt="DAS_DebugAction_PickParentClass" width="600" height="175">
 
 In the debug action class, you can override the following methods:
-<img src="https://cloud.wizurth.ovh/s/oL48QtkY8yosiwK/preview" alt="DAS_BP_Action_2" width="600" height="175">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/DAS_DebugAction_Override.png" alt="DAS_DebugAction_Override" width="600" height="175">
 
 | Method                        | Description                                                                                                            |
 |:------------------------------|:-----------------------------------------------------------------------------------------------------------------------|
@@ -147,10 +147,10 @@ In the debug action class, you can override the following methods:
 ### <u>How to create a custom DebugInput</u>:
 
 Creating a custom debug input is also relatively simple: just create a class that inherits from `UDebugInputBase`.
-<img src="https://cloud.wizurth.ovh/s/D9ZfaApAYB7manT/preview" alt="DAS_BP_Input_1" width="600" height="175">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/DAS_DebugInput_PickParentClass.png" alt="DAS_DebugInput_PickParentClass" width="600" height="175">
 
 In the debug input class, you can also override these methods:
-<img src="https://cloud.wizurth.ovh/s/k3La5EwakAmRzos/preview" alt="DAS_BP_Input_2" width="650" height="150">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/DAS_DebugInput_Override.png" alt="DAS_DebugInput_Override.png" width="650" height="150">
 
 | Method                    | Description |
 |:--------------------------| :--- |
@@ -169,19 +169,19 @@ In the debug input class, you can also override these methods:
 <br>
 <br>
 <i>GetDebugActionTitle:</i>
-<img src="https://cloud.wizurth.ovh/s/JiWBjnrCMXPzS7f/preview" alt="DAS_Example_ObjectCounter_0">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/Example/DAS_Example_BP_DebugAction_GetDebugActionTitle.png" alt="DAS_Example_ObjectCounter_0">
 <br><br>
 <i>OnExecuteDebugAction:</i>
-<img src="https://cloud.wizurth.ovh/s/MPgaFKmEJLZjk52/preview" alt="DAS_Example_ObjectCounter_1">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/Example/DAS_Example_BP_DebugAction_ObjectCounter_OnExecuteDebugAction.png" alt="DAS_Example_ObjectCounter_1">
 <br><br>
 <i>OnParentFolderIsDeveloped:</i>
-<img src="https://cloud.wizurth.ovh/s/cr3bAp9xXcLzSSG/preview" alt="DAS_Example_ObjectCounter_2">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/Example/DAS_Example_BP_DebugAction_OnParentFolderIsDeveloped.png" alt="DAS_Example_ObjectCounter_2">
 <br><br>
 <i>Properties:</i>
-<img src="https://cloud.wizurth.ovh/s/jXYwxjnDXcGdzFZ/preview" alt="DAS_Example_ObjectCounter_3">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/Example/DAS_Example_BP_DebugAction_Properties.png" alt="DAS_Example_ObjectCounter_3">
 <br><br>
 <i>DataAsset preview:</i>
-<img src="https://cloud.wizurth.ovh/s/DwJtdW3AtPA3b4S/preview" alt="DAS_Example_ObjectCounter_4">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/Example/DAS_Example_DebugAction_ObjectCounter_DataAsset_Preview.png" alt="DAS_Example_ObjectCounter_4">
 </details>
 
 <details>
@@ -190,13 +190,13 @@ In the debug input class, you can also override these methods:
   <br>
 <br>
 <i>OnConfigureDebugInput:</i>
-<img src="https://cloud.wizurth.ovh/s/S5rX3fmREQbqQS5/preview" alt="DAS_Example_StringET_0">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/Example/DAS_Example_BP_DebugInput_StringET_OnConfigureDebugInput.png" alt="DAS_Example_StringET_0">
 <br><br>
 <i>GetValue:</i>
-<img src="https://cloud.wizurth.ovh/s/Agc4KLjSE7oQf5R/preview" alt="DAS_Example_StringET_1">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/Example/DAS_Example_BP_DebugInput_StringET_GetValue.png" alt="DAS_Example_StringET_1">
 <br><br>
 <i>Setup (Optional):</i>
-<img src="https://cloud.wizurth.ovh/s/eK5EaSddFmsDjQa/preview" alt="DAS_Example_StringET_2">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/Example/DAS_Example_BP_DebugInput_StringET_Setup.png" alt="DAS_Example_StringET_2">
 </details>
 
 <br>
@@ -206,7 +206,7 @@ In the debug input class, you can also override these methods:
 To better understand how these actions and custom entries work together, you can check out the code examples provided directly in the plugin's `/Plugins/Content` folder. This is the fastest way to learn how to create your own.
 
 Don't forget to enable **Show Plugin Content** in your content browser:
-<img src="https://cloud.wizurth.ovh/s/NqWtkrgkyf7NXab/preview" alt="DAS_Show_Plugin_Content" width="600" height="490">
+<img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/DebugActionsSystemCore/Git_Readme/DAS_Enable_Plugin_Content.png" alt="DAS_Show_Plugin_Content" width="600" height="490">
 
 **Blueprint example classes:**
 
