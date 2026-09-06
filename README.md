@@ -1,9 +1,9 @@
 <p align="center">
   <img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/WizProductions_Icon_256x256.png" alt="HEADER" width="256" height="256">
 </p>
-<p align="center"> <a href="https://www.codefactor.io/repository/github/wizproductions/debugactionssystem-core/overview/master">
-    <img src="https://www.codefactor.io/repository/github/wizproductions/debugactionssystem-core/badge/master" alt="CodeFactor" />
-</a> </p>
+<p align="center">
+    <img src="https://www.codefactor.io/repository/github/wizproductions/debugactionssystem-core/badge" alt="CodeFactor" />
+</p>
 <h1 align="center">Debug Actions System - Core</h1>
 
 > **A powerful, modular, and highly extensible debugging framework for Unreal Engine 5.**
