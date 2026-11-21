@@ -7,7 +7,7 @@
 #include "Components/TextBlock.h"
 #include "Components/VerticalBoxSlot.h"
 #include "Inputs/DebugInputBase.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 #include "WidgetBases/DebugPanelWidgetBase.h"
 
 #define LOCTEXT_NAMESPACE "UMG"

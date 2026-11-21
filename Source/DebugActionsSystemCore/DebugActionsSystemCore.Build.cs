@@ -7,7 +7,8 @@ public class DebugActionsSystemCore : ModuleRules
 	public DebugActionsSystemCore(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-
+		PublicDefinitions.Add("WITH_DEBUG_ACTIONS_SYSTEM=1");
+		
 		// PublicIncludePaths.AddRange(
 		// 	new string[]
 		// 	{

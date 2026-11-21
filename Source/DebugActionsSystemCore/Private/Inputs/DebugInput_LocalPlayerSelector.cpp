@@ -4,7 +4,7 @@
 #include "Inputs/DebugInput_LocalPlayerSelector.h"
 #include "Components/ComboBoxString.h"
 #include "Engine/GameInstance.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
 UWidget* UDebugInput_LocalPlayerSelector::OnConfigureDebugInput_Implementation()

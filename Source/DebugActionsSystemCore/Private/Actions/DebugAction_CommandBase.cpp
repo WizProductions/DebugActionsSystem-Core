@@ -4,7 +4,7 @@
 #include "DebugActionsSystemCoreDefines.h"
 #include "Enumerations/EDebugActionResult.h"
 #include "Inputs/DebugInput_LocalPlayerSelector.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 
 void UDebugAction_CommandBase::OnParentFolderIsDeveloped_Implementation( UDebugActionFolder* ParentFolder )
 {

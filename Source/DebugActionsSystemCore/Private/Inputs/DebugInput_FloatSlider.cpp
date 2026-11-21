@@ -3,7 +3,7 @@
 
 #include "Inputs/DebugInput_FloatSlider.h"
 #include "Components/SpinBox.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
 UWidget* UDebugInput_FloatSlider::OnConfigureDebugInput_Implementation()

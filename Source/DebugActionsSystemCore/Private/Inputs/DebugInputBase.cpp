@@ -2,7 +2,7 @@
 
 #include "Inputs/DebugInputBase.h"
 #include "DebugActionsSystemCoreDefines.h"
-#include "SubSystems/DebugSubsystem.h"
+#include "Subsystems/DebugSubsystem.h"
 #include "WidgetBases/DebugInputSlotWidgetBase.h"
 
 void UDebugInputBase::ConfigureDebugInput()
