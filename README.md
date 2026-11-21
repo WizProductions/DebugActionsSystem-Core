@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://cloud.wizurth.ovh/s/ZY9nNWFAKsXmtCY/preview" alt="PGG_HEADER" width="256" height="256">
+  <img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/WizProductions_Icon_256x256.png" alt="WIZPROD" width="256" height="256">
 </p>
 <p align="center"> <a href="https://www.codefactor.io/repository/github/wizproductions/debugactionssystem-core/overview/master">
     <img src="https://storage.wizurth.ovh/Pictures/Wiz%20Productions/CodeFactor/aplus.svg" alt="CodeFactor" />
