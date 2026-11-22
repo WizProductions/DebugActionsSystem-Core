@@ -32,7 +32,7 @@ protected:
 //#############################################################################	
 
 public:
-#if UE_EDITOR
+#if WITH_EDITOR
 	const FText GetPaletteCategory() override;
 #endif
 

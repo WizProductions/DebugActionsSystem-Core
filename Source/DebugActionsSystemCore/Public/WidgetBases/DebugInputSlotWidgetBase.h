@@ -51,8 +51,7 @@ protected:
 protected:
 	void NativeConstruct() override;
 
-#if UE_EDITOR
-	
+#if WITH_EDITOR
 public:
 	const FText GetPaletteCategory() override;
 #endif

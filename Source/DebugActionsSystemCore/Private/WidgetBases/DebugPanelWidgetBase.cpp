@@ -64,7 +64,7 @@ bool UDebugPanelWidgetBase::CreateDebugActionWidget_Implementation(
 		WIZ_RET_LOG(false, "Debug Action widget class failed to load.", Error, LogDebugActionsSystem);
 
 	FName UniqueWidgetName = MakeUniqueObjectName(WidgetTree, DAWClass->GetClass(),
-	FName(FString::Printf(TEXT("DebugActionWidget_%s"), *LinkedDebugAction->GetDebugActionTitle().ToString())));
+		FName(FString::Printf(TEXT("DebugActionWidget_%s"), *LinkedDebugAction->GetDebugActionTitle().ToString())));
 	NewWidget = WidgetTree->ConstructWidget<UDebugActionWidgetBase>(DAWClass, UniqueWidgetName);
 
 	NewWidgetCanvasSlot = Cast<UCanvasPanelSlot>(CP_Root.Get()->AddChild(NewWidget));
